@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.1)
 project(bvh11 CXX)
 set(CMAKE_CXX_STANDARD 11)
 
+if (WIN32 AND CMAKE_SYSTEM_VERSION)
+	add_compile_definitions(_USE_MATH_DEFINES)
+endif()
+
 find_package(Eigen3)
 if((NOT TARGET Eigen3::Eigen) AND (DEFINED EIGEN3_INCLUDE_DIR))
 	add_library(AliasEigen3 INTERFACE)
