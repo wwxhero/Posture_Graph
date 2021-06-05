@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 		{
 			const std::string bvh_file_path_dst = argv[3];
 			int n_frame = atoi(argv[2]);
-			if (bvh.ResetRestPose(n_frame))
+			if (bvh.ResetRestPose(n_frame - 1))
 				bvh.WriteBvhFile(bvh_file_path_dst);
 			else
 			{
