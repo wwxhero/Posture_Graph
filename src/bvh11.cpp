@@ -58,11 +58,9 @@ namespace bvh11
 			  && nframe < frames())
 		{
 			typedef std::shared_ptr<const Joint> Joint_ptr;
-			std::queue<Joint_ptr> bfsQ;
-			bfsQ.push(root_joint_);
-			while (!bfsQ.empty())
+			auto joints = GetJointList();
+			for (auto joint : joints)
 			{
-				Joint_ptr joint = bfsQ.front();
 				Joint_ptr joint_parent = joint->parent();
 				Eigen::Affine3d tm_parent_w;
 				if (joint_parent != nullptr)
@@ -73,10 +71,8 @@ namespace bvh11
 				Eigen::Vector3d tt_w = tm_w.translation();
 				Eigen::Vector3d tt_parent_w = tm_parent_w.translation();
 				const_cast<Eigen::Vector3d&>(joint->offset()) = tt_w - tt_parent_w;
-				for (auto child : joint->children())
-					bfsQ.push(child);
-				bfsQ.pop();
 			}
+			return true;
 		}
 		else
 			return false;
