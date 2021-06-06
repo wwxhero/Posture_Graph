@@ -83,73 +83,51 @@ namespace bvh11
 		assert(frame < frames() && "Invalid frame is specified.");
 		assert(joint->associated_channels_indices().size() == 3 || joint->associated_channels_indices().size() == 6);
 
-		Eigen::Affine3d transform = Eigen::Affine3d::Identity();
-
-		const bool has_time_varying_translation = (joint->associated_channels_indices().size() == 6);
-
-		if (has_time_varying_translation)
+		Eigen::Affine3d tm_l2p_0(Eigen::Translation3d(joint->offset()));
+		// having:
+		//		tm_l2p_0.linear() == Eigen::Matrix3d::Identity();
+		//		tm_l2p_0.translation() == joint->offset();
+		Eigen::Affine3d tm_delta_l = Eigen::Affine3d::Identity();
+		bool has_a_rotation = false;
+		bool has_a_translation = false;
+		for (int channel_index : joint->associated_channels_indices())
 		{
-			// Apply time-varying transformations
-			for (int channel_index : joint->associated_channels_indices())
+			const bvh11::Channel& channel = channels()[channel_index];
+			const double          value   = motion()(frame, channel_index);
+
+			switch (channel.type)
 			{
-				const bvh11::Channel& channel = channels()[channel_index];
-				const double          value   = motion()(frame, channel_index);
-
-				switch (channel.type)
-				{
-					case bvh11::Channel::Type::x_position:
-						transform *= Eigen::Translation3d(Eigen::Vector3d(value, 0.0, 0.0));
-						break;
-					case bvh11::Channel::Type::y_position:
-						transform *= Eigen::Translation3d(Eigen::Vector3d(0.0, value, 0.0));
-						break;
-					case bvh11::Channel::Type::z_position:
-						transform *= Eigen::Translation3d(Eigen::Vector3d(0.0, 0.0, value));
-						break;
-					case bvh11::Channel::Type::x_rotation:
-						transform *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitX());
-						break;
-					case bvh11::Channel::Type::y_rotation:
-						transform *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitY());
-						break;
-					case bvh11::Channel::Type::z_rotation:
-						transform *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitZ());
-						break;
-				}
-			}
-		}
-		else
-		{
-			// Apply intrinsic offset translation
-			transform *= Eigen::Translation3d(joint->offset());
-
-			// Apply time-varying transformations
-			for (int channel_index : joint->associated_channels_indices())
-			{
-				const bvh11::Channel& channel = channels()[channel_index];
-				const double          value   = motion()(frame, channel_index);
-
-				switch (channel.type)
-				{
-					case bvh11::Channel::Type::x_position:
-					case bvh11::Channel::Type::y_position:
-					case bvh11::Channel::Type::z_position:
-						assert(false && "Found an invalid channel configuration");
-						break;
-					case bvh11::Channel::Type::x_rotation:
-						transform *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitX());
-						break;
-					case bvh11::Channel::Type::y_rotation:
-						transform *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitY());
-						break;
-					case bvh11::Channel::Type::z_rotation:
-						transform *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitZ());
-						break;
-				}
+				case bvh11::Channel::Type::x_position:
+					tm_delta_l *= Eigen::Translation3d(Eigen::Vector3d(value, 0.0, 0.0));
+					has_a_translation = true;
+					break;
+				case bvh11::Channel::Type::y_position:
+					tm_delta_l *= Eigen::Translation3d(Eigen::Vector3d(0.0, value, 0.0));
+					has_a_translation = true;
+					break;
+				case bvh11::Channel::Type::z_position:
+					tm_delta_l *= Eigen::Translation3d(Eigen::Vector3d(0.0, 0.0, value));
+					has_a_translation = true;
+					break;
+				case bvh11::Channel::Type::x_rotation:
+					tm_delta_l *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitX());
+					has_a_rotation = true;
+					break;
+				case bvh11::Channel::Type::y_rotation:
+					tm_delta_l *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitY());
+					has_a_rotation = true;
+					break;
+				case bvh11::Channel::Type::z_rotation:
+					tm_delta_l *= Eigen::AngleAxisd(value * M_PI / 180.0, Eigen::Vector3d::UnitZ());
+					has_a_rotation = true;
+					break;
 			}
 		}
 
-		return transform;
+		assert((joint->associated_channels_indices().size() != 3 || (has_a_rotation && !has_a_translation)) && "|channels| == 3 -> (rotation && not translation)"
+			&& (joint->associated_channels_indices().size() != 6 || (has_a_rotation && has_a_translation)) && "|channels| == 6 -> (rotation && translation)");
+
+		return tm_l2p_0 * tm_delta_l;
 	}
 
 	Eigen::Affine3d BvhObject::GetTransformation(std::shared_ptr<const Joint> joint, int frame) const
