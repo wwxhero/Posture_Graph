@@ -52,26 +52,161 @@ namespace bvh11
 		return joint_list;
 	}
 
+	void BvhObject::UpdateMotion(std::shared_ptr<const Joint> joint, const Eigen::Affine3d& tm_delta_l, int i_frame)
+	{
+		Eigen::Index order2rot_i[3] = { 0 };
+		int rot_i2order[3] = { 0 };
+		int order = 0;
+		auto & idx_jc = joint->associated_channels_indices();
+		for (auto it_i_c = idx_jc.begin()
+			; order < 3 && it_i_c != idx_jc.end()
+			; it_i_c ++)
+		{
+			int i_channel = *it_i_c;
+			const bvh11::Channel& channel = channels()[i_channel];
+			bool is_a_rotation = ( bvh11::Channel::Type::x_rotation == channel.type
+								|| bvh11::Channel::Type::y_rotation == channel.type
+								|| bvh11::Channel::Type::z_rotation == channel.type);
+			if (is_a_rotation)
+			{
+				Eigen::Index rot_i = -1;
+				switch (channel.type)
+				{
+					case bvh11::Channel::Type::x_rotation:
+						rot_i = 0;
+						break;
+					case bvh11::Channel::Type::y_rotation:
+						rot_i = 1;
+						break;
+					case bvh11::Channel::Type::z_rotation:
+						rot_i = 2;
+						break;
+				}
+
+				order2rot_i[order] = rot_i;
+				rot_i2order[rot_i] = order;
+				order ++;
+			}
+		}
+		assert(3 == order
+			&& order2rot_i[0] != order2rot_i[1]
+			&& order2rot_i[0] != order2rot_i[2]
+			&& order2rot_i[1] != order2rot_i[2]
+			&& "make sure the order2rot_i is correctly recording the order of rotation");
+		Eigen::Vector3d rots_euler = tm_delta_l.rotation().eulerAngles(order2rot_i[0], order2rot_i[1], order2rot_i[2]);
+		const auto& data_euler = rots_euler.data();
+		double value_rots[] = {
+								data_euler[rot_i2order[0]], // rotate about x
+								data_euler[rot_i2order[1]], // rotate about y
+								data_euler[rot_i2order[2]], // rotate about z
+							};
+
+		const double c_rad2deg = 180.0/M_PI;
+
+		const Eigen::Vector3d& value_tt = tm_delta_l.translation();
+		bool has_translation_channel = false;
+		for (int channel_index : joint->associated_channels_indices())
+		{
+			const bvh11::Channel& channel = channels()[channel_index];
+			double&          value = const_cast<double&>(motion()(i_frame, channel_index));
+
+			switch (channel.type)
+			{
+			case bvh11::Channel::Type::x_position:
+				value = value_tt.x();
+				has_translation_channel = true;
+				break;
+			case bvh11::Channel::Type::y_position:
+				value = value_tt.y();
+				has_translation_channel = true;
+				break;
+			case bvh11::Channel::Type::z_position:
+				value = value_tt.z();
+				has_translation_channel = true;
+				break;
+			case bvh11::Channel::Type::x_rotation:
+				value = value_rots[0] * c_rad2deg;
+				break;
+			case bvh11::Channel::Type::y_rotation:
+				value = value_rots[1] * c_rad2deg;
+				break;
+			case bvh11::Channel::Type::z_rotation:
+				value = value_rots[2] * c_rad2deg;
+				break;
+			}
+		}
+		double epsilon = 1e-3;
+		bool has_translation_in_delta_tm = (value_tt.norm() > epsilon);
+		assert((!has_translation_in_delta_tm || has_translation_channel)
+			&& "has_translation_in_delta_tm -> has_translation_channel");
+	}
+
 	bool BvhObject::ResetRestPose(int nframe)
 	{
 		if (-1 < nframe
 			  && nframe < frames())
 		{
+			const double c_epsilon = 1e-3;
 			typedef std::shared_ptr<const Joint> Joint_ptr;
 			auto joints = GetJointList();
-			for (auto joint : joints)
+			size_t n_joints = joints.size();
+			std::vector<Eigen::Vector3d> offset_b(n_joints);
+			std::vector<Eigen::Affine3d> bind_a2b(n_joints);
+			std::vector<Eigen::Affine3d> bind_b2a(n_joints);
+			std::vector<Eigen::Affine3d> bind_p2l_a(n_joints);
+
+			for (int i_joint = 0; i_joint < n_joints; i_joint ++)
 			{
+				Joint_ptr joint = joints[i_joint];
+				Eigen::Affine3d bind_l2w_i = GetTransformation(joint, nframe);
+				Eigen::Affine3d bind_p2w_i;
 				Joint_ptr joint_parent = joint->parent();
-				Eigen::Affine3d tm_parent_w;
-				if (joint_parent != nullptr)
-					tm_parent_w = GetTransformation(joint_parent, nframe);
+				if (nullptr == joint_parent)
+				{
+					bind_p2w_i.linear() = Eigen::Matrix3d::Identity();
+					bind_p2w_i.translation() = bind_l2w_i.translation();
+				}
 				else
-					tm_parent_w = Eigen::Affine3d::Identity();
-				Eigen::Affine3d tm_w = GetTransformation(joint, nframe);
-				Eigen::Vector3d tt_w = tm_w.translation();
-				Eigen::Vector3d tt_parent_w = tm_parent_w.translation();
-				const_cast<Eigen::Vector3d&>(joint->offset()) = tt_w - tt_parent_w;
+				{
+					bind_p2w_i = GetTransformation(joint_parent, nframe);
+				}
+
+				Eigen::Vector3d offset_i = bind_l2w_i.translation() - bind_p2w_i.translation();
+				Eigen::Affine3d bind_a2b_i(bind_l2w_i.linear());
+				Eigen::Affine3d bind_b2a_i(bind_a2b_i.inverse());
+				Eigen::Affine3d bind_p2l_i = bind_l2w_i.inverse() * bind_p2w_i;
+
+				offset_b[i_joint] = offset_i;
+				bind_a2b[i_joint] = bind_a2b_i;
+				bind_b2a[i_joint] = bind_b2a_i;
+				bind_p2l_a[i_joint] = bind_p2l_i;
 			}
+
+			std::vector<Eigen::Affine3d> delta_b_l;
+			delta_b_l.resize(joints.size());
+			for (int i_frame = 0; i_frame < frames_; i_frame++)
+			{
+				for (int i_joint = 0; i_joint < joints.size(); i_joint ++)
+				{
+					Joint_ptr joint = joints[i_joint];
+					Eigen::Affine3d delta_l2p_a_i = GetTransformationRelativeToParent(joint, i_frame);
+					Eigen::Affine3d delta_a_l_i = bind_p2l_a[i_joint]*delta_l2p_a_i;
+					Eigen::Affine3d delta_b_l_i = bind_a2b[i_joint] * delta_a_l_i * bind_b2a[i_joint];
+					delta_b_l[i_joint] = delta_b_l_i;
+				}
+
+				for (int i_joint = 0; i_joint < joints.size(); i_joint ++)
+				{
+					UpdateMotion(joints[i_joint], delta_b_l[i_joint], i_frame);
+				}
+			}
+
+			for (int i_joint = 0; i_joint < n_joints; i_joint ++)
+			{
+				Joint_ptr joint = joints[i_joint];
+				const_cast<Eigen::Vector3d&>(joint->offset()) = offset_b[i_joint];
+			}
+
 			return true;
 		}
 		else
