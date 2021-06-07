@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\unrealProjects\hIK\tester_unreal\Externals\bvh_posture_reset\vs_win\demos\visual_demo\visual_demo_autogen\mocs_compilation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\unrealProjects\hIK\tester_unreal\Externals\bvh_posture_reset\demos\visual_demo\Widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\unrealProjects\hIK\tester_unreal\Externals\bvh_posture_reset\demos\visual_demo\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\unrealProjects\hIK\tester_unreal\Externals\bvh_posture_reset\demos\visual_demo\Widget.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\unrealProjects\hIK\tester_unreal\Externals\bvh_posture_reset\demos\visual_demo\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B22F6171-FDE8-3B4A-9A36-F2EA1B971FDA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{C6DEFAAA-80CB-3B04-A0E3-171574A00477}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

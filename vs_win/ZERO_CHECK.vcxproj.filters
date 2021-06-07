@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\unrealProjects\hIK\tester_unreal\Externals\bvh_posture_reset\vs_win\CMakeFiles\96224c32c7a1f1dbde17800c48b2d86b\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{181B4B84-3BC5-316D-80F9-2EB60B9391D4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
