@@ -213,6 +213,8 @@ namespace bvh11
 			return false;
 	}
 
+
+
 	Eigen::Affine3d BvhObject::GetTransformationRelativeToParent(std::shared_ptr<const Joint> joint, int frame) const
 	{
 		assert(frame < frames() && "Invalid frame is specified.");

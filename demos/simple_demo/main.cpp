@@ -1,5 +1,13 @@
 #include <iostream>
 #include <bvh11.hpp>
+#include "articulated_body.h"
+bool ResetRestPose(bvh11::BvhObject& bvh, int i_frame)
+{
+	float theta = 0;
+	float theta_prime = ik_test(theta);
+	std::cout << "theta = " << theta << "; theta_prime = " << theta_prime << std::endl;
+	return false;
+}
 
 int main(int argc, char* argv[])
 {
@@ -30,7 +38,7 @@ int main(int argc, char* argv[])
 		{
 			const std::string bvh_file_path_dst = argv[3];
 			int n_frame = atoi(argv[2]);
-			if (bvh.ResetRestPose(n_frame - 1))
+			if (ResetRestPose(bvh, n_frame - 1))
 				bvh.WriteBvhFile(bvh_file_path_dst);
 			else
 			{
