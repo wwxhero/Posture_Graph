@@ -1,12 +1,122 @@
 #include <iostream>
 #include <bvh11.hpp>
 #include "articulated_body.h"
-bool ResetRestPose(bvh11::BvhObject& bvh, int i_frame)
+
+HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
 {
-	float theta = 0;
-	float theta_prime = ik_test(theta);
-	std::cout << "theta = " << theta << "; theta_prime = " << theta_prime << std::endl;
+	//traverse the bvh herachical structure
+	//	to create an articulated body with the given posture
+	return H_INVALID;
+}
+
+HBODY createArticulatedBodyAsRestPose(bvh11::BvhObject& bvh, int frame)
+{
+	//traverse the bvh herachical structure
+	//	to create an articulated body with the posture given by the frame No.
+	//	as rest posture in BVH convention (I, offset)
+	return H_INVALID;
+}
+
+void updateHeader(bvh11::BvhObject& bvh, HBODY body)
+{
+	//update the header part of the BVH file
+	//	, the given body is in BVH rest posture
+}
+
+typedef void* HMOTIONPIPE;
+
+HMOTIONPIPE createHomoSpaceMotionPipe(HBODY start, HBODY end)
+{
+	//the articulated bodies are in same coordinate space but in different postures
+	return H_INVALID;
+}
+
+HMOTIONPIPE createXSpaceMotionPipe(HBODY start, HBODY end)
+{
+	//the articulated bodies are in different coordiante space but in same (aligned) posture
+	return H_INVALID;
+}
+
+typedef void* HPIPELINE;
+
+HPIPELINE createPipeline()
+{
+	//a pipe line contains several motion pipes
+	return H_INVALID;
+}
+
+bool appendPipe(HPIPELINE line, HMOTIONPIPE pipe)
+{
+	//p == rear(line) -> end(p) == start(pipe)
 	return false;
+}
+
+void pose(HBODY body, const bvh11::BvhObject& bvh, int i_frame)
+{
+	//pose the articulated body with the posture for frame i_frame
+	//	the articulated body should have same rest posture as bvh
+}
+
+void executePipeLine(HPIPELINE line)
+{
+	// execute the pipe in sequence
+}
+
+void updateAnim(HBODY body, bvh11::BvhObject& bvh)
+{
+	// copy the joint (delta) transformation into BVH animation stack
+}
+
+void destroyPipeline(HPIPELINE line)
+{
+
+}
+
+void destroyArticulatedBody(HBODY body)
+{
+
+}
+
+void destroyMotionPipe(HMOTIONPIPE pipe)
+{
+
+}
+
+
+bool ResetRestPose(bvh11::BvhObject& bvh, int t)
+{
+	int n_frames = bvh.frames();
+	bool in_range = (-1 < t
+						&& t < n_frames);
+	if (!in_range)
+		return false;
+
+	HBODY h_driver = createArticulatedBody(bvh, -1); //t = -1: the rest posture in BVH file
+	HBODY h_driveeProxy = createArticulatedBody(bvh, t);
+	HBODY h_drivee = createArticulatedBodyAsRestPose(bvh, t);
+	updateHeader(bvh, h_drivee);
+	HMOTIONPIPE h_pipe_0 = createHomoSpaceMotionPipe(h_driver, h_driveeProxy);
+	HMOTIONPIPE h_pipe_1 = createXSpaceMotionPipe(h_driveeProxy, h_drivee);
+	HPIPELINE h_pipe_line = createPipeline();
+	appendPipe(h_pipe_line, h_pipe_0);
+	appendPipe(h_pipe_line, h_pipe_1);
+	for (int i_frame = 0
+		; i_frame < n_frames
+		; i_frame ++)
+	{
+		pose(h_driver, bvh, i_frame);
+		executePipeLine(h_pipe_line);
+		updateAnim(h_drivee, bvh);
+	}
+
+	destroyPipeline(h_pipe_line);
+	destroyMotionPipe(h_pipe_1);
+	destroyMotionPipe(h_pipe_0);
+	destroyArticulatedBody(h_driver);
+	destroyArticulatedBody(h_driveeProxy);
+	destroyArticulatedBody(h_drivee);
+
+	return true;
 }
 
 int main(int argc, char* argv[])
