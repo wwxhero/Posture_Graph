@@ -1,5 +1,6 @@
 #include <iostream>
 #include <bvh11.hpp>
+#include <stack>
 #include "articulated_body.h"
 #include "motion_pipeline.h"
 
@@ -47,6 +48,52 @@ void destroyArticulatedBody(HBODY body)
 
 }
 
+template<typename CHARTYPE>
+inline void printArtName(const CHARTYPE* name, int n_indent)
+{
+	std::basic_string<CHARTYPE> item;
+	for (int i_indent = 0
+		; i_indent < n_indent
+		; i_indent ++)
+		item += CHARTYPE("\t");
+	item += name;
+	std::cout << item.c_str() << std::endl;
+}
+
+template<typename LAMaccessEnter, typename LAMaccessLeave>
+inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave OnLeaveBody)
+{
+	assert(H_INVALID != root);
+	typedef struct _EDGE
+	{
+		HBODY body_this;
+		HBODY body_child;
+	} EDGE;
+	std::stack<EDGE> stkDFS;
+	stkDFS.push({root, get_first_child(root)});
+	//printArtName(body_name_w(root), 0);
+	OnEnterBody(root);
+	while (!stkDFS.empty())
+	{
+		EDGE &edge = stkDFS.top();
+		int n_indent = stkDFS.size();
+		if (H_INVALID == edge.body_child)
+		{
+			stkDFS.pop();
+			OnLeaveBody(edge.body_this);
+		}
+		else
+		{
+			//printArtName(body_name_w(edge.body_child), n_indent);
+			OnEnterBody(edge.body_child);
+			HBODY body_grandchild = get_first_child(edge.body_child);
+			HBODY body_nextchild = get_next_sibling(edge.body_child);
+			stkDFS.push({edge.body_child, body_grandchild});
+			edge.body_child = body_nextchild;
+		}
+	}
+}
+
 
 bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 {
@@ -55,8 +102,24 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 						&& t < n_frames);
 	if (!in_range)
 		return false;
-
+#if defined _DEBUG
+	std::cout << "BVH joints:" << std::endl;
+	bvh.PrintJointHierarchy();
+#endif
 	HBODY h_driver = createArticulatedBody(bvh, -1); //t = -1: the rest posture in BVH file
+#if defined _DEBUG
+	std::cout << "Articulated bodies:" << std::endl;
+	int n_indent = 1;
+	auto lam_onEnter = [&n_indent] (HBODY h_this)
+						{
+							printArtName(body_name_w(h_this), n_indent++);
+						};
+	auto lam_onLeave = [&n_indent] (HBODY h_this)
+						{
+							n_indent --;
+						};
+	TraverseDFS(h_driver, lam_onEnter, lam_onLeave);
+#endif
 	HBODY h_driveeProxy = createArticulatedBody(bvh, t);
 	HBODY h_drivee = createArticulatedBodyAsRestPose(bvh, t);
 	updateHeader(bvh, h_drivee);
