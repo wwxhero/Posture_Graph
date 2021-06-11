@@ -39,13 +39,13 @@ HMOTIONPIPE createXSpaceMotionPipe(HBODY start, HBODY end)
 
 typedef void* HPIPELINE;
 
-HPIPELINE createPipeline()
+HPIPELINE createPipeline(HMOTIONPIPE pipe)
 {
 	//a pipe line contains several motion pipes
 	return H_INVALID;
 }
 
-bool appendPipe(HPIPELINE line, HMOTIONPIPE pipe)
+bool appendPipe(HPIPELINE line, HMOTIONPIPE pipe, HMOTIONPIPE pipe_suc)
 {
 	//p == rear(line) -> end(p) == start(pipe)
 	return false;
@@ -97,9 +97,8 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 	updateHeader(bvh, h_drivee);
 	HMOTIONPIPE h_pipe_0 = createHomoSpaceMotionPipe(h_driver, h_driveeProxy);
 	HMOTIONPIPE h_pipe_1 = createXSpaceMotionPipe(h_driveeProxy, h_drivee);
-	HPIPELINE h_pipe_line = createPipeline();
-	appendPipe(h_pipe_line, h_pipe_0);
-	appendPipe(h_pipe_line, h_pipe_1);
+	HPIPELINE h_pipe_line = createPipeline(h_pipe_0);
+	appendPipe(h_pipe_line, h_pipe_0, h_pipe_1);
 	for (int i_frame = 0
 		; i_frame < n_frames
 		; i_frame ++)
