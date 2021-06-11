@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bvh11.hpp>
 #include "articulated_body.h"
+#include "motion_pipeline.h"
 
 HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
 {
@@ -23,33 +24,8 @@ void updateHeader(bvh11::BvhObject& bvh, HBODY body)
 	//	, the given body is in BVH rest posture
 }
 
-typedef void* HMOTIONPIPE;
 
-HMOTIONPIPE createHomoSpaceMotionPipe(HBODY start, HBODY end)
-{
-	//the articulated bodies are in same coordinate space but in different postures
-	return H_INVALID;
-}
 
-HMOTIONPIPE createXSpaceMotionPipe(HBODY start, HBODY end)
-{
-	//the articulated bodies are in different coordiante space but in same (aligned) posture
-	return H_INVALID;
-}
-
-typedef void* HPIPELINE;
-
-HPIPELINE createPipeline(HMOTIONPIPE pipe)
-{
-	//a pipe line contains several motion pipes
-	return H_INVALID;
-}
-
-bool appendPipe(HPIPELINE line, HMOTIONPIPE pipe, HMOTIONPIPE pipe_suc)
-{
-	//p == rear(line) -> end(p) == start(pipe)
-	return false;
-}
 
 void pose(HBODY body, const bvh11::BvhObject& bvh, int i_frame)
 {
@@ -57,27 +33,16 @@ void pose(HBODY body, const bvh11::BvhObject& bvh, int i_frame)
 	//	the articulated body should have same rest posture as bvh
 }
 
-void executePipeLine(HPIPELINE line)
-{
-	// execute the pipe in sequence
-}
+
 
 void updateAnim(HBODY body, bvh11::BvhObject& bvh)
 {
 	// copy the joint (delta) transformation into BVH animation stack
 }
 
-void destroyPipeline(HPIPELINE line)
-{
 
-}
 
 void destroyArticulatedBody(HBODY body)
-{
-
-}
-
-void destroyMotionPipe(HMOTIONPIPE pipe)
 {
 
 }
