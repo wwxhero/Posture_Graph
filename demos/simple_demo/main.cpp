@@ -124,6 +124,32 @@ inline void printBoundName(Bound bnd, int n_indent)
 	std::cout << itemBody.c_str() << std::endl;
 }
 
+inline bool BoundEQ(Bound bnd, const bvh11::BvhObject& bvh, int frame)
+{
+	const double epsilon = 1e-5;
+	auto& joint_bvh = bnd.first;
+	auto& body_hik = bnd.second;
+	auto& name_bvh = joint_bvh->name();
+	auto name_body = body_name_c(body_hik);
+	bool name_eq = (name_bvh == name_body);
+	Eigen::Affine3d tm_bvh = bvh.GetTransformation(joint_bvh, frame);
+	Eigen::Matrix3d linear_tm_bvh = tm_bvh.linear();
+	Eigen::Vector3d tt_tm_bvh = tm_bvh.translation();
+
+	_TRANSFORM tm_hik;
+	get_joint_transform_l2w(body_hik, &tm_hik);
+	Eigen::Vector3r s(tm_hik.s.x, tm_hik.s.y, tm_hik.s.z);
+	Eigen::Matrix3r r(Eigen::Quaternionr(tm_hik.r.w, tm_hik.r.x, tm_hik.r.y, tm_hik.r.z));
+	Eigen::Matrix3r linear_tm_hik = r * s.asDiagonal();
+	Eigen::Vector3r tt_tm_hik(tm_hik.tt.x, tm_hik.tt.y, tm_hik.tt.z);
+
+	Eigen::Matrix3d diff = linear_tm_bvh.inverse() * linear_tm_bvh;
+	bool linear_eq = ((diff - Eigen::Matrix3d::Identity()).norm() < epsilon);
+	bool tt_eq = ((tt_tm_bvh - tt_tm_hik).norm() < epsilon);
+
+	return name_eq && linear_eq && tt_eq;
+}
+
 template<typename LAMaccessEnter, typename LAMaccessLeave>
 inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave OnLeaveBody)
 {
@@ -191,26 +217,42 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 						&& t < n_frames);
 	if (!in_range)
 		return false;
-#if defined _DEBUG
-	std::cout << "BVH joints:" << std::endl;
-	bvh.PrintJointHierarchy();
-#endif
 	HBODY h_driver = createArticulatedBody(bvh, -1); //t = -1: the rest posture in BVH file
 #if defined _DEBUG
-	std::cout << "Bounds:" << std::endl;
-	int n_indent = 1;
-	auto lam_onEnter = [&n_indent] (Bound b_this)
-						{
-							printBoundName(b_this, n_indent++);
-						};
-	auto lam_onLeave = [&n_indent] (Bound b_this)
-						{
-							n_indent --;
-						};
-	Bound root = std::make_pair(bvh.root_joint(), h_driver);
-	TraverseDFS(root, lam_onEnter, lam_onLeave);
+	{
+		std::cout << "Bounds:" << std::endl;
+		int n_indent = 1;
+		auto lam_onEnter = [&n_indent, &bvh = std::as_const(bvh)] (Bound b_this)
+							{
+								printBoundName(b_this, n_indent++);
+								assert(BoundEQ(b_this, bvh, -1));
+							};
+		auto lam_onLeave = [&n_indent] (Bound b_this)
+							{
+								n_indent --;
+							};
+		Bound root = std::make_pair(bvh.root_joint(), h_driver);
+		TraverseDFS(root, lam_onEnter, lam_onLeave);
+	}
 #endif
 	HBODY h_driveeProxy = createArticulatedBody(bvh, t);
+#if defined _DEBUG
+	{
+		std::cout << "Bounds:" << std::endl;
+		int n_indent = 1;
+		auto lam_onEnter = [&n_indent, &bvh = std::as_const(bvh), t] (Bound b_this)
+							{
+								printBoundName(b_this, n_indent++);
+								assert(BoundEQ(b_this, bvh, t));
+							};
+		auto lam_onLeave = [&n_indent] (Bound b_this)
+							{
+								n_indent --;
+							};
+		Bound root = std::make_pair(bvh.root_joint(), h_driveeProxy);
+		TraverseDFS(root, lam_onEnter, lam_onLeave);
+	}
+#endif
 	HBODY h_drivee = createArticulatedBodyAsRestPose(bvh, t);
 	updateHeader(bvh, h_drivee);
 	HMOTIONPIPE h_pipe_0 = createHomoSpaceMotionPipe(h_driver, h_driveeProxy);
