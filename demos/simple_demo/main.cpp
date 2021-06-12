@@ -95,15 +95,6 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame, bool asRestBvhPose
 
 
 
-void updateHeader(bvh11::BvhObject& bvh, HBODY body)
-{
-	//update the header part of the BVH file
-	//	, the given body is in BVH rest posture
-}
-
-
-
-
 void pose(HBODY body, const bvh11::BvhObject& bvh, int i_frame)
 {
 	//pose the articulated body with the posture for frame i_frame
@@ -278,6 +269,24 @@ inline void TraverseDFS(Bound bound_this, LAMaccessEnter OnEnterBound, LAMaccess
 	OnLeaveBound(bound_this);
 }
 
+void updateHeader(bvh11::BvhObject& bvh, HBODY body)
+{
+	//update the header part of the BVH file
+	//	, the given body is in BVH rest posture
+	auto lam_onEnter = [&bvh = std::as_const(bvh)] (Bound b_this)
+							{
+								Joint_bvh_ptr joint_this = b_this.first;
+								HBODY body_this = b_this.second;
+								_TRANSFORM tm_l2p;
+								get_joint_transform_l2p(body_this, &tm_l2p);
+								const_cast<Eigen::Vector3d&>(joint_this->offset()) = Eigen::Vector3r(tm_l2p.tt.x, tm_l2p.tt.y, tm_l2p.tt.z);
+							};
+	auto lam_onLeave = [] (Bound b_this)
+							{
+							};
+	Bound root = std::make_pair(bvh.root_joint(), body);
+	TraverseDFS(root, lam_onEnter, lam_onLeave);
+}
 
 bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 {
