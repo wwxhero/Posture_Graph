@@ -211,7 +211,7 @@ inline bool BoundResetAsBVHRest(Bound bnd, const bvh11::BvhObject& bvh, int fram
 }
 
 template<typename LAMaccessEnter, typename LAMaccessLeave>
-inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave OnLeaveBody)
+inline void TraverseDFS_botree_nonrecur(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave OnLeaveBody)
 {
 	assert(H_INVALID != root);
 	typedef struct _EDGE
@@ -245,23 +245,58 @@ inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave O
 }
 
 template<typename LAMaccessEnter, typename LAMaccessLeave>
-inline void TraverseDFS(Bound bound_this, LAMaccessEnter OnEnterBound, LAMaccessLeave OnLeaveBound)
+inline void TraverseDFS_motree_nonrecur(HMOTIONNODE root, LAMaccessEnter OnEnterBody, LAMaccessLeave OnLeaveBody)
+{
+	assert(H_INVALID != root);
+	typedef struct _EDGE
+	{
+		HMOTIONNODE body_this;
+		HMOTIONNODE body_child;
+	} EDGE;
+	std::stack<EDGE> stkDFS;
+	stkDFS.push({root, get_first_child_mo_node(root)});
+	//printArtName(body_name_w(root), 0);
+	OnEnterBody(root);
+	while (!stkDFS.empty())
+	{
+		EDGE &edge = stkDFS.top();
+		size_t n_indent = stkDFS.size();
+		if (H_INVALID == edge.body_child)
+		{
+			stkDFS.pop();
+			OnLeaveBody(edge.body_this);
+		}
+		else
+		{
+			//printArtName(body_name_w(edge.body_child), n_indent);
+			OnEnterBody(edge.body_child);
+			HMOTIONNODE body_grandchild = get_first_child_mo_node(edge.body_child);
+			HMOTIONNODE body_nextchild = get_next_sibling_mo_node(edge.body_child);
+			stkDFS.push({edge.body_child, body_grandchild});
+			edge.body_child = body_nextchild;
+		}
+	}
+}
+
+
+template<typename LAMaccessEnter, typename LAMaccessLeave>
+inline void TraverseDFS_boundtree_recur(Bound bound_this, LAMaccessEnter OnEnterBound, LAMaccessLeave OnLeaveBound)
 {
 	OnEnterBound(bound_this);
 	auto bvh_this = bound_this.first;
 	auto body_this = bound_this.second;
 	const auto& children_bvh_this = bvh_this->children();
 	auto it_bvh_next = children_bvh_this.begin();
-	auto body_next = get_first_child(body_this);
+	auto body_next = get_first_child_body(body_this);
 	bool proceed = (it_bvh_next != children_bvh_this.end());
 	assert((proceed)
 		== (H_INVALID != body_next));
 	while (proceed)
 	{
 		Bound bound_next = std::make_pair(*it_bvh_next, body_next);
-		TraverseDFS(bound_next, OnEnterBound, OnLeaveBound);
+		TraverseDFS_boundtree_recur(bound_next, OnEnterBound, OnLeaveBound);
 		it_bvh_next++;
-		body_next = get_next_sibling(body_next);
+		body_next = get_next_sibling_body(body_next);
 		proceed = (it_bvh_next != children_bvh_this.end());
 		assert((proceed)
 			== (H_INVALID != body_next));
@@ -285,7 +320,7 @@ void updateHeader(bvh11::BvhObject& bvh, HBODY body)
 							{
 							};
 	Bound root = std::make_pair(bvh.root_joint(), body);
-	TraverseDFS(root, lam_onEnter, lam_onLeave);
+	TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 }
 
 bool ResetRestPose(bvh11::BvhObject& bvh, int t)
@@ -310,7 +345,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 								n_indent --;
 							};
 		Bound root = std::make_pair(bvh.root_joint(), h_driver);
-		TraverseDFS(root, lam_onEnter, lam_onLeave);
+		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
 #endif
 	HBODY h_driveeProxy = createArticulatedBody(bvh, t, false);
@@ -328,7 +363,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 								n_indent --;
 							};
 		Bound root = std::make_pair(bvh.root_joint(), h_driveeProxy);
-		TraverseDFS(root, lam_onEnter, lam_onLeave);
+		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
 #endif
 	HBODY h_drivee = createArticulatedBody(bvh, t, true);
@@ -346,30 +381,36 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 								n_indent --;
 							};
 		Bound root = std::make_pair(bvh.root_joint(), h_drivee);
-		TraverseDFS(root, lam_onEnter, lam_onLeave);
+		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
 #endif
 	updateHeader(bvh, h_drivee);
-	HMOTIONPIPE h_pipe_0 = createHomoSpaceMotionPipe(h_driver, h_driveeProxy);
-	HMOTIONPIPE h_pipe_1 = createXSpaceMotionPipe(h_driveeProxy, h_drivee);
-	HPIPELINE h_pipe_line = createPipeline(h_pipe_0);
-	appendPipe(h_pipe_line, h_pipe_0, h_pipe_1);
+
+	HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
+	HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
+	motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy);
+
+	HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
+	motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, NULL, 0);
+
+
 	for (int i_frame = 0
 		; i_frame < n_frames
 		; i_frame ++)
 	{
 		pose(h_driver, bvh, i_frame);
-		executePipeLine(h_pipe_line);
+		motion_sync(h_motion_driver);
 		updateAnim(h_drivee, bvh);
 	}
 
-	destroyPipeline(h_pipe_line);
-	destroyMotionPipe(h_pipe_1);
-	destroyMotionPipe(h_pipe_0);
-	destroyArticulatedBody(h_driver);
-	destroyArticulatedBody(h_driveeProxy);
-	destroyArticulatedBody(h_drivee);
-
+	auto lam_onEnter = [] (HMOTIONNODE node)
+							{
+							};
+	auto lam_onLeave = [] (HMOTIONNODE node)
+							{
+								destroy_tree_motion_node(node);
+							};
+	TraverseDFS_motree_nonrecur(h_motion_driver, lam_onEnter, lam_onLeave);
 	return true;
 }
 
