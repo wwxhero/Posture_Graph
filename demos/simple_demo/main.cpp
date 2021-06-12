@@ -23,14 +23,44 @@ HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 	return b_hik;
 }
 
-HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
+
+HBODY create_arti_body_as_rest_bvh_pose(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
+{
+	auto name = j_bvh->name().c_str();
+	auto tm_bvh = bvh.GetTransformation(j_bvh, frame);
+	Eigen::Affine3d tm_parent_bvh;
+	auto j_parent_bvh = j_bvh->parent();
+	if (nullptr == j_parent_bvh)
+	{
+		tm_parent_bvh.linear() = Eigen::Matrix3d::Identity();
+		tm_parent_bvh.translation() = tm_bvh.translation();
+	}
+	else
+	{
+		tm_parent_bvh = bvh.GetTransformation(j_parent_bvh, frame);
+	}
+
+	Eigen::Vector3d tt = tm_bvh.translation() - tm_parent_bvh.translation();
+	_TRANSFORM tm_hik = {
+		{1, 1, 1},
+		{1, 0, 0, 0},
+		{tt.x(), tt.y(), tt.z()}
+	};
+	auto b_hik = create_arti_body_c(name, &tm_hik);
+	return b_hik;
+}
+
+
+HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame, bool asRestBvhPose)
 {
 	//traverse the bvh herachical structure
 	//	to create an articulated body with the given posture
 	bool reset_posture = (frame < 0);
 	std::queue<Bound> queBFS;
 	auto root_j_bvh = bvh.root_joint();
-	auto root_b_hik = create_arti_body(bvh, root_j_bvh, frame);
+	auto root_b_hik = asRestBvhPose
+						? create_arti_body_as_rest_bvh_pose(bvh, root_j_bvh, frame)
+						: create_arti_body(bvh, root_j_bvh, frame);
 	Bound root = std::make_pair(
 			root_j_bvh,
 			root_b_hik
@@ -45,7 +75,9 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
 		auto& rb_this = b_hik;
 		for (auto j_bvh_child: j_bvh->children())
 		{
-			auto b_hik_child = create_arti_body(bvh, j_bvh_child, frame);
+			auto b_hik_child = asRestBvhPose
+								? create_arti_body_as_rest_bvh_pose(bvh, j_bvh_child, frame)
+								: create_arti_body(bvh, j_bvh_child, frame);
 			Bound child = std::make_pair(
 					j_bvh_child,
 					b_hik_child
@@ -61,13 +93,7 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
 	return root_b_hik;
 }
 
-HBODY createArticulatedBodyAsRestPose(bvh11::BvhObject& bvh, int frame)
-{
-	//traverse the bvh herachical structure
-	//	to create an articulated body with the posture given by the frame No.
-	//	as rest posture in BVH convention (I, offset)
-	return H_INVALID;
-}
+
 
 void updateHeader(bvh11::BvhObject& bvh, HBODY body)
 {
@@ -143,11 +169,54 @@ inline bool BoundEQ(Bound bnd, const bvh11::BvhObject& bvh, int frame)
 	Eigen::Matrix3r linear_tm_hik = r * s.asDiagonal();
 	Eigen::Vector3r tt_tm_hik(tm_hik.tt.x, tm_hik.tt.y, tm_hik.tt.z);
 
-	Eigen::Matrix3d diff = linear_tm_bvh.inverse() * linear_tm_bvh;
-	bool linear_eq = ((diff - Eigen::Matrix3d::Identity()).norm() < epsilon);
-	bool tt_eq = ((tt_tm_bvh - tt_tm_hik).norm() < epsilon);
+	Eigen::Matrix3d diff_linear = linear_tm_bvh.inverse() * linear_tm_bvh;
+	double abs_diff_linear = (diff_linear - Eigen::Matrix3d::Identity()).norm();
+	bool linear_eq = (-epsilon < abs_diff_linear
+						&& abs_diff_linear < epsilon);
+	double diff_tt = (tt_tm_bvh - tt_tm_hik).norm();
+	bool tt_eq = (-epsilon < diff_tt
+						&& diff_tt < epsilon);
 
 	return name_eq && linear_eq && tt_eq;
+}
+
+inline bool BoundResetAsBVHRest(Bound bnd, const bvh11::BvhObject& bvh, int frame)
+{
+	const double epsilon = 1e-5;
+	auto& joint_bvh = bnd.first;
+	auto& body_hik = bnd.second;
+	auto& name_bvh = joint_bvh->name();
+	auto name_body = body_name_c(body_hik);
+	bool name_eq = (name_bvh == name_body);
+	Eigen::Affine3d tm_bvh = bvh.GetTransformation(joint_bvh, frame);
+	auto& joint_parent_bvh = joint_bvh->parent();
+	Eigen::Affine3d tm_parent_bvh;
+	if (nullptr == joint_parent_bvh)
+	{
+		tm_parent_bvh.linear() = Eigen::Matrix3d::Identity();
+		tm_parent_bvh.translation() = tm_bvh.translation();
+	}
+	else
+		tm_parent_bvh = bvh.GetTransformation(joint_parent_bvh, frame);
+	Eigen::Vector3d tt_tm_bvh_l = tm_bvh.translation() - tm_parent_bvh.translation();
+
+
+	_TRANSFORM tm_hik_l;
+	get_joint_transform_l2p(body_hik, &tm_hik_l);
+	Eigen::Vector3r s(tm_hik_l.s.x, tm_hik_l.s.y, tm_hik_l.s.z);
+	Eigen::Vector3r tt_tm_hik_l(tm_hik_l.tt.x, tm_hik_l.tt.y, tm_hik_l.tt.z);
+
+	Real diff_s = (s - Eigen::Vector3r::Ones()).norm();
+	Real diff_r = Eigen::Vector4r(tm_hik_l.r.w - 1, tm_hik_l.r.x, tm_hik_l.r.y, tm_hik_l.r.z).norm();
+	Real diff_tt = (tt_tm_bvh_l - tt_tm_hik_l).norm();
+	bool linear_id = (-epsilon < diff_s
+							&&	diff_s < epsilon
+					&&-epsilon < diff_r
+							&&  diff_r < epsilon);
+	bool tt_eq = (-epsilon < diff_tt
+					&& diff_tt < epsilon);
+
+	return name_eq && linear_id && tt_eq;
 }
 
 template<typename LAMaccessEnter, typename LAMaccessLeave>
@@ -217,7 +286,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 						&& t < n_frames);
 	if (!in_range)
 		return false;
-	HBODY h_driver = createArticulatedBody(bvh, -1); //t = -1: the rest posture in BVH file
+	HBODY h_driver = createArticulatedBody(bvh, -1, false); //t = -1: the rest posture in BVH file
 #if defined _DEBUG
 	{
 		std::cout << "Bounds:" << std::endl;
@@ -235,7 +304,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 		TraverseDFS(root, lam_onEnter, lam_onLeave);
 	}
 #endif
-	HBODY h_driveeProxy = createArticulatedBody(bvh, t);
+	HBODY h_driveeProxy = createArticulatedBody(bvh, t, false);
 #if defined _DEBUG
 	{
 		std::cout << "Bounds:" << std::endl;
@@ -253,7 +322,24 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 		TraverseDFS(root, lam_onEnter, lam_onLeave);
 	}
 #endif
-	HBODY h_drivee = createArticulatedBodyAsRestPose(bvh, t);
+	HBODY h_drivee = createArticulatedBody(bvh, t, true);
+#if defined _DEBUG
+	{
+		std::cout << "Bounds:" << std::endl;
+		int n_indent = 1;
+		auto lam_onEnter = [&n_indent, &bvh = std::as_const(bvh), t] (Bound b_this)
+							{
+								printBoundName(b_this, n_indent++);
+								assert(BoundResetAsBVHRest(b_this, bvh, t));
+							};
+		auto lam_onLeave = [&n_indent] (Bound b_this)
+							{
+								n_indent --;
+							};
+		Bound root = std::make_pair(bvh.root_joint(), h_drivee);
+		TraverseDFS(root, lam_onEnter, lam_onLeave);
+	}
+#endif
 	updateHeader(bvh, h_drivee);
 	HMOTIONPIPE h_pipe_0 = createHomoSpaceMotionPipe(h_driver, h_driveeProxy);
 	HMOTIONPIPE h_pipe_1 = createXSpaceMotionPipe(h_driveeProxy, h_drivee);
