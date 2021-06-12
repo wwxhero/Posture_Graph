@@ -126,7 +126,7 @@ inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave O
 	while (!stkDFS.empty())
 	{
 		EDGE &edge = stkDFS.top();
-		int n_indent = stkDFS.size();
+		size_t n_indent = stkDFS.size();
 		if (H_INVALID == edge.body_child)
 		{
 			stkDFS.pop();
