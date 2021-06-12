@@ -225,8 +225,10 @@ namespace bvh11
 		//		tm_l2p_0.linear() == Eigen::Matrix3d::Identity();
 		//		tm_l2p_0.translation() == joint->offset();
 		Eigen::Affine3d tm_delta_l = Eigen::Affine3d::Identity();
+		bool rest_posture = (frame < 0);
 		bool has_a_rotation = false;
 		bool has_a_translation = false;
+		if (!rest_posture)
 		for (int channel_index : joint->associated_channels_indices())
 		{
 			const bvh11::Channel& channel = channels()[channel_index];
@@ -261,8 +263,8 @@ namespace bvh11
 			}
 		}
 
-		assert((joint->associated_channels_indices().size() != 3 || (has_a_rotation && !has_a_translation)) && "|channels| == 3 -> (rotation && not translation)"
-			&& (joint->associated_channels_indices().size() != 6 || (has_a_rotation && has_a_translation)) && "|channels| == 6 -> (rotation && translation)");
+		assert((joint->associated_channels_indices().size() != 3 || rest_posture || (has_a_rotation && !has_a_translation)) && "|channels| == 3 -> (rotation && not translation)"
+			&& (joint->associated_channels_indices().size() != 6 || rest_posture || (has_a_rotation && has_a_translation)) && "|channels| == 6 -> (rotation && translation)");
 
 		return tm_l2p_0 * tm_delta_l;
 	}

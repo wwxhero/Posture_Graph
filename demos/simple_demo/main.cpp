@@ -1,14 +1,65 @@
 #include <iostream>
 #include <bvh11.hpp>
 #include <stack>
+#include <queue>
 #include "articulated_body.h"
 #include "motion_pipeline.h"
+
+typedef std::shared_ptr<const bvh11::Joint> Joint_bvh_ptr;
+
+HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
+{
+	auto name = j_bvh->name().c_str();
+	auto tm_bvh = bvh.GetTransformationRelativeToParent(j_bvh, frame);
+	Eigen::Quaterniond rq(tm_bvh.linear());
+	Eigen::Vector3d tt = tm_bvh.translation();
+	_TRANSFORM tm_hik = {
+		{1, 1, 1},
+		{rq.w(), rq.x(), rq.y(), rq.z()},
+		{tt.x(), tt.y(), tt.z()}
+	};
+	auto b_hik = create_arti_body_c(name, &tm_hik);
+	return b_hik;
+}
 
 HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
 {
 	//traverse the bvh herachical structure
 	//	to create an articulated body with the given posture
-	return H_INVALID;
+	typedef std::pair<Joint_bvh_ptr, HBODY> Bound;
+
+	bool reset_posture = (frame < 0);
+	std::queue<Bound> queBFS;
+	auto root_j_bvh = bvh.root_joint();
+	auto root_b_hik = create_arti_body(bvh, root_j_bvh, frame);
+	Bound root = std::make_pair(
+			root_j_bvh,
+			root_b_hik
+		);
+	queBFS.push(root);
+	while (!queBFS.empty())
+	{
+		auto pair = queBFS.front();
+		auto j_bvh = pair.first;
+		auto b_hik = pair.second;
+		CNN cnn = FIRSTCHD;
+		auto& rb_this = b_hik;
+		for (auto j_bvh_child: j_bvh->children())
+		{
+			auto b_hik_child = create_arti_body(bvh, j_bvh_child, frame);
+			Bound child = std::make_pair(
+					j_bvh_child,
+					b_hik_child
+				);
+			queBFS.push(child);
+			auto& rb_next = b_hik_child;
+			cnn_arti_body(rb_this, rb_next, cnn);
+			cnn = NEXTSIB;
+			rb_this = rb_next;
+		}
+		queBFS.pop();
+	}
+	return root_b_hik;
 }
 
 HBODY createArticulatedBodyAsRestPose(bvh11::BvhObject& bvh, int frame)
@@ -48,14 +99,13 @@ void destroyArticulatedBody(HBODY body)
 
 }
 
-template<typename CHARTYPE>
-inline void printArtName(const CHARTYPE* name, int n_indent)
+inline void printArtName(const char* name, int n_indent)
 {
-	std::basic_string<CHARTYPE> item;
+	std::string item;
 	for (int i_indent = 0
 		; i_indent < n_indent
 		; i_indent ++)
-		item += CHARTYPE("\t");
+		item += "\t";
 	item += name;
 	std::cout << item.c_str() << std::endl;
 }
@@ -112,7 +162,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 	int n_indent = 1;
 	auto lam_onEnter = [&n_indent] (HBODY h_this)
 						{
-							printArtName(body_name_w(h_this), n_indent++);
+							printArtName(body_name_c(h_this), n_indent++);
 						};
 	auto lam_onLeave = [&n_indent] (HBODY h_this)
 						{
@@ -153,8 +203,8 @@ int main(int argc, char* argv[])
 	if (!for_show_file_info
 	 && !for_reset_restpose)
 	{
-		std::cerr << "Usage:\tsimpe_demo [BVH_PATH]\t\t//to show the file information" << std::endl;
-		std::cerr <<       "\tsimpe_demo [BVH_PATH_SRC] [FRAME_NO] [BVH_PATH_DEST]\t//to reset rest posture with the given frame posture" << std::endl;
+		std::cerr << "Usage:\tsimpe_demo <BVH_PATH>\t\t//to show the file information" << std::endl;
+		std::cerr <<       "\tsimpe_demo <BVH_PATH_SRC> <FRAME_NO> <BVH_PATH_DEST>\t//to reset rest posture with the given frame posture" << std::endl;
 
 	}
 	else
