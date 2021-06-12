@@ -6,6 +6,7 @@
 #include "motion_pipeline.h"
 
 typedef std::shared_ptr<const bvh11::Joint> Joint_bvh_ptr;
+typedef std::pair<Joint_bvh_ptr, HBODY> Bound;
 
 HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 {
@@ -26,8 +27,6 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame)
 {
 	//traverse the bvh herachical structure
 	//	to create an articulated body with the given posture
-	typedef std::pair<Joint_bvh_ptr, HBODY> Bound;
-
 	bool reset_posture = (frame < 0);
 	std::queue<Bound> queBFS;
 	auto root_j_bvh = bvh.root_joint();
@@ -110,6 +109,21 @@ inline void printArtName(const char* name, int n_indent)
 	std::cout << item.c_str() << std::endl;
 }
 
+inline void printBoundName(Bound bnd, int n_indent)
+{
+	std::string item;
+	for (int i_indent = 0
+		; i_indent < n_indent
+		; i_indent ++)
+		item += "\t";
+	std::string itemBvh(item);
+	itemBvh += bnd.first->name();
+	std::string itemBody(item);
+	itemBody += body_name_c(bnd.second);
+	std::cout << itemBvh.c_str() << std::endl;
+	std::cout << itemBody.c_str() << std::endl;
+}
+
 template<typename LAMaccessEnter, typename LAMaccessLeave>
 inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave OnLeaveBody)
 {
@@ -144,6 +158,31 @@ inline void TraverseDFS(HBODY root, LAMaccessEnter OnEnterBody, LAMaccessLeave O
 	}
 }
 
+template<typename LAMaccessEnter, typename LAMaccessLeave>
+inline void TraverseDFS(Bound bound_this, LAMaccessEnter OnEnterBound, LAMaccessLeave OnLeaveBound)
+{
+	OnEnterBound(bound_this);
+	auto bvh_this = bound_this.first;
+	auto body_this = bound_this.second;
+	const auto& children_bvh_this = bvh_this->children();
+	auto it_bvh_next = children_bvh_this.begin();
+	auto body_next = get_first_child(body_this);
+	bool proceed = (it_bvh_next != children_bvh_this.end());
+	assert((proceed)
+		== (H_INVALID != body_next));
+	while (proceed)
+	{
+		Bound bound_next = std::make_pair(*it_bvh_next, body_next);
+		TraverseDFS(bound_next, OnEnterBound, OnLeaveBound);
+		it_bvh_next++;
+		body_next = get_next_sibling(body_next);
+		proceed = (it_bvh_next != children_bvh_this.end());
+		assert((proceed)
+			== (H_INVALID != body_next));
+	}
+	OnLeaveBound(bound_this);
+}
+
 
 bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 {
@@ -158,17 +197,18 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 #endif
 	HBODY h_driver = createArticulatedBody(bvh, -1); //t = -1: the rest posture in BVH file
 #if defined _DEBUG
-	std::cout << "Articulated bodies:" << std::endl;
+	std::cout << "Bounds:" << std::endl;
 	int n_indent = 1;
-	auto lam_onEnter = [&n_indent] (HBODY h_this)
+	auto lam_onEnter = [&n_indent] (Bound b_this)
 						{
-							printArtName(body_name_c(h_this), n_indent++);
+							printBoundName(b_this, n_indent++);
 						};
-	auto lam_onLeave = [&n_indent] (HBODY h_this)
+	auto lam_onLeave = [&n_indent] (Bound b_this)
 						{
 							n_indent --;
 						};
-	TraverseDFS(h_driver, lam_onEnter, lam_onLeave);
+	Bound root = std::make_pair(bvh.root_joint(), h_driver);
+	TraverseDFS(root, lam_onEnter, lam_onLeave);
 #endif
 	HBODY h_driveeProxy = createArticulatedBody(bvh, t);
 	HBODY h_drivee = createArticulatedBodyAsRestPose(bvh, t);
