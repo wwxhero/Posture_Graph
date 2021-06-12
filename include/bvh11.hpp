@@ -41,6 +41,8 @@ namespace bvh11
 		/// \param frame Frame. This value must be between 0 and frames() - 1.
 		Eigen::Affine3d GetTransformation(std::shared_ptr<const Joint> joint, int frame) const;
 
+		Eigen::Affine3d GetLocalDeltaTM(std::shared_ptr<const Joint> joint, int frame) const;
+
 		/// \param frame Frame. This value must be between 0 and frames() - 1.
 		Eigen::Affine3d GetRootTransformation(int frame) const
 		{

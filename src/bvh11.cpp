@@ -213,22 +213,11 @@ namespace bvh11
 			return false;
 	}
 
-
-
-	Eigen::Affine3d BvhObject::GetTransformationRelativeToParent(std::shared_ptr<const Joint> joint, int frame) const
+	Eigen::Affine3d BvhObject::GetLocalDeltaTM(std::shared_ptr<const Joint> joint, int frame) const
 	{
-		assert(frame < frames() && "Invalid frame is specified.");
-		assert(joint->associated_channels_indices().size() == 3 || joint->associated_channels_indices().size() == 6);
-
-		Eigen::Affine3d tm_l2p_0(Eigen::Translation3d(joint->offset()));
-		// having:
-		//		tm_l2p_0.linear() == Eigen::Matrix3d::Identity();
-		//		tm_l2p_0.translation() == joint->offset();
-		Eigen::Affine3d tm_delta_l = Eigen::Affine3d::Identity();
-		bool rest_posture = (frame < 0);
 		bool has_a_rotation = false;
 		bool has_a_translation = false;
-		if (!rest_posture)
+		Eigen::Affine3d tm_delta_l = Eigen::Affine3d::Identity();
 		for (int channel_index : joint->associated_channels_indices())
 		{
 			const bvh11::Channel& channel = channels()[channel_index];
@@ -263,10 +252,29 @@ namespace bvh11
 			}
 		}
 
-		assert((joint->associated_channels_indices().size() != 3 || rest_posture || (has_a_rotation && !has_a_translation)) && "|channels| == 3 -> (rotation && not translation)"
-			&& (joint->associated_channels_indices().size() != 6 || rest_posture || (has_a_rotation && has_a_translation)) && "|channels| == 6 -> (rotation && translation)");
+		assert((joint->associated_channels_indices().size() != 3 || (has_a_rotation && !has_a_translation)) && "|channels| == 3 -> (rotation && not translation)"
+			&& (joint->associated_channels_indices().size() != 6 || (has_a_rotation && has_a_translation)) && "|channels| == 6 -> (rotation && translation)");
 
-		return tm_l2p_0 * tm_delta_l;
+		return tm_delta_l;
+	}
+
+	Eigen::Affine3d BvhObject::GetTransformationRelativeToParent(std::shared_ptr<const Joint> joint, int frame) const
+	{
+		assert(frame < frames() && "Invalid frame is specified.");
+		assert(joint->associated_channels_indices().size() == 3 || joint->associated_channels_indices().size() == 6);
+
+		Eigen::Affine3d tm_l2p_0(Eigen::Translation3d(joint->offset()));
+		// having:
+		//		tm_l2p_0.linear() == Eigen::Matrix3d::Identity();
+		//		tm_l2p_0.translation() == joint->offset();
+		bool rest_posture = (frame < 0);
+		if (!rest_posture)
+		{
+			Eigen::Affine3d tm_delta_l = GetLocalDeltaTM(joint, frame);
+			return tm_l2p_0 * tm_delta_l;
+		}
+		else
+			return tm_l2p_0;
 	}
 
 	Eigen::Affine3d BvhObject::GetTransformation(std::shared_ptr<const Joint> joint, int frame) const
