@@ -329,7 +329,8 @@ namespace bvh11
 					const std::shared_ptr<Joint> parent = stack.empty() ? nullptr : stack.back();
 
 					// Instantiate a new joint
-					std::shared_ptr<Joint> new_joint = std::make_shared<Joint>(joint_name, parent);
+
+					std::shared_ptr<Joint> new_joint(new Joint(joint_name, parent));
 
 					// Register it to the parent's children list
 					if (parent) { parent->AddChild(new_joint); }

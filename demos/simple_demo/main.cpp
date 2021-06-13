@@ -5,6 +5,7 @@
 #include "articulated_body.h"
 #include "motion_pipeline.h"
 
+
 typedef std::shared_ptr<const bvh11::Joint> Joint_bvh_ptr;
 typedef std::pair<Joint_bvh_ptr, HBODY> Bound;
 
@@ -477,6 +478,9 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 
 int main(int argc, char* argv[])
 {
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
+
 	bool for_show_file_info = (2 == argc);
 	bool for_reset_restpose = (4 == argc);
 	if (!for_show_file_info

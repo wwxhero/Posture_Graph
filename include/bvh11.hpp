@@ -9,6 +9,14 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <stdlib.h>
+#include <crtdbg.h>
+#if defined _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
 namespace bvh11
 {
 	struct Channel;
@@ -21,6 +29,11 @@ namespace bvh11
 		BvhObject(const std::string& file_path, const double scale = 1.0)
 		{
 			ReadBvhFile(file_path, scale);
+		}
+
+		~BvhObject()
+		{
+
 		}
 
 		int    frames()     const { return frames_;     }
@@ -98,7 +111,19 @@ namespace bvh11
 	class Joint
 	{
 	public:
-		Joint(const std::string& name, std::shared_ptr<Joint> parent) : name_(name), parent_(parent) {}
+		Joint(const std::string& name, std::shared_ptr<Joint> parent) : name_(name), parent_(parent)
+		{
+#ifdef _DEBUG
+			std::cout << "Joint: " << name_.c_str() << std::endl;
+#endif
+		}
+		virtual ~Joint()
+		{
+#ifdef _DEBUG
+			std::cout << "~Joint: " << name_.c_str() << std::endl;
+#endif
+
+		}
 
 		const Eigen::Vector3d& offset() const { return offset_; }
 		Eigen::Vector3d& offset() { return offset_; }
@@ -114,14 +139,14 @@ namespace bvh11
 		const std::list<std::shared_ptr<Joint>>& children() const { return children_; }
 		const std::list<int>& associated_channels_indices() const { return associated_channels_indices_; }
 
-		std::shared_ptr<Joint> parent() const { return parent_; }
+		std::shared_ptr<Joint> parent() const { return parent_.lock(); }
 
 		void AddChild(std::shared_ptr<Joint> child) { children_.push_back(child); }
 		void AssociateChannel(int channel_index) { associated_channels_indices_.push_back(channel_index); }
 
 	private:
 		const std::string            name_;
-		const std::shared_ptr<Joint> parent_;
+		const std::weak_ptr<Joint> parent_;
 
 		bool                              has_end_site_ = false;
 		Eigen::Vector3d                   end_site_;
