@@ -95,11 +95,7 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame, bool asRestBvhPose
 
 
 
-void pose(HBODY body, const bvh11::BvhObject& bvh, int i_frame)
-{
-	//pose the articulated body with the posture for frame i_frame
-	//	the articulated body should have same rest posture as bvh
-}
+
 
 
 
@@ -141,20 +137,12 @@ inline void printBoundName(Bound bnd, int n_indent)
 	std::cout << itemBody.c_str() << std::endl;
 }
 
-inline bool BoundEQ(Bound bnd, const bvh11::BvhObject& bvh, int frame)
+inline bool TransformEq(const _TRANSFORM& tm_hik, const Eigen::Affine3d& tm_bvh)
 {
 	const double epsilon = 1e-5;
-	auto& joint_bvh = bnd.first;
-	auto& body_hik = bnd.second;
-	auto& name_bvh = joint_bvh->name();
-	auto name_body = body_name_c(body_hik);
-	bool name_eq = (name_bvh == name_body);
-	Eigen::Affine3d tm_bvh = bvh.GetTransformation(joint_bvh, frame);
 	Eigen::Matrix3d linear_tm_bvh = tm_bvh.linear();
 	Eigen::Vector3d tt_tm_bvh = tm_bvh.translation();
 
-	_TRANSFORM tm_hik;
-	get_joint_transform_l2w(body_hik, &tm_hik);
 	Eigen::Vector3r s(tm_hik.s.x, tm_hik.s.y, tm_hik.s.z);
 	Eigen::Matrix3r r(Eigen::Quaternionr(tm_hik.r.w, tm_hik.r.x, tm_hik.r.y, tm_hik.r.z));
 	Eigen::Matrix3r linear_tm_hik = r * s.asDiagonal();
@@ -167,8 +155,22 @@ inline bool BoundEQ(Bound bnd, const bvh11::BvhObject& bvh, int frame)
 	double diff_tt = (tt_tm_bvh - tt_tm_hik).norm();
 	bool tt_eq = (-epsilon < diff_tt
 						&& diff_tt < epsilon);
+	return linear_eq && tt_eq;
+}
 
-	return name_eq && linear_eq && tt_eq;
+inline bool BoundEQ(Bound bnd, const bvh11::BvhObject& bvh, int frame)
+{
+	auto& joint_bvh = bnd.first;
+	auto& body_hik = bnd.second;
+	auto& name_bvh = joint_bvh->name();
+	auto name_body = body_name_c(body_hik);
+	bool name_eq = (name_bvh == name_body);
+	Eigen::Affine3d tm_bvh = bvh.GetTransformation(joint_bvh, frame);
+
+	_TRANSFORM tm_hik;
+	get_body_transform_l2w(body_hik, &tm_hik);
+
+	return name_eq && TransformEq(tm_hik, tm_bvh);
 }
 
 inline bool BoundResetAsBVHRest(Bound bnd, const bvh11::BvhObject& bvh, int frame)
@@ -193,7 +195,7 @@ inline bool BoundResetAsBVHRest(Bound bnd, const bvh11::BvhObject& bvh, int fram
 
 
 	_TRANSFORM tm_hik_l;
-	get_joint_transform_l2p(body_hik, &tm_hik_l);
+	get_body_transform_l2p(body_hik, &tm_hik_l);
 	Eigen::Vector3r s(tm_hik_l.s.x, tm_hik_l.s.y, tm_hik_l.s.z);
 	Eigen::Vector3r tt_tm_hik_l(tm_hik_l.tt.x, tm_hik_l.tt.y, tm_hik_l.tt.z);
 
@@ -313,13 +315,57 @@ void updateHeader(bvh11::BvhObject& bvh, HBODY body)
 								Joint_bvh_ptr joint_this = b_this.first;
 								HBODY body_this = b_this.second;
 								_TRANSFORM tm_l2p;
-								get_joint_transform_l2p(body_this, &tm_l2p);
+								get_body_transform_l2p(body_this, &tm_l2p);
 								const_cast<Eigen::Vector3d&>(joint_this->offset()) = Eigen::Vector3r(tm_l2p.tt.x, tm_l2p.tt.y, tm_l2p.tt.z);
 							};
 	auto lam_onLeave = [] (Bound b_this)
 							{
 							};
 	Bound root = std::make_pair(bvh.root_joint(), body);
+	TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
+}
+
+void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
+{
+	//pose the articulated body with the posture for frame i_frame
+	//	the articulated body should have same rest posture as bvh
+	auto lam_onEnter = [&bvh = std::as_const(bvh), i_frame](Bound b_this)
+	{
+		Joint_bvh_ptr joint_bvh = b_this.first;
+		HBODY body_hik = b_this.second;
+		Eigen::Affine3d delta_l = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
+		Eigen::Quaternionr r(delta_l.linear());
+		Eigen::Vector3r tt(delta_l.translation());
+		_TRANSFORM delta_l_tm = {
+			{0, 0, 0}, //scale is trivial
+			{r.w(), r.x(), r.y(), r.z()}, //rotation
+			{tt.x(), tt.y(), tt.z()}, //trivial
+		};
+		set_joint_transform(body_hik, &delta_l_tm);
+	};
+	auto lam_onLeave = [&bvh = std::as_const(bvh), i_frame](Bound b_this)
+	{
+		Joint_bvh_ptr joint_bvh = b_this.first;
+		HBODY body_hik = b_this.second;
+
+		auto tm_l2w_bvh = bvh.GetTransformation(joint_bvh, i_frame);
+		_TRANSFORM tm_l2w_hik = {0};
+		get_body_transform_l2w(body_hik, &tm_l2w_hik);
+
+		auto tm_l2p_bvh = bvh.GetTransformationRelativeToParent(joint_bvh, i_frame);
+		_TRANSFORM tm_l2p_hik = {0};
+		get_body_transform_l2p(body_hik, &tm_l2p_hik);
+
+		auto tm_l_bvh = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
+		_TRANSFORM tm_l_hik = {0};
+		get_joint_transform(body_hik, &tm_l2w_hik);
+
+		assert(TransformEq(tm_l2w_hik, tm_l2w_bvh)
+			&& TransformEq(tm_l2p_hik, tm_l2p_bvh)
+			&& TransformEq(tm_l_hik, tm_l_bvh));
+
+	};
+	Bound root = std::make_pair(bvh.root_joint(), body_root);
 	TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 }
 
@@ -386,33 +432,33 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 #endif
 	updateHeader(bvh, h_drivee);
 
-	HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
-	HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
-	motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy);
+	// HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
+	// HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
+	// motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy);
 
-	HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
-	motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, NULL, 0);
+	// HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
+	// motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, NULL, 0);
 
 
-	for (int i_frame = 0
-		; i_frame < n_frames
-		; i_frame ++)
-	{
-		pose(h_driver, bvh, i_frame);
-		motion_sync(h_motion_driver);
-		updateAnim(h_drivee, bvh);
-	}
+	// for (int i_frame = 0
+	// 	; i_frame < n_frames
+	// 	; i_frame ++)
+	// {
+	// 	pose(h_driver, bvh, i_frame);
+	// 	motion_sync(h_motion_driver);
+	// 	updateAnim(h_drivee, bvh);
+	// }
 
-	{
-		auto lam_onEnter = [] (HMOTIONNODE node)
-								{
-								};
-		auto lam_onLeave = [] (HMOTIONNODE node)
-								{
-									destroy_tree_motion_node(node);
-								};
-		// TraverseDFS_motree_nonrecur(h_motion_driver, lam_onEnter, lam_onLeave);
-	}
+	// {
+	// 	auto lam_onEnter = [] (HMOTIONNODE node)
+	// 							{
+	// 							};
+	// 	auto lam_onLeave = [] (HMOTIONNODE node)
+	// 							{
+	// 								destroy_tree_motion_node(node);
+	// 							};
+	// 	// TraverseDFS_motree_nonrecur(h_motion_driver, lam_onEnter, lam_onLeave);
+	// }
 
 	{
 		auto lam_onEnter = [] (HBODY node)
@@ -423,6 +469,8 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 									destroy_tree_body_node(node);
 								};
 		TraverseDFS_botree_nonrecur(h_driver, lam_onEnter, lam_onLeave);
+		TraverseDFS_botree_nonrecur(h_driveeProxy, lam_onEnter, lam_onLeave);
+		TraverseDFS_botree_nonrecur(h_drivee, lam_onEnter, lam_onLeave);
 	}
 	return true;
 }
