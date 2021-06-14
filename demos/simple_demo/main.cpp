@@ -92,26 +92,15 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame, bool asRestBvhPose
 		}
 		queBFS.pop();
 	}
+	update_fk(root_b_hik);
 	return root_b_hik;
 }
-
-
-
-
-
-
 
 void updateAnim(HBODY body, bvh11::BvhObject& bvh)
 {
 	// copy the joint (delta) transformation into BVH animation stack
 }
 
-
-
-void destroyArticulatedBody(HBODY body)
-{
-
-}
 
 inline void printArtName(const char* name, int n_indent)
 {
@@ -367,31 +356,42 @@ inline bool verify_bound(Bound b_this, bool enter, const bvh11::BvhObject& bvh, 
 
 void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 {
-	//pose the articulated body with the posture for frame i_frame
-	//	the articulated body should have same rest posture as bvh
-
-
-	auto lam_onEnter = [&bvh = std::as_const(bvh), i_frame](Bound b_this)
 	{
-		Joint_bvh_ptr joint_bvh = b_this.first;
-		HBODY body_hik = b_this.second;
-		Eigen::Affine3d delta_l = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
-		Eigen::Quaternionr r(delta_l.linear());
-		Eigen::Vector3r tt(delta_l.translation());
-		_TRANSFORM delta_l_tm = {
-			{1, 1, 1}, //scale is trivial
-			{r.w(), r.x(), r.y(), r.z()}, //rotation
-			{tt.x(), tt.y(), tt.z()}, //trivial
+		auto lam_onEnter = [&bvh = std::as_const(bvh), i_frame](Bound b_this) -> void
+		{
+			Joint_bvh_ptr joint_bvh = b_this.first;
+			HBODY body_hik = b_this.second;
+			Eigen::Affine3d delta_l = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
+			Eigen::Quaternionr r(delta_l.linear());
+			Eigen::Vector3r tt(delta_l.translation());
+			_TRANSFORM delta_l_tm = {
+				{1, 1, 1}, //scale is trivial
+				{r.w(), r.x(), r.y(), r.z()}, //rotation
+				{tt.x(), tt.y(), tt.z()}, //trivial
+			};
+			set_joint_transform(body_hik, &delta_l_tm);
 		};
-		set_joint_transform(body_hik, &delta_l_tm);
-		verify_bound(b_this, true, bvh, i_frame);
-	};
-	auto lam_onLeave = [&bvh = std::as_const(bvh), i_frame](Bound b_this)
+		auto lam_onLeave = [&bvh = std::as_const(bvh), i_frame](Bound b_this) -> void
+		{
+		};
+		Bound root = std::make_pair(bvh.root_joint(), body_root);
+		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
+	}
+	update_fk(body_root);
 	{
-		verify_bound(b_this, false, bvh, i_frame);
-	};
-	Bound root = std::make_pair(bvh.root_joint(), body_root);
-	TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
+		//pose the articulated body with the posture for frame i_frame
+		//	the articulated body should have same rest posture as bvh
+		auto lam_onEnter = [&bvh = std::as_const(bvh), i_frame](Bound b_this) -> void
+		{
+			verify_bound(b_this, true, bvh, i_frame);
+		};
+		auto lam_onLeave = [&bvh = std::as_const(bvh), i_frame](Bound b_this) -> void
+		{
+			verify_bound(b_this, false, bvh, i_frame);
+		};
+		Bound root = std::make_pair(bvh.root_joint(), body_root);
+		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
+	}
 }
 
 bool ResetRestPose(bvh11::BvhObject& bvh, int t)
