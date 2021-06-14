@@ -3,6 +3,7 @@
 #include <cassert>
 #include <fstream>
 #include <queue>
+#include <Windows.h>
 
 namespace bvh11
 {
@@ -14,24 +15,112 @@ namespace bvh11
 			FastStream(const std::string& path)
 			{
 				//open a file, and map it to memory
+				if (!LoadFile(path.c_str(), &m_mem))
+				{
+					memset(&m_mem, 0, sizeof(m_mem));
+					m_streamPtr = NULL;
+				}
+				else
+					m_streamPtr = m_mem.p;
 			}
 
 			~FastStream()
 			{
 				//close the file
+				if (NULL != m_streamPtr)
+					UnLoad(&m_mem);
+				m_streamPtr = NULL;
 			}
 
 			bool is_open() const
 			{
 				//to check if the file is open and mapped to memor correctly
-				return false;
+				return (m_mem.size > 0);
 			}
+
 
 			bool getline(std::string& line)
 			{
-				return false;
+				const unsigned char* p_end = m_mem.p + m_mem.size;
+				while (m_streamPtr < p_end && is_on_line_delim(m_streamPtr, p_end))
+					m_streamPtr ++;
+				const unsigned char* p_line_start = m_streamPtr;
+				while (m_streamPtr < p_end && !is_on_line_delim(m_streamPtr, p_end))
+					m_streamPtr ++;
+				const unsigned char* p_line_end = m_streamPtr;
+				line.clear();
+				line.assign((const char*)p_line_start, p_line_end - p_line_start);
+				return p_line_start < p_line_end;
+			}
+		private:
+			bool is_on_line_delim(const unsigned char* p, const unsigned char* p_end)
+			{
+				const unsigned char* pp = p + 1;
+				return (*p == '\n')
+					|| ((*p == '\r') && (pp < p_end) && (*pp == '\n'));
 			}
 
+			struct MemSrc
+			{
+				const unsigned char* p;
+				unsigned int size;
+				HANDLE hFile;
+				HANDLE hMapFile;
+			};
+			inline bool LoadFile(const char* filePath, MemSrc* mem)
+			{
+				mem->hFile = CreateFileA(filePath,               // file name
+			                       GENERIC_READ,          // open for reading
+			                       0,                     // do not share
+			                       NULL,                  // default security
+			                       OPEN_EXISTING,         // existing file only
+			                       FILE_ATTRIBUTE_NORMAL, // normal file
+			                       NULL);                 // no template
+
+			   	bool ok = (INVALID_HANDLE_VALUE != mem->hFile);
+			   	if (ok)
+			   	{
+			   		mem->size = GetFileSize(mem->hFile, 0);
+			   		mem->hMapFile = CreateFileMapping(
+			                 mem->hFile,    				// use paging file
+			                 NULL,                  // default security
+			                 PAGE_READONLY,        // read/write access
+			                 0,						// maximum object size (high-order DWORD)
+			                 mem->size,						// maximum object size (low-order DWORD)
+			                 NULL);                 // name of mapping object
+			   		ok = (mem->hMapFile != NULL);
+			   	}
+
+			   	if (ok)
+			   	{
+			   		mem->p = (const unsigned char*) MapViewOfFile(mem->hMapFile,   // handle to map object
+			                    	    				FILE_MAP_READ, // read/write permission
+			                    	    				0,
+			                    	    				0,
+			                    	    				mem->size);
+			   	}
+			   	else
+			   	{
+			   		mem->p = NULL;
+			   		mem->size = 0;
+			   		mem->hFile = INVALID_HANDLE_VALUE;
+			   		mem->hMapFile = NULL;
+			   	}
+			   	return ok;
+			}
+			void UnLoad(MemSrc* mem)
+			{
+				UnmapViewOfFile(mem->p);
+
+			   	CloseHandle(mem->hMapFile);
+			   	CloseHandle(mem->hFile);
+			   	mem->size = 0;
+
+			}
+
+			MemSrc m_mem;
+
+			const unsigned char* m_streamPtr;
 		};
 
 		inline std::vector<std::string> split(const std::string& sequence, const std::string& pattern)
