@@ -215,6 +215,8 @@ namespace bvh11
 
 	Eigen::Affine3d BvhObject::GetLocalDeltaTM(std::shared_ptr<const Joint> joint, int frame) const
 	{
+		if (frame < 0)
+			return Eigen::Affine3d::Identity();
 		bool has_a_rotation = false;
 		bool has_a_translation = false;
 		Eigen::Affine3d tm_delta_l = Eigen::Affine3d::Identity();

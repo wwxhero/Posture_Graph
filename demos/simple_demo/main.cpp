@@ -4,6 +4,7 @@
 #include <queue>
 #include "articulated_body.h"
 #include "motion_pipeline.h"
+#include "fk_joint.h"
 
 
 typedef std::shared_ptr<const bvh11::Joint> Joint_bvh_ptr;
@@ -74,7 +75,7 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame, bool asRestBvhPose
 		auto b_hik = pair.second;
 		CNN cnn = FIRSTCHD;
 		auto& rb_this = b_hik;
-		for (auto j_bvh_child: j_bvh->children())
+		for (auto j_bvh_child : j_bvh->children())
 		{
 			auto b_hik_child = asRestBvhPose
 								? create_arti_body_as_rest_bvh_pose(bvh, j_bvh_child, frame)
@@ -223,7 +224,7 @@ inline void TraverseDFS_botree_nonrecur(HBODY root, LAMaccessEnter OnEnterBody, 
 		HBODY body_child;
 	} EDGE;
 	std::stack<EDGE> stkDFS;
-	stkDFS.push({root, get_first_child_body(root)});
+	stkDFS.push({ root, get_first_child_body(root) });
 	//printArtName(body_name_w(root), 0);
 	OnEnterBody(root);
 	while (!stkDFS.empty())
@@ -241,7 +242,7 @@ inline void TraverseDFS_botree_nonrecur(HBODY root, LAMaccessEnter OnEnterBody, 
 			OnEnterBody(edge.body_child);
 			HBODY body_grandchild = get_first_child_body(edge.body_child);
 			HBODY body_nextchild = get_next_sibling_body(edge.body_child);
-			stkDFS.push({edge.body_child, body_grandchild});
+			stkDFS.push({ edge.body_child, body_grandchild });
 			edge.body_child = body_nextchild;
 		}
 	}
@@ -257,7 +258,7 @@ inline void TraverseDFS_motree_nonrecur(HMOTIONNODE root, LAMaccessEnter OnEnter
 		HMOTIONNODE body_child;
 	} EDGE;
 	std::stack<EDGE> stkDFS;
-	stkDFS.push({root, get_first_child_mo_node(root)});
+	stkDFS.push({ root, get_first_child_mo_node(root) });
 	//printArtName(body_name_w(root), 0);
 	OnEnterBody(root);
 	while (!stkDFS.empty())
@@ -275,7 +276,7 @@ inline void TraverseDFS_motree_nonrecur(HMOTIONNODE root, LAMaccessEnter OnEnter
 			OnEnterBody(edge.body_child);
 			HMOTIONNODE body_grandchild = get_first_child_mo_node(edge.body_child);
 			HMOTIONNODE body_nextchild = get_next_sibling_mo_node(edge.body_child);
-			stkDFS.push({edge.body_child, body_grandchild});
+			stkDFS.push({ edge.body_child, body_grandchild });
 			edge.body_child = body_nextchild;
 		}
 	}
@@ -326,10 +327,50 @@ void updateHeader(bvh11::BvhObject& bvh, HBODY body)
 	TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 }
 
+inline bool verify_bound(Bound b_this, bool enter, const bvh11::BvhObject& bvh, int i_frame)
+{
+	Joint_bvh_ptr joint_bvh = b_this.first;
+	HBODY body_hik = b_this.second;
+	const std::string& name_bvh = joint_bvh->name();
+	std::string name_hik(body_name_c(body_hik));
+
+	auto tm_l2w_bvh = bvh.GetTransformation(joint_bvh, i_frame);
+	_TRANSFORM tm_l2w_hik = { 0 };
+	get_body_transform_l2w(body_hik, &tm_l2w_hik);
+
+	auto tm_l2p_bvh = bvh.GetTransformationRelativeToParent(joint_bvh, i_frame);
+	_TRANSFORM tm_l2p_hik = { 0 };
+	get_body_transform_l2p(body_hik, &tm_l2p_hik);
+
+	auto tm_l_bvh = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
+	_TRANSFORM tm_l_hik = { 0 };
+	get_joint_transform(body_hik, &tm_l_hik);
+
+	bool delta_l_eq = TransformEq(tm_l_hik, tm_l_bvh);
+	bool l2p_eq = TransformEq(tm_l2p_hik, tm_l2p_bvh);
+	bool l2w_eq = TransformEq(tm_l2w_hik, tm_l2w_bvh);
+	bool name_eq = (name_bvh == name_hik);
+
+	bool verified = (name_eq && delta_l_eq && l2p_eq && l2w_eq);
+	if (!verified)
+	{
+		std::cout << "Enter" << enter
+			<< "\t" << name_hik.c_str()
+			<< ":\t delta_l_eq = " << delta_l_eq
+			<< "\t l2p_eq = " << l2p_eq
+			<< "\t l2w_eq = " << l2w_eq
+			<< "\t name_eq = " << name_eq
+			<< std::endl;
+	}
+	return verified;
+}
+
 void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 {
 	//pose the articulated body with the posture for frame i_frame
 	//	the articulated body should have same rest posture as bvh
+
+
 	auto lam_onEnter = [&bvh = std::as_const(bvh), i_frame](Bound b_this)
 	{
 		Joint_bvh_ptr joint_bvh = b_this.first;
@@ -338,33 +379,16 @@ void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 		Eigen::Quaternionr r(delta_l.linear());
 		Eigen::Vector3r tt(delta_l.translation());
 		_TRANSFORM delta_l_tm = {
-			{0, 0, 0}, //scale is trivial
+			{1, 1, 1}, //scale is trivial
 			{r.w(), r.x(), r.y(), r.z()}, //rotation
 			{tt.x(), tt.y(), tt.z()}, //trivial
 		};
 		set_joint_transform(body_hik, &delta_l_tm);
+		verify_bound(b_this, true, bvh, i_frame);
 	};
 	auto lam_onLeave = [&bvh = std::as_const(bvh), i_frame](Bound b_this)
 	{
-		Joint_bvh_ptr joint_bvh = b_this.first;
-		HBODY body_hik = b_this.second;
-
-		auto tm_l2w_bvh = bvh.GetTransformation(joint_bvh, i_frame);
-		_TRANSFORM tm_l2w_hik = {0};
-		get_body_transform_l2w(body_hik, &tm_l2w_hik);
-
-		auto tm_l2p_bvh = bvh.GetTransformationRelativeToParent(joint_bvh, i_frame);
-		_TRANSFORM tm_l2p_hik = {0};
-		get_body_transform_l2p(body_hik, &tm_l2p_hik);
-
-		auto tm_l_bvh = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
-		_TRANSFORM tm_l_hik = {0};
-		get_joint_transform(body_hik, &tm_l2w_hik);
-
-		assert(TransformEq(tm_l2w_hik, tm_l2w_bvh)
-			&& TransformEq(tm_l2p_hik, tm_l2p_bvh)
-			&& TransformEq(tm_l_hik, tm_l_bvh));
-
+		verify_bound(b_this, false, bvh, i_frame);
 	};
 	Bound root = std::make_pair(bvh.root_joint(), body_root);
 	TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
@@ -431,7 +455,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
 #endif
-	updateHeader(bvh, h_drivee);
+	// updateHeader(bvh, h_drivee);
 
 	// HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
 	// HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
@@ -441,15 +465,15 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 	// motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, NULL, 0);
 
 
-	// for (int i_frame = 0
-	// 	; i_frame < n_frames
-	// 	; i_frame ++)
-	// {
-	// 	pose(h_driver, bvh, i_frame);
-	// 	motion_sync(h_motion_driver);
-	// 	updateAnim(h_drivee, bvh);
-	// }
-
+	for (int i_frame = 0
+		; i_frame < n_frames
+		; i_frame++)
+	{
+		pose(h_driver, bvh, i_frame);
+		// motion_sync(h_motion_driver);
+		// updateAnim(h_drivee, bvh);
+	}
+	updateHeader(bvh, h_drivee);
 	// {
 	// 	auto lam_onEnter = [] (HMOTIONNODE node)
 	// 							{
@@ -478,8 +502,8 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 
 int main(int argc, char* argv[])
 {
-	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
 	bool for_show_file_info = (2 == argc);
 	bool for_reset_restpose = (4 == argc);
