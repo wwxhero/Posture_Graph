@@ -8,6 +8,32 @@ namespace bvh11
 {
 	namespace internal
 	{
+		class FastStream
+		{
+		public:
+			FastStream(const std::string& path)
+			{
+				//open a file, and map it to memory
+			}
+
+			~FastStream()
+			{
+				//close the file
+			}
+
+			bool is_open() const
+			{
+				//to check if the file is open and mapped to memor correctly
+				return false;
+			}
+
+			void getline(string& line)
+			{
+
+			}
+
+		};
+
 		inline std::vector<std::string> split(const std::string& sequence, const std::string& pattern)
 		{
 			const std::regex regex(pattern);
@@ -29,6 +55,21 @@ namespace bvh11
 				return {};
 			}
 		}
+
+		inline std::vector<std::string> tokenize_next_line(FastStream& ifs)
+		{
+			std::string line;
+			if (lfs->getline(line))
+			{
+				return internal::split(line, R"([\t\s]+)");
+			}
+			else
+			{
+				assert(false && "Failed to read the next line");
+				return {};
+			}
+		}
+
 
 		inline Eigen::Vector3d read_offset(const std::vector<std::string>& tokens)
 		{
@@ -296,7 +337,7 @@ namespace bvh11
 	void BvhObject::ReadBvhFile(const std::string& file_path, const double scale)
 	{
 		// Open the input file
-		std::ifstream ifs(file_path);
+		FastStream ifs(file_path);
 		assert(ifs.is_open() && "Failed to open the input file.");
 
 		// Read the HIERARCHY part
@@ -304,7 +345,7 @@ namespace bvh11
 		{
 			std::string line;
 			std::vector<std::shared_ptr<Joint>> stack;
-			while (std::getline(ifs, line))
+			while(ifs.getline(line))
 			{
 				// Split the line into tokens
 				const std::vector<std::string> tokens = internal::split(line, R"([\t\s]+)");
