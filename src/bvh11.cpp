@@ -27,9 +27,9 @@ namespace bvh11
 				return false;
 			}
 
-			void getline(string& line)
+			bool getline(std::string& line)
 			{
-
+				return false;
 			}
 
 		};
@@ -56,10 +56,10 @@ namespace bvh11
 			}
 		}
 
-		inline std::vector<std::string> tokenize_next_line(FastStream& ifs)
+		inline std::vector<std::string> tokenize_next_line(internal::FastStream& ifs)
 		{
 			std::string line;
-			if (lfs->getline(line))
+			if (ifs.getline(line))
 			{
 				return internal::split(line, R"([\t\s]+)");
 			}
@@ -337,7 +337,7 @@ namespace bvh11
 	void BvhObject::ReadBvhFile(const std::string& file_path, const double scale)
 	{
 		// Open the input file
-		FastStream ifs(file_path);
+		internal::FastStream ifs(file_path);
 		assert(ifs.is_open() && "Failed to open the input file.");
 
 		// Read the HIERARCHY part
