@@ -436,7 +436,9 @@ void pose_nonrecur(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 	while(!queBFS.empty())
 	{
 		Bound b_this = queBFS.front();
-		verify_bound(b_this);
+		verify_bound(b_this, false, bvh, i_frame);
+		Joint_bvh_ptr joint_bvh = b_this.first;
+		HBODY body_hik = b_this.second;
 		auto& children_bvh = joint_bvh->children();
 		auto it_bvh_child = children_bvh.begin();
 		auto body_child = get_first_child_body(body_hik);
