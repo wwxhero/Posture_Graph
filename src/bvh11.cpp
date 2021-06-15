@@ -156,7 +156,7 @@ namespace bvh11
 			std::size_t i_token = 0;
 			std::size_t n_tokens = tokens.size();
 			enum State {is_on_break = 0, is_on_token, is_on_end};
-			State s = is_on_token;
+			State s = is_on_break;
 			const char* p = sequence.c_str();
 			const char* p_token_start = p;
 			while(s != is_on_end
@@ -180,7 +180,11 @@ namespace bvh11
 				else if (s == is_on_token
 					&& (s_p == is_on_end || s_p == is_on_break))
 				{
-					tokens[i_token ++].assign(p_token_start, p - p_token_start);
+					std::size_t len = (p-p_token_start);
+					std::string& token_i = tokens[i_token];
+					token_i.resize(len + 1, '\0');
+					token_i.assign(p_token_start, p - p_token_start);
+					i_token ++;
 				}
 				s = s_p;
 			}
