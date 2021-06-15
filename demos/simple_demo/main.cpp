@@ -378,6 +378,7 @@ void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
 	update_fk(body_root);
+#if defined _DEBUG
 	{
 		//pose the articulated body with the posture for frame i_frame
 		//	the articulated body should have same rest posture as bvh
@@ -392,6 +393,66 @@ void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 		Bound root = std::make_pair(bvh.root_joint(), body_root);
 		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
+#endif
+}
+
+void pose_nonrecur(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
+{
+	Bound root = std::make_pair(bvh.root_joint(), body_root);
+	std::queue<Bound> queBFS;
+	queBFS.push(root);
+	while(!queBFS.empty())
+	{
+		Bound b_this = queBFS.front();
+		Joint_bvh_ptr joint_bvh = b_this.first;
+		HBODY body_hik = b_this.second;
+		Eigen::Affine3d delta_l = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
+		Eigen::Quaternionr r(delta_l.linear());
+		Eigen::Vector3r tt(delta_l.translation());
+		_TRANSFORM delta_l_tm = {
+			{1, 1, 1}, //scale is trivial
+			{r.w(), r.x(), r.y(), r.z()}, //rotation
+			{tt.x(), tt.y(), tt.z()}, //trivial
+		};
+		set_joint_transform(body_hik, &delta_l_tm);
+		auto& children_bvh = joint_bvh->children();
+		auto it_bvh_child = children_bvh.begin();
+		auto body_child = get_first_child_body(body_hik);
+		for (
+			; it_bvh_child != children_bvh.end()
+			&&  body_child != H_INVALID
+			; it_bvh_child ++,
+			  body_child = get_next_sibling_body(body_child))
+		{
+			Bound b_child = std::make_pair(*it_bvh_child, body_child);
+			queBFS.push(b_child);
+		}
+		queBFS.pop();
+	}
+
+	update_fk(body_root);
+#if defined _DEBUG
+	queBFS.push(root);
+	while(!queBFS.empty())
+	{
+		Bound b_this = queBFS.front();
+		verify_bound(b_this);
+		auto& children_bvh = joint_bvh->children();
+		auto it_bvh_child = children_bvh.begin();
+		auto body_child = get_first_child_body(body_hik);
+		for (
+			; it_bvh_child != children_bvh.end()
+			&&  body_child != H_INVALID
+			; it_bvh_child ++,
+			  body_child = get_next_sibling_body(body_child))
+		{
+			Bound b_child = std::make_pair(*it_bvh_child, body_child);
+			queBFS.push(b_child);
+		}
+		queBFS.pop();
+	}
+
+#endif
 }
 
 bool ResetRestPose(bvh11::BvhObject& bvh, int t)
@@ -469,7 +530,7 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 		; i_frame < n_frames
 		; i_frame++)
 	{
-		pose(h_driver, bvh, i_frame);
+		pose_nonrecur(h_driver, bvh, i_frame);
 		// motion_sync(h_motion_driver);
 		// updateAnim(h_drivee, bvh);
 	}
@@ -521,7 +582,7 @@ int main(int argc, char* argv[])
 		bvh11::BvhObject bvh(bvh_file_path);
 		auto tick = ::GetTickCount64() - tick_start;
 		float tick_sec = tick / 1000.0f;
-		fprintf( stderr, "Parsing %s takes %.2f seconds\n", bvh_file_path.c_str(), tick_sec);
+		printf("Parsing %s takes %.2f seconds\n", bvh_file_path.c_str(), tick_sec);
 		if (for_show_file_info)
 		{
 			std::cout << "#Channels       : " << bvh.channels().size() << std::endl;
@@ -539,7 +600,16 @@ int main(int argc, char* argv[])
 		{
 			const std::string bvh_file_path_dst = argv[3];
 			int n_frame = atoi(argv[2]);
-			if (ResetRestPose(bvh, n_frame - 1))
+			tick_start = ::GetTickCount64();
+			bool resetted = ResetRestPose(bvh, n_frame - 1);
+			tick = ::GetTickCount64() - tick_start;
+			tick_sec = tick / 1000.0f;
+			const char* results[] = {"failed" , "successful"};
+			int i_result = (resetted ? 1 : 0);
+			printf("Reset posture takes %.2f seconds %s\n",
+					tick_sec,
+					results[i_result]);
+			if (resetted)
 				bvh.WriteBvhFile(bvh_file_path_dst);
 			else
 			{
