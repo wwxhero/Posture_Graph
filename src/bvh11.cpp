@@ -48,9 +48,11 @@ namespace bvh11
 				while (m_streamPtr < p_end && !is_on_line_delim(m_streamPtr, p_end))
 					m_streamPtr ++;
 				const unsigned char* p_line_end = m_streamPtr;
-				std::size_t str_len = p_line_end - p_line_start;
-				line.resize(str_len+1, '\0');
-				line.assign((const char*)p_line_start, str_len);
+				std::size_t len_line = p_line_end - p_line_start;
+				std::size_t cap_line = len_line + 1;
+				if (line.size() < cap_line)
+					line.resize(cap_line, '\0');
+				line.assign((const char*)p_line_start, len_line);
 				return p_line_start < p_line_end;
 			}
 		private:
@@ -182,8 +184,8 @@ namespace bvh11
 				{
 					std::size_t len = (p-p_token_start);
 					std::string& token_i = tokens[i_token];
-					token_i.resize(len + 1, '\0');
-					token_i.assign(p_token_start, p - p_token_start);
+					token_i.assign(p_token_start, len);
+					token_i[len] = '\0';
 					i_token ++;
 				}
 				s = s_p;
@@ -643,6 +645,9 @@ namespace bvh11
 			// Read each frame
 			std::vector<std::string> tokens;
 			tokens.resize(channels_.size());
+			const std::size_t double_token_len = 256;
+			for (auto& token : tokens)
+				token.resize(double_token_len, '\0');
 			std::string line;
 			for (int frame_index = 0; frame_index < frames_; ++ frame_index)
 			{
@@ -655,15 +660,15 @@ namespace bvh11
 				}
 			}
 
-			// // Scale translations
-			// for (int channel_index = 0; channel_index < channels_.size(); ++ channel_index)
-			// {
-			// 	const Channel::Type& type = channels_[channel_index].type;
-			// 	if (type == Channel::Type::x_position || type == Channel::Type::y_position || type == Channel::Type::z_position)
-			// 	{
-			// 		motion_.col(channel_index) = scale * motion_.col(channel_index);
-			// 	}
-			// }
+			// Scale translations
+			for (int channel_index = 0; channel_index < channels_.size(); ++ channel_index)
+			{
+				const Channel::Type& type = channels_[channel_index].type;
+				if (type == Channel::Type::x_position || type == Channel::Type::y_position || type == Channel::Type::z_position)
+				{
+					motion_.col(channel_index) = scale * motion_.col(channel_index);
+				}
+			}
 		}();
 	}
 
