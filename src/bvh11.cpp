@@ -146,7 +146,8 @@ namespace bvh11
 			auto is_a_token = [](char c) -> bool
 						{
 							return ' ' != c
-								&& '\t' != c;
+								&& '\t' != c
+								&& '\0' != c;
 						};
 			auto is_a_termi = [](char c) -> bool
 						{
@@ -164,8 +165,8 @@ namespace bvh11
 			while(s != is_on_end
 				&& i_token < n_tokens)
 			{
-				p ++;
 				State s_p = s;
+				assert(*p != '\r' && *p != '\n');
 				if (is_a_break(*p))
 					s_p = is_on_break;
 				else if (is_a_token(*p))
@@ -189,6 +190,7 @@ namespace bvh11
 					i_token ++;
 				}
 				s = s_p;
+				p ++;
 			}
 		}
 
