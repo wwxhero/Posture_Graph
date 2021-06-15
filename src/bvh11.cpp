@@ -48,8 +48,9 @@ namespace bvh11
 				while (m_streamPtr < p_end && !is_on_line_delim(m_streamPtr, p_end))
 					m_streamPtr ++;
 				const unsigned char* p_line_end = m_streamPtr;
-				line.clear();
-				line.assign((const char*)p_line_start, p_line_end - p_line_start);
+				std::size_t str_len = p_line_end - p_line_start;
+				line.resize(str_len+1, '\0');
+				line.assign((const char*)p_line_start, str_len);
 				return p_line_start < p_line_end;
 			}
 		private:
@@ -131,6 +132,60 @@ namespace bvh11
 			return std::vector<std::string>{ first->str().empty() ? std::next(first) : first, last };
 		}
 
+
+
+		inline void split(const std::string& sequence, std::vector<std::string>& tokens)
+		{
+			auto is_a_break = [](char c) -> bool
+						{
+							return ' ' == c
+								|| '\t' == c;
+						};
+			auto is_a_token = [](char c) -> bool
+						{
+							return ' ' != c
+								&& '\t' != c;
+						};
+			auto is_a_termi = [](char c) -> bool
+						{
+							return '\0' == c;
+						};
+
+			assert(!sequence.empty());
+
+			std::size_t i_token = 0;
+			std::size_t n_tokens = tokens.size();
+			enum State {is_on_break = 0, is_on_token, is_on_end};
+			State s = is_on_token;
+			const char* p = sequence.c_str();
+			const char* p_token_start = p;
+			while(s != is_on_end
+				&& i_token < n_tokens)
+			{
+				p ++;
+				State s_p = s;
+				if (is_a_break(*p))
+					s_p = is_on_break;
+				else if (is_a_token(*p))
+					s_p = is_on_token;
+				else if (is_a_termi(*p))
+					s_p = is_on_end;
+
+				if (s == is_on_break
+					&& s_p == is_on_token)
+				{
+					p_token_start = p;
+				}
+
+				else if (s == is_on_token
+					&& (s_p == is_on_end || s_p == is_on_break))
+				{
+					tokens[i_token ++].assign(p_token_start, p - p_token_start);
+				}
+				s = s_p;
+			}
+		}
+
 		inline std::vector<std::string> tokenize_next_line(std::ifstream& ifs)
 		{
 			std::string line;
@@ -158,6 +213,20 @@ namespace bvh11
 				return {};
 			}
 		}
+
+
+		inline void tokenize_next_line(internal::FastStream& ifs, std::string& line, std::vector<std::string>& tokens)
+		{
+			if (ifs.getline(line))
+			{
+				internal::split(line, tokens);
+			}
+			else
+			{
+				assert(false && "Failed to read the next line");
+			}
+		}
+
 
 
 		inline Eigen::Vector3d read_offset(const std::vector<std::string>& tokens)
@@ -568,9 +637,12 @@ namespace bvh11
 			motion_.resize(frames_, channels_.size());
 
 			// Read each frame
+			std::vector<std::string> tokens;
+			tokens.resize(channels_.size());
+			std::string line;
 			for (int frame_index = 0; frame_index < frames_; ++ frame_index)
 			{
-				const std::vector<std::string> tokens = internal::tokenize_next_line(ifs);
+				internal::tokenize_next_line(ifs, line, tokens);
 				assert(tokens.size() == channels_.size() && "Found invalid motion data");
 
 				for (int channel_index = 0; channel_index < channels_.size(); ++ channel_index)
@@ -579,15 +651,15 @@ namespace bvh11
 				}
 			}
 
-			// Scale translations
-			for (int channel_index = 0; channel_index < channels_.size(); ++ channel_index)
-			{
-				const Channel::Type& type = channels_[channel_index].type;
-				if (type == Channel::Type::x_position || type == Channel::Type::y_position || type == Channel::Type::z_position)
-				{
-					motion_.col(channel_index) = scale * motion_.col(channel_index);
-				}
-			}
+			// // Scale translations
+			// for (int channel_index = 0; channel_index < channels_.size(); ++ channel_index)
+			// {
+			// 	const Channel::Type& type = channels_[channel_index].type;
+			// 	if (type == Channel::Type::x_position || type == Channel::Type::y_position || type == Channel::Type::z_position)
+			// 	{
+			// 		motion_.col(channel_index) = scale * motion_.col(channel_index);
+			// 	}
+			// }
 		}();
 	}
 

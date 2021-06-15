@@ -517,9 +517,11 @@ int main(int argc, char* argv[])
 	else
 	{
 		const std::string bvh_file_path = argv[1];
-
+		auto tick_start = ::GetTickCount64();
 		bvh11::BvhObject bvh(bvh_file_path);
-
+		auto tick = ::GetTickCount64() - tick_start;
+		float tick_sec = tick / 1000.0f;
+		fprintf( stderr, "Parsing %s takes %.2f seconds\n", bvh_file_path.c_str(), tick_sec);		
 		if (for_show_file_info)
 		{
 			std::cout << "#Channels       : " << bvh.channels().size() << std::endl;
