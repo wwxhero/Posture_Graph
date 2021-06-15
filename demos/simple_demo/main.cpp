@@ -92,6 +92,7 @@ HBODY createArticulatedBody(bvh11::BvhObject& bvh, int frame, bool asRestBvhPose
 		}
 		queBFS.pop();
 	}
+	initialize_kina(root_b_hik);
 	update_fk(root_b_hik);
 	return root_b_hik;
 }
@@ -219,7 +220,7 @@ inline void TraverseDFS_botree_nonrecur(HBODY root, LAMaccessEnter OnEnterBody, 
 	while (!stkDFS.empty())
 	{
 		EDGE &edge = stkDFS.top();
-		size_t n_indent = stkDFS.size();
+		// size_t n_indent = stkDFS.size();
 		if (H_INVALID == edge.body_child)
 		{
 			stkDFS.pop();
@@ -349,6 +350,7 @@ inline bool verify_bound(Bound b_this, bool enter, const bvh11::BvhObject& bvh, 
 			<< "\t l2p_eq = " << l2p_eq
 			<< "\t l2w_eq = " << l2w_eq
 			<< "\t name_eq = " << name_eq
+			<< "\t frame = " << i_frame
 			<< std::endl;
 	}
 	return verified;
