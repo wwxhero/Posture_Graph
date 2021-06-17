@@ -6,6 +6,7 @@
 #include "motion_pipeline.h"
 #include "fk_joint.h"
 
+const double epsilon = 1e-5;
 
 typedef std::shared_ptr<const bvh11::Joint> Joint_bvh_ptr;
 typedef std::pair<Joint_bvh_ptr, HBODY> Bound;
@@ -15,13 +16,20 @@ HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 	auto name = j_bvh->name().c_str();
 	auto tm_bvh = bvh.GetTransformationRelativeToParent(j_bvh, frame);
 	Eigen::Quaterniond rq(tm_bvh.linear());
-	Eigen::Vector3d tt = tm_bvh.translation();
+	Eigen::Vector3d tt;
+	if (nullptr == j_bvh->parent())
+		tt = Eigen::Vector3d::Zero();
+	else
+		tt = tm_bvh.translation();
+
 	_TRANSFORM tm_hik = {
 		{1, 1, 1},
 		{rq.w(), rq.x(), rq.y(), rq.z()},
 		{tt.x(), tt.y(), tt.z()}
 	};
 	auto b_hik = create_tree_body_node_c(name, &tm_hik);
+	assert(nullptr != j_bvh->parent()
+		|| tt.norm() < epsilon);
 	return b_hik;
 }
 
@@ -49,6 +57,8 @@ HBODY create_arti_body_as_rest_bvh_pose(bvh11::BvhObject& bvh, Joint_bvh_ptr j_b
 		{tt.x(), tt.y(), tt.z()}
 	};
 	auto b_hik = create_tree_body_node_c(name, &tm_hik);
+	assert(nullptr != j_parent_bvh
+		|| tt.norm() < epsilon);
 	return b_hik;
 }
 
@@ -128,7 +138,6 @@ inline void printBoundName(Bound bnd, int n_indent)
 
 inline bool TransformEq(const _TRANSFORM& tm_hik, const Eigen::Affine3d& tm_bvh)
 {
-	const double epsilon = 1e-5;
 	Eigen::Matrix3d linear_tm_bvh = tm_bvh.linear();
 	Eigen::Vector3d tt_tm_bvh = tm_bvh.translation();
 
@@ -164,7 +173,6 @@ inline bool BoundEQ(Bound bnd, const bvh11::BvhObject& bvh, int frame)
 
 inline bool BoundResetAsBVHRest(Bound bnd, const bvh11::BvhObject& bvh, int frame)
 {
-	const double epsilon = 1e-5;
 	auto& joint_bvh = bnd.first;
 	auto& body_hik = bnd.second;
 	auto& name_bvh = joint_bvh->name();
@@ -424,7 +432,7 @@ inline void TraverseBFS_boundtree_norecur(Bound root, LAMaccessEnter OnEnterBoun
 	}
 }
 
-void pose_nonrecur(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
+void pose_nonrecur(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame, bool header_resetted)
 {
 	auto onEnterBound_pose = [&bvh, i_frame] (Bound b_this)
 						{
@@ -446,23 +454,66 @@ void pose_nonrecur(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 	TraverseBFS_boundtree_norecur(root, onEnterBound_pose, onLeaveBound_pose);
 
 	update_fk(body_root);
-#if defined _DEBUG
 
-	auto onEnterBound_verify = [] (Bound b_this)
-						{
-						};
+	if (!header_resetted)
+	{
+		auto onEnterBound_verify = [] (Bound b_this)
+							{
+							};
 
-	auto onLeaveBound_verify = [&bvh, i_frame] (Bound b_this)
-						{
-							verify_bound(b_this, false, bvh, i_frame);
-						};
+		auto onLeaveBound_verify = [&bvh, i_frame] (Bound b_this)
+							{
+								verify_bound(b_this, false, bvh, i_frame);
+							};
 
-	TraverseBFS_boundtree_norecur(root, onEnterBound_verify, onLeaveBound_verify);
-#endif
+		TraverseBFS_boundtree_norecur(root, onEnterBound_verify, onLeaveBound_verify);
+	}
 }
 
-void updateAnim(HBODY body_root, bvh11::BvhObject& bvh, int i_frame)
+void updateBVHAnim(HBODY body_root, bvh11::BvhObject& bvh, int i_frame, bool header_resetted)
 {
+	auto onEnterBound_pose = [&bvh, i_frame] (Bound b_this)
+						{
+							Joint_bvh_ptr joint_bvh = b_this.first;
+							HBODY body_hik = b_this.second;
+							_TRANSFORM delta_l_tm;
+							get_joint_transform(body_hik, &delta_l_tm);
+
+							Eigen::Affine3d delta_l;
+							Eigen::Vector3d tt (delta_l_tm.tt.x,
+												delta_l_tm.tt.y,
+												delta_l_tm.tt.z);
+							Eigen::Quaterniond r(delta_l_tm.r.w,
+												 delta_l_tm.r.x,
+												 delta_l_tm.r.y,
+												 delta_l_tm.r.z);
+							Eigen::Vector3d s	(delta_l_tm.s.x,
+												delta_l_tm.s.y,
+												delta_l_tm.s.z);
+							delta_l.fromPositionOrientationScale(tt, r, s);
+							bvh.UpdateMotion(joint_bvh, delta_l, i_frame);
+
+						};
+	auto onLeaveBound_pose = [] (Bound b_this) {};
+
+	Bound root = std::make_pair(bvh.root_joint(), body_root);
+	TraverseBFS_boundtree_norecur(root, onEnterBound_pose, onLeaveBound_pose);
+
+	update_fk(body_root);
+
+	if (header_resetted)
+	{
+		auto onEnterBound_verify = [] (Bound b_this)
+							{
+							};
+
+		auto onLeaveBound_verify = [&bvh, i_frame] (Bound b_this)
+							{
+								verify_bound(b_this, true, bvh, i_frame);
+							};
+
+		TraverseBFS_boundtree_norecur(root, onEnterBound_verify, onLeaveBound_verify);
+	}
 
 }
 
@@ -492,13 +543,14 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 	}
 #endif
 	HBODY h_driveeProxy = createArticulatedBody(bvh, t, false);
-#if defined _DEBUG
+#if 0 //defined _DEBUG
 	{
 		std::cout << "Bounds:" << std::endl;
 		int n_indent = 1;
 		auto lam_onEnter = [&n_indent, &bvh = std::as_const(bvh), t] (Bound b_this)
 							{
 								printBoundName(b_this, n_indent++);
+								// BoundEQ(b_this, bvh, t);
 								assert(BoundEQ(b_this, bvh, t));
 							};
 		auto lam_onLeave = [&n_indent] (Bound b_this)
@@ -534,16 +586,26 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 	HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
 	motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, FIRSTCHD, NULL, 0);
 
+	bool pre_reset_header = true;
+
+	bool header_resetted = false;
+	if (pre_reset_header)
+	{
+		updateHeader(bvh, h_drivee);
+		header_resetted = true;
+	}
 
 	for (int i_frame = 0
 		; i_frame < n_frames
 		; i_frame++)
 	{
-		pose_nonrecur(h_driver, bvh, i_frame);
+		pose_nonrecur(h_driver, bvh, i_frame, header_resetted);
 		motion_sync(h_motion_driver);
-		updateAnim(h_drivee, bvh, i_frame);
+		updateBVHAnim(h_drivee, bvh, i_frame, header_resetted);
 	}
-	updateHeader(bvh, h_drivee);
+
+	if (!pre_reset_header)
+		updateHeader(bvh, h_drivee);
 
 	auto lam_onMoEnter = [] (HMOTIONNODE node)
 								{
