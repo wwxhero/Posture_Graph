@@ -520,14 +520,12 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 		TraverseDFS_boundtree_recur(root, lam_onEnter, lam_onLeave);
 	}
 #endif
-	// updateHeader(bvh, h_drivee);
+	HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
+	HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
+	motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy, FIRSTCHD);
 
-	// HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
-	// HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
-	// motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy);
-
-	// HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
-	// motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, NULL, 0);
+	HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
+	motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, FIRSTCHD, NULL, 0);
 
 
 	for (int i_frame = 0
@@ -535,33 +533,31 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 		; i_frame++)
 	{
 		pose_nonrecur(h_driver, bvh, i_frame);
-		// motion_sync(h_motion_driver);
-		// updateAnim(h_drivee, bvh);
+		motion_sync(h_motion_driver);
+		updateAnim(h_drivee, bvh);
 	}
 	updateHeader(bvh, h_drivee);
-	// {
-	// 	auto lam_onEnter = [] (HMOTIONNODE node)
-	// 							{
-	// 							};
-	// 	auto lam_onLeave = [] (HMOTIONNODE node)
-	// 							{
-	// 								destroy_tree_motion_node(node);
-	// 							};
-	// 	// TraverseDFS_motree_nonrecur(h_motion_driver, lam_onEnter, lam_onLeave);
-	// }
 
-	{
-		auto lam_onEnter = [] (HBODY node)
+	auto lam_onMoEnter = [] (HMOTIONNODE node)
 								{
 								};
-		auto lam_onLeave = [] (HBODY node)
+	auto lam_onMoLeave = [] (HMOTIONNODE node)
+								{
+									destroy_tree_motion_node(node);
+								};
+	TraverseDFS_motree_nonrecur(h_motion_driver, lam_onMoEnter, lam_onMoLeave);
+
+	auto lam_onBoEnter = [] (HBODY node)
+								{
+								};
+	auto lam_onBoLeave = [] (HBODY node)
 								{
 									destroy_tree_body_node(node);
 								};
-		TraverseDFS_botree_nonrecur(h_driver, lam_onEnter, lam_onLeave);
-		TraverseDFS_botree_nonrecur(h_driveeProxy, lam_onEnter, lam_onLeave);
-		TraverseDFS_botree_nonrecur(h_drivee, lam_onEnter, lam_onLeave);
-	}
+	TraverseDFS_botree_nonrecur(h_driver, lam_onBoEnter, lam_onBoLeave);
+	TraverseDFS_botree_nonrecur(h_driveeProxy, lam_onBoEnter, lam_onBoLeave);
+	TraverseDFS_botree_nonrecur(h_drivee, lam_onBoEnter, lam_onBoLeave);
+
 	return true;
 }
 
