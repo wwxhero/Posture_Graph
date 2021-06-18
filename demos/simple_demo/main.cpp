@@ -6,6 +6,8 @@
 #include "motion_pipeline.h"
 #include "fk_joint.h"
 
+#define ZERO_ENTITY_TT
+
 const double epsilon = 1e-5;
 
 typedef std::shared_ptr<const bvh11::Joint> Joint_bvh_ptr;
@@ -17,10 +19,14 @@ HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 	auto tm_bvh = bvh.GetTransformationRelativeToParent(j_bvh, frame);
 	Eigen::Quaterniond rq(tm_bvh.linear());
 	Eigen::Vector3d tt;
+#ifdef ZERO_ENTITY_TT
 	if (nullptr == j_bvh->parent())
 		tt = Eigen::Vector3d::Zero();
 	else
 		tt = tm_bvh.translation();
+#else
+	tt = tm_bvh.translation();
+#endif
 
 	_TRANSFORM tm_hik = {
 		{1, 1, 1},
@@ -28,11 +34,12 @@ HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 		{tt.x(), tt.y(), tt.z()}
 	};
 	auto b_hik = create_tree_body_node_c(name, &tm_hik);
+#ifdef ZERO_ENTITY_TT
 	assert(nullptr != j_bvh->parent()
 		|| tt.norm() < epsilon);
+#endif
 	return b_hik;
 }
-
 
 HBODY create_arti_body_as_rest_bvh_pose(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 {
@@ -42,8 +49,12 @@ HBODY create_arti_body_as_rest_bvh_pose(bvh11::BvhObject& bvh, Joint_bvh_ptr j_b
 	auto j_parent_bvh = j_bvh->parent();
 	if (nullptr == j_parent_bvh)
 	{
+#if defined ZERO_ENTITY_TT
 		tm_parent_bvh.linear() = Eigen::Matrix3d::Identity();
 		tm_parent_bvh.translation() = tm_bvh.translation();
+#else
+		tm_parent_bvh = Eigen::Affine3d::Identity();
+#endif
 	}
 	else
 	{
@@ -581,10 +592,12 @@ bool ResetRestPose(bvh11::BvhObject& bvh, int t)
 #endif
 	HMOTIONNODE h_motion_driver = create_tree_motion_node(h_driver);
 	HMOTIONNODE h_motion_driveeProxy = create_tree_motion_node(h_driveeProxy);
-	motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy, FIRSTCHD);
+	bool sync_created = motion_sync_cnn_homo(h_motion_driver, h_motion_driveeProxy, FIRSTCHD);
+	assert(sync_created && "homo sync should be created for 2 same-header-BVHs");
 
 	HMOTIONNODE h_motion_drivee = create_tree_motion_node(h_drivee);
-	motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, FIRSTCHD, NULL, 0);
+	sync_created = motion_sync_cnn_cross(h_motion_driveeProxy, h_motion_drivee, FIRSTCHD, NULL, 0);
+	assert(sync_created && "cross sync should be created for 2 algined postures");
 
 	bool pre_reset_header = true;
 
