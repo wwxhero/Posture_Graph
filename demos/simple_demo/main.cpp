@@ -6,7 +6,8 @@
 #include "motion_pipeline.h"
 #include "fk_joint.h"
 
-#define ZERO_ENTITY_TT
+#define ZERO_ENTITY_TT_HOMO
+#define ZERO_ENTITY_TT_CROSS
 
 const double epsilon = 1e-5;
 
@@ -19,7 +20,7 @@ HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 	auto tm_bvh = bvh.GetTransformationRelativeToParent(j_bvh, frame);
 	Eigen::Quaterniond rq(tm_bvh.linear());
 	Eigen::Vector3d tt;
-#ifdef ZERO_ENTITY_TT
+#ifdef ZERO_ENTITY_TT_HOMO
 	if (nullptr == j_bvh->parent())
 		tt = Eigen::Vector3d::Zero();
 	else
@@ -34,7 +35,7 @@ HBODY create_arti_body(bvh11::BvhObject& bvh, Joint_bvh_ptr j_bvh, int frame)
 		{tt.x(), tt.y(), tt.z()}
 	};
 	auto b_hik = create_tree_body_node_c(name, &tm_hik);
-#ifdef ZERO_ENTITY_TT
+#ifdef ZERO_ENTITY_TT_HOMO
 	assert(nullptr != j_bvh->parent()
 		|| tt.norm() < epsilon);
 #endif
@@ -49,7 +50,7 @@ HBODY create_arti_body_as_rest_bvh_pose(bvh11::BvhObject& bvh, Joint_bvh_ptr j_b
 	auto j_parent_bvh = j_bvh->parent();
 	if (nullptr == j_parent_bvh)
 	{
-#if defined ZERO_ENTITY_TT
+#if defined ZERO_ENTITY_TT_CROSS
 		tm_parent_bvh.linear() = Eigen::Matrix3d::Identity();
 		tm_parent_bvh.translation() = tm_bvh.translation();
 #else
