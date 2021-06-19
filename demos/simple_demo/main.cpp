@@ -5,6 +5,7 @@
 #include "articulated_body.h"
 #include "motion_pipeline.h"
 #include "fk_joint.h"
+#include <Eigen/Geometry>
 
 #define ZERO_ENTITY_TT_HOMO
 #define ZERO_ENTITY_TT_CROSS
@@ -153,10 +154,10 @@ inline bool TransformEq(const _TRANSFORM& tm_hik, const Eigen::Affine3d& tm_bvh)
 	Eigen::Matrix3d linear_tm_bvh = tm_bvh.linear();
 	Eigen::Vector3d tt_tm_bvh = tm_bvh.translation();
 
-	Eigen::Vector3r s(tm_hik.s.x, tm_hik.s.y, tm_hik.s.z);
-	Eigen::Matrix3r r(Eigen::Quaternionr(tm_hik.r.w, tm_hik.r.x, tm_hik.r.y, tm_hik.r.z));
-	Eigen::Matrix3r linear_tm_hik = r * s.asDiagonal();
-	Eigen::Vector3r tt_tm_hik(tm_hik.tt.x, tm_hik.tt.y, tm_hik.tt.z);
+	Eigen::Vector3d s(tm_hik.s.x, tm_hik.s.y, tm_hik.s.z);
+	Eigen::Matrix3d r(Eigen::Quaterniond(tm_hik.r.w, tm_hik.r.x, tm_hik.r.y, tm_hik.r.z));
+	Eigen::Matrix3d linear_tm_hik = r * s.asDiagonal();
+	Eigen::Vector3d tt_tm_hik(tm_hik.tt.x, tm_hik.tt.y, tm_hik.tt.z);
 
 	Eigen::Matrix3d diff_linear = linear_tm_bvh.inverse() * linear_tm_bvh;
 	double abs_diff_linear = (diff_linear - Eigen::Matrix3d::Identity()).norm();
@@ -205,11 +206,11 @@ inline bool BoundResetAsBVHRest(Bound bnd, const bvh11::BvhObject& bvh, int fram
 
 	_TRANSFORM tm_hik_l;
 	get_body_transform_l2p(body_hik, &tm_hik_l);
-	Eigen::Vector3r s(tm_hik_l.s.x, tm_hik_l.s.y, tm_hik_l.s.z);
-	Eigen::Vector3r tt_tm_hik_l(tm_hik_l.tt.x, tm_hik_l.tt.y, tm_hik_l.tt.z);
+	Eigen::Vector3d s(tm_hik_l.s.x, tm_hik_l.s.y, tm_hik_l.s.z);
+	Eigen::Vector3d tt_tm_hik_l(tm_hik_l.tt.x, tm_hik_l.tt.y, tm_hik_l.tt.z);
 
-	Real diff_s = (s - Eigen::Vector3r::Ones()).norm();
-	Real diff_r = Eigen::Vector4r(tm_hik_l.r.w - 1, tm_hik_l.r.x, tm_hik_l.r.y, tm_hik_l.r.z).norm();
+	Real diff_s = (s - Eigen::Vector3d::Ones()).norm();
+	Real diff_r = Eigen::Vector4d(tm_hik_l.r.w - 1, tm_hik_l.r.x, tm_hik_l.r.y, tm_hik_l.r.z).norm();
 	Real diff_tt = (tt_tm_bvh_l - tt_tm_hik_l).norm();
 	bool linear_id = (-epsilon < diff_s
 							&&	diff_s < epsilon
@@ -325,7 +326,7 @@ void updateHeader(bvh11::BvhObject& bvh, HBODY body)
 								HBODY body_this = b_this.second;
 								_TRANSFORM tm_l2p;
 								get_body_transform_l2p(body_this, &tm_l2p);
-								const_cast<Eigen::Vector3d&>(joint_this->offset()) = Eigen::Vector3r(tm_l2p.tt.x, tm_l2p.tt.y, tm_l2p.tt.z);
+								const_cast<Eigen::Vector3d&>(joint_this->offset()) = Eigen::Vector3d(tm_l2p.tt.x, tm_l2p.tt.y, tm_l2p.tt.z);
 							};
 	auto lam_onLeave = [] (Bound b_this)
 							{
@@ -381,8 +382,8 @@ void pose(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame)
 			Joint_bvh_ptr joint_bvh = b_this.first;
 			HBODY body_hik = b_this.second;
 			Eigen::Affine3d delta_l = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
-			Eigen::Quaternionr r(delta_l.linear());
-			Eigen::Vector3r tt(delta_l.translation());
+			Eigen::Quaterniond r(delta_l.linear());
+			Eigen::Vector3d tt(delta_l.translation());
 			_TRANSFORM delta_l_tm = {
 				{1, 1, 1}, //scale is trivial
 				{r.w(), r.x(), r.y(), r.z()}, //rotation
@@ -451,8 +452,8 @@ void pose_nonrecur(HBODY body_root, const bvh11::BvhObject& bvh, int i_frame, bo
 							Joint_bvh_ptr joint_bvh = b_this.first;
 							HBODY body_hik = b_this.second;
 							Eigen::Affine3d delta_l = bvh.GetLocalDeltaTM(joint_bvh, i_frame);
-							Eigen::Quaternionr r(delta_l.linear());
-							Eigen::Vector3r tt(delta_l.translation());
+							Eigen::Quaterniond r(delta_l.linear());
+							Eigen::Vector3d tt(delta_l.translation());
 							_TRANSFORM delta_l_tm = {
 								{1, 1, 1}, //scale is trivial
 								{r.w(), r.x(), r.y(), r.z()}, //rotation
