@@ -344,8 +344,8 @@ Global
 		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.MinSizeRel|x64.Build.0 = Development|x64
 		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.MinSizeRel|x86.ActiveCfg = Development|Win32
 		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.MinSizeRel|x86.Build.0 = Development|Win32
-		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.Release|x64.ActiveCfg = Development|x64
-		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.Release|x64.Build.0 = Development|x64
+		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.Release|x64.ActiveCfg = Shipping|x64
+		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.Release|x64.Build.0 = Shipping|x64
 		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.Release|x86.ActiveCfg = Development|Win32
 		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.Release|x86.Build.0 = Development|Win32
 		{4625B20B-A8C9-4319-8589-26B41E7B4D74}.RelWithDebInfo|x64.ActiveCfg = Development|x64

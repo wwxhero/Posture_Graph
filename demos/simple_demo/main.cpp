@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 			int n_frame = atoi(argv[2]);
 			auto tick_start = ::GetTickCount64();
 			bool resetted = ResetRestPose(bvh_file_path.c_str()
-										, n_frame - 1
+										, n_frame
 										, bvh_file_path_dst.c_str());
 			auto tick = ::GetTickCount64() - tick_start;
 			auto tick_sec = tick / 1000.0f;
