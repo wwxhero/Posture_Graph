@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{7108CEAB-8EF3-3B45-8472-E374700C23CB}</ProjectGuid>
+    <ProjectGuid>{854BF11E-035F-32B6-99BB-F10E6F5EF201}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
@@ -63,7 +63,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -85,7 +85,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -107,7 +107,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -129,7 +129,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\visual_demo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\libigl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -150,7 +150,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\CMakeFiles\c01bfa046098f811baa6717f33d469eb\RUN_TESTS_force.rule">
+    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\CMakeFiles\29705a32ab2f67357e46017d3cdcf19b\RUN_TESTS_force.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 cd .
@@ -162,7 +162,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
@@ -175,7 +175,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
@@ -188,7 +188,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
@@ -201,13 +201,13 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\visual_demo\CMakeFiles\RUN_TESTS_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\ZERO_CHECK.vcxproj">
-      <Project>{B302C6B0-4FA2-3B0A-B869-55295F31B046}</Project>
+    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\ZERO_CHECK.vcxproj">
+      <Project>{0986468C-529E-3DFB-B074-E6A4DB101137}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

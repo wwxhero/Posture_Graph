@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\src\bvh11.cpp">
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\src\bvh11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include\bvh11.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include\bvh11.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{1FB86877-303B-3632-9874-455506849B30}</UniqueIdentifier>
+      <UniqueIdentifier>{06C22EC3-E41A-3621-BEEA-D844EBC5906C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{5D24AEC2-6DEC-36B9-BB47-449A16464C48}</UniqueIdentifier>
+      <UniqueIdentifier>{7F61CA99-2FEA-3534-863B-38C6C165D902}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

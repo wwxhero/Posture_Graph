@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{296769C8-C648-3080-B991-8482C7665535}</ProjectGuid>
+    <ProjectGuid>{C52A1BB2-C009-3DE5-B9F8-5193A62CEEAD}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
@@ -56,26 +56,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">three-dim-util.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">three-dim-util</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">three-dim-util.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">three-dim-util</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">three-dim-util.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">three-dim-util</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">three-dim-util.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">three-dim-util</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Debug;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Debug;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -92,10 +92,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;QT_GUI_LIB;QT_CORE_LIB;QT_WIDGETS_LIB;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Debug;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Debug;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Debug;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Debug;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -105,11 +105,11 @@
     <PreBuildEvent>
       <Message>Automatic MOC for target three-dim-util</Message>
       <Command>setlocal
-cd C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util
+cd C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json Debug
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -124,7 +124,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Release;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Release;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -141,10 +141,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;QT_WIDGETS_LIB;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Release;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Release;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Release;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_Release;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -154,11 +154,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PreBuildEvent>
       <Message>Automatic MOC for target three-dim-util</Message>
       <Command>setlocal
-cd C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util
+cd C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json Release
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json Release
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -173,7 +173,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_MinSizeRel;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_MinSizeRel;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -190,10 +190,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;QT_WIDGETS_LIB;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_MinSizeRel;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_MinSizeRel;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_MinSizeRel;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_MinSizeRel;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -203,11 +203,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PreBuildEvent>
       <Message>Automatic MOC for target three-dim-util</Message>
       <Command>setlocal
-cd C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util
+cd C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json MinSizeRel
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -222,7 +222,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_RelWithDebInfo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_RelWithDebInfo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -238,10 +238,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;QT_WIDGETS_LIB;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_RelWithDebInfo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_RelWithDebInfo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_RelWithDebInfo;C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\include_RelWithDebInfo;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include;D:\cppProjects\eigen-3.3.9;C:\Qt\5.14.2\msvc2017_64\include;C:\Qt\5.14.2\msvc2017_64\include\QtGui;C:\Qt\5.14.2\msvc2017_64\include\QtANGLE;C:\Qt\5.14.2\msvc2017_64\include\QtCore;C:\Qt\5.14.2\msvc2017_64\.\mkspecs\win32-msvc;C:\Qt\5.14.2\msvc2017_64\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -251,11 +251,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PreBuildEvent>
       <Message>Automatic MOC for target three-dim-util</Message>
       <Command>setlocal
-cd C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util
+cd C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util
 if %errorlevel% neq 0 goto :cmEnd
 C:
 if %errorlevel% neq 0 goto :cmEnd
-"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json RelWithDebInfo
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autogen C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/three-dim-util_autogen.dir/AutogenInfo.json RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -269,10 +269,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
+    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -281,11 +281,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QGifPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICNSPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICOPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QJpegPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QMinimalIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QOffscreenIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgIconPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTgaPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTiffPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTuioTouchPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWbmpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWebpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsDirect2DIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QXdgDesktopPortalThemePlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5Widgets_QWindowsVistaStylePlugin.cmake;C:\eigen-3.3.9\bin\Eigen3Config.cmake;C:\eigen-3.3.9\bin\Eigen3ConfigVersion.cmake;C:\eigen-3.3.9\bin\Eigen3Targets.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -294,11 +294,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QGifPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICNSPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICOPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QJpegPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QMinimalIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QOffscreenIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgIconPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTgaPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTiffPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTuioTouchPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWbmpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWebpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsDirect2DIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QXdgDesktopPortalThemePlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5Widgets_QWindowsVistaStylePlugin.cmake;C:\eigen-3.3.9\bin\Eigen3Config.cmake;C:\eigen-3.3.9\bin\Eigen3ConfigVersion.cmake;C:\eigen-3.3.9\bin\Eigen3Targets.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -307,11 +307,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QGifPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICNSPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICOPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QJpegPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QMinimalIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QOffscreenIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgIconPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTgaPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTiffPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTuioTouchPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWbmpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWebpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsDirect2DIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QXdgDesktopPortalThemePlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5Widgets_QWindowsVistaStylePlugin.cmake;C:\eigen-3.3.9\bin\Eigen3Config.cmake;C:\eigen-3.3.9\bin\Eigen3ConfigVersion.cmake;C:\eigen-3.3.9\bin\Eigen3Targets.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/external/three-dim-util/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/external/three-dim-util/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -320,34 +320,34 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.19\Modules\CMakeParseArguments.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigExtrasMkspecDir.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Core\Qt5CoreMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QGifPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICNSPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QICOPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QJpegPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QMinimalIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QOffscreenIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgIconPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QSvgPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTgaPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTiffPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QTuioTouchPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWbmpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWebpPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsDirect2DIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QWindowsIntegrationPlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Gui\Qt5Gui_QXdgDesktopPortalThemePlugin.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigExtras.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5WidgetsMacros.cmake;C:\Qt\5.14.2\msvc2017_64\lib\cmake\Qt5Widgets\Qt5Widgets_QWindowsVistaStylePlugin.cmake;C:\eigen-3.3.9\bin\Eigen3Config.cmake;C:\eigen-3.3.9\bin\Eigen3ConfigVersion.cmake;C:\eigen-3.3.9\bin\Eigen3Targets.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\mocs_compilation.cpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\camera.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\matrix.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\mesh.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\draw-functions.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl-wrappers.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\material.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\abstract-primitive.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\cube.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\sphere.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\abstract-widget.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\game-loop-widget.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\trackball-widget.hpp" />
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl3\shader.hpp" />
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\camera.cpp" />
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\abstract-widget.cpp" />
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\game-loop-widget.cpp" />
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\trackball-widget.cpp" />
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\mocs_compilation.cpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\camera.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\matrix.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\mesh.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\draw-functions.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl-wrappers.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\material.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\abstract-primitive.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\cube.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\sphere.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\abstract-widget.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\game-loop-widget.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\trackball-widget.hpp" />
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl3\shader.hpp" />
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\camera.cpp" />
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\abstract-widget.cpp" />
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\game-loop-widget.cpp" />
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\trackball-widget.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\ZERO_CHECK.vcxproj">
-      <Project>{B302C6B0-4FA2-3B0A-B869-55295F31B046}</Project>
+    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\ZERO_CHECK.vcxproj">
+      <Project>{0986468C-529E-3DFB-B074-E6A4DB101137}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

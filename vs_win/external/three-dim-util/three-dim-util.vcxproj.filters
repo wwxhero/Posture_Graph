@@ -1,75 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\mocs_compilation.cpp">
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\external\three-dim-util\three-dim-util_autogen\mocs_compilation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\camera.cpp">
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\abstract-widget.cpp">
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\abstract-widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\game-loop-widget.cpp">
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\game-loop-widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\trackball-widget.cpp">
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\src\opengl2\trackball-widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\camera.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\matrix.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\matrix.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\mesh.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\mesh.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\draw-functions.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\draw-functions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl-wrappers.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl-wrappers.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\gl.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\material.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\abstract-primitive.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\abstract-primitive.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\cube.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\cube.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\sphere.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\primitives\sphere.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\abstract-widget.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\abstract-widget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\game-loop-widget.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\game-loop-widget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\trackball-widget.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl2\widgets\trackball-widget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl3\shader.hpp">
+    <ClInclude Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\include\three-dim-util\opengl3\shader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\external\three-dim-util\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\external\three-dim-util\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{1FB86877-303B-3632-9874-455506849B30}</UniqueIdentifier>
+      <UniqueIdentifier>{06C22EC3-E41A-3621-BEEA-D844EBC5906C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{5D24AEC2-6DEC-36B9-BB47-449A16464C48}</UniqueIdentifier>
+      <UniqueIdentifier>{7F61CA99-2FEA-3534-863B-38C6C165D902}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -68,13 +68,13 @@
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\simple_demo\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">simple_demo.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">simple_demo</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\simple_demo\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">simple_demo.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">simple_demo</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(LIB_HIK_INC);C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;C:\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%LIB_HIK_INC%;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -100,10 +100,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -114,7 +114,7 @@
       <Message>
       </Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Debug
+"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Debug
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -125,12 +125,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>lib_hIK.lib;..\..\Debug\bvh11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Binaries\Win64\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Binaries\Win64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Debug/simple_demo.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Debug/simple_demo.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Debug/simple_demo.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Debug/simple_demo.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -139,7 +139,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(LIB_HIK_INC);C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%LIB_HIK_INC%;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -156,10 +156,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -170,7 +170,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Message>
       </Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Release
+"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Release
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -181,12 +181,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
     <Link>
       <AdditionalDependencies>lib_hIK.lib;..\..\Release\bvh11.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Binaries\Win64\%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Binaries\Win64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Release/simple_demo.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Release/simple_demo.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Release/simple_demo.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/Release/simple_demo.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -195,7 +195,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -212,10 +212,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -226,7 +226,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Message>
       </Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/MinSizeRel
+"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/MinSizeRel
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -241,8 +241,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/MinSizeRel/simple_demo.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/MinSizeRel/simple_demo.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/MinSizeRel/simple_demo.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/MinSizeRel/simple_demo.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -251,7 +251,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -267,10 +267,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -281,7 +281,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <Message>
       </Message>
       <Command>setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/RelWithDebInfo
+"C:\Program Files\CMake\bin\cmake.exe" -E copy C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_01.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_02.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/resources/scaled_131_03.bvh C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/RelWithDebInfo
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -296,8 +296,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/RelWithDebInfo/simple_demo.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/RelWithDebInfo/simple_demo.pdb</ProgramDataBaseFile>
+      <ImportLibrary>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/RelWithDebInfo/simple_demo.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/RelWithDebInfo/simple_demo.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -305,10 +305,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\demos\simple_demo\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
+    <CustomBuild Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\simple_demo\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -317,11 +317,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -330,11 +330,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -343,11 +343,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/demos/simple_demo/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/tester_unreal_blank/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset -BC:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win --check-stamp-file C:/Users/Mathew/unrealProjects/hIK/Externals/bvh_posture_reset/vs_win/demos/simple_demo/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -356,22 +356,22 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\demos\simple_demo\main.cpp" />
+    <ClCompile Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\simple_demo\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\ZERO_CHECK.vcxproj">
-      <Project>{B302C6B0-4FA2-3B0A-B869-55295F31B046}</Project>
+    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\ZERO_CHECK.vcxproj">
+      <Project>{0986468C-529E-3DFB-B074-E6A4DB101137}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\tester_unreal_blank\Externals\bvh_posture_reset\vs_win\bvh11.vcxproj">
-      <Project>{A1E1D3E9-7B15-3249-979B-51401699D3D3}</Project>
+    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\bvh11.vcxproj">
+      <Project>{E759E13E-EEE2-3F3A-8024-D6F680C7DEFF}</Project>
       <Name>bvh11</Name>
     </ProjectReference>
   </ItemGroup>
