@@ -166,10 +166,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\bvh11.vcxproj">
-      <Project>{E759E13E-EEE2-3F3A-8024-D6F680C7DEFF}</Project>
-      <Name>bvh11</Name>
-    </ProjectReference>
     <ProjectReference Include="C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\vs_win\demos\simple_demo\simple_demo.vcxproj">
       <Project>{87B9CA8E-D3D3-36F2-93B8-297A5FB53707}</Project>
       <Name>simple_demo</Name>
