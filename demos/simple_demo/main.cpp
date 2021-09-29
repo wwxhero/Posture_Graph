@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 			printf("Parsing %s takes %.2f seconds\n", bvh_file_path.c_str(), tick_sec);
 
 			std::cout << "#Channels       : " << channels(hBVH)		<< std::endl;
-			std::cout << "#Frames         : " << frames(hBVH)		<< std::endl;
+			std::cout << "#Frames         : " << get_n_frames(hBVH)		<< std::endl;
 			std::cout << "Frame time      : " << frame_time(hBVH) 	<< std::endl;
 			std::cout << "Joint hierarchy : " << std::endl;
 			PrintJointHierarchy(hBVH);
@@ -37,17 +37,18 @@ int main(int argc, char* argv[])
 			bvh_file_path_dup += "_dup";
 			WriteBvhFile(hBVH, bvh_file_path_dup.c_str());
 #endif
+			unload_bvh(hBVH);
 		}
 		else
 		{
 			const std::string bvh_file_path_dst = argv[2];
-			int n_frame = atoi(argv[3]);
+			int i_frame = atoi(argv[3]);
 			double scale = ((5 == argc)
 							? atof(argv[4])
 							: 1);
 			auto tick_start = ::GetTickCount64();
 			bool resetted = ResetRestPose(bvh_file_path.c_str()
-										, n_frame
+										, i_frame
 										, bvh_file_path_dst.c_str()
 										, scale);
 			auto tick = ::GetTickCount64() - tick_start;
