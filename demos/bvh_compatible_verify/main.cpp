@@ -1,51 +1,31 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include <string>
 #include <shlwapi.h>
 #include <strsafe.h>
+#include <filesystem>
 #include "articulated_body.h"
 #include "bvh.h"
 
-typedef bool (*CB_OnBVHFile)(const char* path);
-
-
-void TraverseDirTree(const char* dirPath, CB_OnBVHFile onbvh) //  throw (std::string)
+template<typename LAMBDA_onext>
+void TraverseDirTree(const std::string& dirPath, LAMBDA_onext onbvh, const std::string& ext) //  throw (std::string)
 {
+	namespace fs = std::experimental::filesystem;
 	WIN32_FIND_DATA ffd;
 	LARGE_INTEGER filesize;
-	TCHAR szDir[MAX_PATH];
-	size_t length_of_arg;
+	std::string filter = dirPath + "\\*";
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwError=0;
 
-	// If the directory is not specified as a command-line argument,
-	// print usage.
-
-	// Check that the input path plus 3 is not longer than MAX_PATH.
-	// Three characters are for the "\*" plus NULL appended below.
-
-	StringCchLength(dirPath, MAX_PATH, &length_of_arg);
-
-	if (length_of_arg > (MAX_PATH - 3))
-		throw std::string("\nDirectory path is too long.\n");
-
-	// Prepare string for use with FindFile functions.  First, copy the
-	// string to a buffer, then append '\*' to the directory name.
-
-	StringCchCopy(szDir, MAX_PATH, dirPath);
-	StringCchCat(szDir, MAX_PATH, TEXT("\\*"));
-
 	// Find the first file in the directory.
-
-	hFind = FindFirstFile(szDir, &ffd);
-
+	hFind = FindFirstFile(filter.c_str(), &ffd);
 	if (INVALID_HANDLE_VALUE == hFind)
 	{
-		throw std::string("FindFirstFile: ") + std::string(dirPath);
+		throw std::string("FindFirstFile: ") + dirPath;
 	}
-
 	// List all the files in the directory with some info about them.
-	std::vector<std::string> trivial_dir = {".", ".."};
+	std::set<std::string> trivial_dir = {".", ".."};
 	bool traversing = true;
 	do
 	{
@@ -53,19 +33,14 @@ void TraverseDirTree(const char* dirPath, CB_OnBVHFile onbvh) //  throw (std::st
 			continue;
 		else if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			bool trivial = false;
-			for (auto dir_t : trivial_dir)
-			{
-				trivial = (dir_t == std::string(ffd.cFileName));
-				if (trivial)
-					break;
-			}
+			bool trivial = (trivial_dir.end() != trivial_dir.find(ffd.cFileName));
+
 			if (!trivial)
-			{// _tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
+			{
 				try
 				{
-					PathCombine(szDir, dirPath, ffd.cFileName);
-					TraverseDirTree(szDir, onbvh);
+					fs::path dirPath_prime = fs::path(dirPath)/ffd.cFileName;
+					TraverseDirTree(dirPath_prime.u8string(), onbvh, ext);
 				}
 				catch (std::string& info)
 				{
@@ -79,21 +54,13 @@ void TraverseDirTree(const char* dirPath, CB_OnBVHFile onbvh) //  throw (std::st
 		{
 			filesize.LowPart = ffd.nFileSizeLow;
 			filesize.HighPart = ffd.nFileSizeHigh;
-			const char c_append[] = "hvb.";
-			const int len_append = sizeof(c_append) / sizeof(const char) - 1;
-			StringCchLength(ffd.cFileName, MAX_PATH, &length_of_arg);
-			if (!(length_of_arg < len_append))
+
+			if (fs::path(ffd.cFileName).extension().u8string() == ext)
 			{
-				const char* s_append = ffd.cFileName + length_of_arg;
-				bool matched = true;
-				int i = 0; s_append--;
-				for (
-					; i < len_append && (matched = (tolower(*s_append) == c_append[i]))
-					; i ++ , s_append --);
-				if (matched)
-					//_tprintf(TEXT("  %s   %ld bytes\n"), ffd.cFileName, filesize.QuadPart);
-					traversing = onbvh(ffd.cFileName);
+				fs::path filepath = fs::path(dirPath)/ffd.cFileName;
+				traversing = onbvh(filepath.u8string().c_str());
 			}
+
 		}
 	}
 	while (traversing
@@ -105,8 +72,6 @@ void TraverseDirTree(const char* dirPath, CB_OnBVHFile onbvh) //  throw (std::st
 	{
 		throw std::string("FindFirstFile");
 	}
-
-
 }
 
 
@@ -147,14 +112,14 @@ int main(int argc, char* argv[])
 			HBODY body_s = create_tree_body_bvh(hBVH_s);
 
 			std::cout << "BVH files:" << std::endl;
-			auto onbvh = [] (const char* path) -> bool
+			auto onbvh = [body_s] (const char* path) -> bool
 				{
 					std::cout << path << std::endl;
 					return true;
 				};
 			try
 			{
-				TraverseDirTree(argv[2], onbvh);
+				TraverseDirTree(argv[2], onbvh, ".bvh");
 			}
 			catch (std::string &info)
 			{
