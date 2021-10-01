@@ -110,11 +110,30 @@ int main(int argc, char* argv[])
 			WriteBvhFile(hBVH_s, bvh_file_path_dup.c_str());
 #endif
 			HBODY body_s = create_tree_body_bvh(hBVH_s);
-
-			std::cout << "BVH files:" << std::endl;
-			auto onbvh = [body_s] (const char* path) -> bool
+			int n_err_nodes_cap = channels(hBVH_s);
+			HBODY* err_nodes = (HBODY*)malloc(sizeof(HBODY) * n_err_nodes_cap);
+			std::cout << "standard BVH file:" << argv[1] << std::endl;
+			auto onbvh = [body_s, err_nodes, n_err_nodes_cap] (const char* path) -> bool
 				{
-					std::cout << path << std::endl;
+					HBVH hBVH_d = load_bvh_c(path);
+					HBODY body_d = H_INVALID;
+					int n_err_nodes = 0;
+					bool eq = VALID_HANDLE(hBVH_d)
+								&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d))
+								&& (0 == (n_err_nodes = body_cmp(body_s, body_d, err_nodes, n_err_nodes_cap))); //verify body_s == body_d
+					if (VALID_HANDLE(body_d))
+						destroy_tree_body(body_d);
+					if (VALID_HANDLE(hBVH_d))
+						unload_bvh(hBVH_d);
+					const char * res[] = { "false", "true" };
+					int i_res = (eq ? 1 : 0);
+					std::cout << path << ": " << "Equal = " << res[i_res];
+					for (int i_err_node = 0; i_err_node < n_err_nodes; i_err_node ++)
+					{
+						std::cout << "\t" << body_name_c(err_nodes[i_err_node]);
+					}
+					std:: cout << std::endl;
+
 					return true;
 				};
 			try
@@ -125,7 +144,7 @@ int main(int argc, char* argv[])
 			{
 				std::cout << "ERROR: " << info << std::endl;
 			}
-
+			free(err_nodes);
 			destroy_tree_body(body_s);
 			unload_bvh(hBVH_s);
 		}
