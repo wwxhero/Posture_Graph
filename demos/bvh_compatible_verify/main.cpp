@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	if (!for_testing_compatibility
 	 && !for_reset_restpose)
 	{
-		std::cerr << "Usage:\tbvh_compatible_verify <STANDARD_BVH_PATH> <BVH_DIR>\t\t//to show the file information" << std::endl;
+		std::cout << "Usage:\tbvh_compatible_verify <STANDARD_BVH_PATH> <BVH_DIR>\t\t//to show the file information" << std::endl;
 		// std::cerr <<       "\tsimpe_demo <BVH_DIR_SRC> <BVH_PATH_DEST> <FRAME_NO> [<SCALE>]\t//to reset rest posture with the given frame posture" << std::endl;
 	}
 	else
