@@ -95,6 +95,11 @@ int main(int argc, char* argv[])
 		{
 			auto tick_start = ::GetTickCount64();
 			HBVH hBVH_s = load_bvh_c(bvh_file_path.c_str());
+			if (!VALID_HANDLE(hBVH_s))
+			{
+				std::cout << "file: " << bvh_file_path << " can not be opened!!!" << std::endl;
+				return -1;
+			}
 			auto tick = ::GetTickCount64() - tick_start;
 			float tick_sec = tick / 1000.0f;
 			printf("Parsing %s takes %.2f seconds\n", bvh_file_path.c_str(), tick_sec);
@@ -121,10 +126,6 @@ int main(int argc, char* argv[])
 					bool eq = VALID_HANDLE(hBVH_d)
 								&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d))
 								&& (0 == (n_err_nodes = body_cmp(body_s, body_d, err_nodes, n_err_nodes_cap))); //verify body_s == body_d
-					if (VALID_HANDLE(body_d))
-						destroy_tree_body(body_d);
-					if (VALID_HANDLE(hBVH_d))
-						unload_bvh(hBVH_d);
 					const char * res[] = { "false", "true" };
 					int i_res = (eq ? 1 : 0);
 					std::cout << path << ": " << "Equal = " << res[i_res];
@@ -133,7 +134,11 @@ int main(int argc, char* argv[])
 						std::cout << "\t" << body_name_c(err_nodes[i_err_node]);
 					}
 					std:: cout << std::endl;
-
+					
+					if (VALID_HANDLE(body_d))
+						destroy_tree_body(body_d);
+					if (VALID_HANDLE(hBVH_d))
+						unload_bvh(hBVH_d);
 					return true;
 				};
 			try
