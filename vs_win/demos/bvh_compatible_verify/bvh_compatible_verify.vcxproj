@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%LIB_HIK_INC%;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%LIB_HIK_INC%;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\share;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -139,7 +139,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%LIB_HIK_INC%;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\include;D:\cppProjects\eigen-3.3.9;%LIB_HIK_INC%;C:\Users\Mathew\unrealProjects\hIK\Externals\bvh_posture_reset\demos\share;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
