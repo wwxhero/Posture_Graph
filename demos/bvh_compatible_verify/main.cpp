@@ -49,25 +49,34 @@ int main(int argc, char* argv[])
 			WriteBvhFile(hBVH_s, bvh_file_path_dup.c_str());
 #endif
 			HBODY body_s = create_tree_body_bvh(hBVH_s);
-			int n_err_nodes_cap = channels(hBVH_s);
+			const char* const pts_interest[] = {
+				"LeftFoot", "LeftLeg", 							//left leg points
+				"RightFoot", "RightLeg",						//right leg points
+				"Spine", "Spine1", "Neck", "Neck1", "Head",		//spine points
+				"RightForeArm", "RightHand",					//right arm points
+				"LeftForeArm", "LeftHand"						//left arm points
+			};
+			int n_err_nodes_cap = sizeof(pts_interest)/sizeof(const char*);
 			HBODY* err_nodes = (HBODY*)malloc(sizeof(HBODY) * n_err_nodes_cap);
+			Real* err_oris = new Real[n_err_nodes_cap];
 			std::cout << "standard BVH file:" << argv[1] << std::endl;
-			auto onbvh = [body_s, err_nodes, n_err_nodes_cap] (const char* path) -> bool
+			auto onbvh = [body_s, err_nodes, err_oris, pts_interest, n_err_nodes_cap] (const char* path) -> bool
 				{
 					HBVH hBVH_d = load_bvh_c(path);
 					HBODY body_d = H_INVALID;
 					int n_err_nodes = 0;
+					memset(err_oris, 0, n_err_nodes_cap * sizeof(Real));
 					bool eq = VALID_HANDLE(hBVH_d)
 								&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d))
-								&& (0 == (n_err_nodes = body_cmp(body_s, body_d, err_nodes, n_err_nodes_cap))); //verify body_s == body_d
+								&& (0 == (n_err_nodes = body_cmp(pts_interest, n_err_nodes_cap, body_s, body_d, err_nodes, err_oris))); //verify body_s == body_d
 					const char * res[] = { "false", "true" };
 					int i_res = (eq ? 1 : 0);
 					std::cout << path << ": " << "Equal = " << res[i_res];
 					for (int i_err_node = 0; i_err_node < n_err_nodes; i_err_node ++)
 					{
-						std::cout << "\t" << body_name_c(err_nodes[i_err_node]);
+						std::cout << "\t" << body_name_c(err_nodes[i_err_node]) << "=" << err_oris[i_err_node];
 					}
-					std:: cout << std::endl;
+					std::cout << std::endl;
 					
 					if (VALID_HANDLE(body_d))
 						destroy_tree_body(body_d);
@@ -83,6 +92,7 @@ int main(int argc, char* argv[])
 			{
 				std::cout << "ERROR: " << info << std::endl;
 			}
+			delete [] err_oris;
 			free(err_nodes);
 			destroy_tree_body(body_s);
 			unload_bvh(hBVH_s);
