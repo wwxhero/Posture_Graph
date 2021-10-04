@@ -15,19 +15,46 @@ int main(int argc, char* argv[])
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
 	bool for_testing_compatibility = (3 == argc);
-	bool for_reset_restpose = (4 == argc || 5 == argc);
+	bool for_testing_restpose_T = (2 == argc);
 	if (!for_testing_compatibility
-	 && !for_reset_restpose)
+	 && !for_testing_restpose_T)
 	{
-		std::cout << "Usage:\tbvh_compatible_verify <STANDARD_BVH_PATH> <BVH_DIR>\t\t//to show the file information" << std::endl;
-		// std::cerr <<       "\tsimpe_demo <BVH_DIR_SRC> <BVH_PATH_DEST> <FRAME_NO> [<SCALE>]\t//to reset rest posture with the given frame posture" << std::endl;
+		std::cout << "Usage:\tbvh_compatible_verify <STANDARD_BVH> <BVH_DIR>\t\t\t\t\t//to compare the files in <BVH_DIR> against <STANDARD_BVH>" << std::endl;
+		std::cout << 	   "\tbvh_compatible_verify <BVH_DIR>\t\t\t\t\t\t\t//to verify for the files in <BVH_DIR> in 'T' posture" << std::endl;
 	}
 	else
 	{
-		const std::string bvh_file_path = argv[1];
+
+		std::vector<const char*> right_arm_pts = {
+			"RightForeArm", "RightHand"						//right arm points
+		};
+		std::vector<const char*> left_arm_pts = {
+			"LeftForeArm", "LeftHand"						//left arm points
+		};
+		std::vector<const char*> spine_pts = {
+			"Spine", "Spine1", "Neck", "Neck1", "Head",		//spine points
+		};
+		std::vector<const char*> right_leg_pts = {
+			"RightFoot", "RightLeg",						//right leg points
+		};
+		std::vector<const char*> left_leg_pts = {
+			"LeftFoot", "LeftLeg", 							//left leg points
+		};
+
+		std::vector<const char*> pts_interest;
+		std::vector<const char*>* parts[] = {&spine_pts, &right_leg_pts, &left_leg_pts, &right_arm_pts, &left_arm_pts };
+		for (auto part : parts)
+		{
+			pts_interest.insert(pts_interest.end(), part->begin(), part->end());
+		}
+		int n_interests = (int)pts_interest.size();
+		Real* err = new Real[n_interests];
+		const Real c_errMax = (Real)180;
+
 		if (for_testing_compatibility)
 		{
 			auto tick_start = ::GetTickCount64();
+			const std::string bvh_file_path = argv[1];
 			HBVH hBVH_s = load_bvh_c(bvh_file_path.c_str());
 			if (!VALID_HANDLE(hBVH_s))
 			{
@@ -43,80 +70,76 @@ int main(int argc, char* argv[])
 			std::cout << "Frame time      : " << frame_time(hBVH_s) 	<< std::endl;
 			std::cout << "Joint hierarchy : " << std::endl;
 			PrintJointHierarchy(hBVH_s);
-#ifdef _DEBUG
-			std::string bvh_file_path_dup(bvh_file_path);
-			bvh_file_path_dup += "_dup";
-			WriteBvhFile(hBVH_s, bvh_file_path_dup.c_str());
-#endif
-			HBODY body_s = create_tree_body_bvh(hBVH_s);
-			const char* const pts_interest[] = {
-				"LeftFoot", "LeftLeg", 							//left leg points
-				"RightFoot", "RightLeg",						//right leg points
-				"Spine", "Spine1", "Neck", "Neck1", "Head",		//spine points
-				"RightForeArm", "RightHand",					//right arm points
-				"LeftForeArm", "LeftHand"						//left arm points
-			};
-			int n_err_nodes_cap = sizeof(pts_interest)/sizeof(const char*);
-			HBODY* err_nodes = (HBODY*)malloc(sizeof(HBODY) * n_err_nodes_cap);
-			Real* err_oris = new Real[n_err_nodes_cap];
+
 			std::cout << "standard BVH file:" << argv[1] << std::endl;
-			auto onbvh = [body_s, err_nodes, err_oris, pts_interest, n_err_nodes_cap] (const char* path) -> bool
+			HBODY body_s = create_tree_body_bvh(hBVH_s);
+			destroy_tree_body(body_s);
+			unload_bvh(hBVH_s);
+		}
+		else // for_testing_restpose_T
+		{
+			auto onbvh = [&] (const char* path) -> bool
+			{
+				HBVH hBVH_d = load_bvh_c(path);
+				HBODY body_d = H_INVALID;
+				int n_nT_nodes = 0;
+				const Real up[] = {(Real)0, (Real)1, (Real)0}; //+Y
+				// memset(err, c_errMax, n_interests * sizeof(Real));
+				for (int i_interest = 0; i_interest < n_interests; i_interest++)
+					err[i_interest] = c_errMax;
+				if (VALID_HANDLE(hBVH_d)
+					&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d)))
 				{
-					HBVH hBVH_d = load_bvh_c(path);
-					HBODY body_d = H_INVALID;
-					int n_err_nodes = 0;
-					memset(err_oris, 0, n_err_nodes_cap * sizeof(Real));
-					bool eq = VALID_HANDLE(hBVH_d)
-								&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d))
-								&& (0 == (n_err_nodes = body_cmp(pts_interest, n_err_nodes_cap, body_s, body_d, err_nodes, err_oris))); //verify body_s == body_d
-					const char * res[] = { "false", "true" };
-					int i_res = (eq ? 1 : 0);
-					std::cout << path << ": " << "Equal = " << res[i_res];
-					for (int i_err_node = 0; i_err_node < n_err_nodes; i_err_node ++)
+					int i_sub_parts[5][2] = {0};
+					const int n_parts = 5;
+					i_sub_parts[0][0] = 0;
+					i_sub_parts[0][1] = (int)parts[0]->size();
+					for (int i_part = 1; i_part < n_parts; i_part ++)
 					{
-						std::cout << "\t" << body_name_c(err_nodes[i_err_node]) << "=" << err_oris[i_err_node];
+						int& i_sub_part_start = i_sub_parts[i_part][0];
+						int& i_sub_part_end = i_sub_parts[i_part][0];
+						const int i_sub_part_end_p = i_sub_parts[i_part-1][1];
+						i_sub_part_start = i_sub_part_end_p;
+						i_sub_part_end = i_sub_part_start + (int)parts[i_part]->size();
 					}
-					std::cout << std::endl;
-					
-					if (VALID_HANDLE(body_d))
-						destroy_tree_body(body_d);
-					if (VALID_HANDLE(hBVH_d))
-						unload_bvh(hBVH_d);
-					return true;
-				};
+
+					body_T_test(body_d, up
+						, pts_interest.data(), (int)pts_interest.size()
+						, i_sub_parts
+						, err);
+				}
+
+				std::cout << path;
+				for (int i_err = 0; i_err < n_interests; i_err ++)
+					std::cout << "\t" << err[i_err];
+				std::cout << std::endl;
+
+				if (VALID_HANDLE(body_d))
+					destroy_tree_body(body_d);
+				if (VALID_HANDLE(hBVH_d))
+					unload_bvh(hBVH_d);
+				return true;
+			};
 			try
 			{
-				TraverseDirTree(argv[2], onbvh, ".bvh");
+				const std::string bvh_file_dir = argv[1];
+				std::cout << "File";
+				for (int i_interest = 0; i_interest < n_interests; i_interest ++)
+					std::cout << "\t" << pts_interest[i_interest];
+				std::cout << std::endl;
+				TraverseDirTree(bvh_file_dir, onbvh, ".bvh");
 			}
 			catch (std::string &info)
 			{
 				std::cout << "ERROR: " << info << std::endl;
 			}
-			delete [] err_oris;
-			free(err_nodes);
-			destroy_tree_body(body_s);
-			unload_bvh(hBVH_s);
 		}
-		else
-		{
-			const std::string bvh_file_path_dst = argv[2];
-			int i_frame = atoi(argv[3]);
-			double scale = ((5 == argc)
-							? atof(argv[4])
-							: 1);
-			auto tick_start = ::GetTickCount64();
-			bool resetted = ResetRestPose(bvh_file_path.c_str()
-										, i_frame
-										, bvh_file_path_dst.c_str()
-										, scale);
-			auto tick = ::GetTickCount64() - tick_start;
-			auto tick_sec = tick / 1000.0f;
-			const char* results[] = {"failed" , "successful"};
-			int i_result = (resetted ? 1 : 0);
-			printf("Reset posture takes %.2f seconds %s\n",
-					tick_sec,
-					results[i_result]);
-		}
+		delete [] err;
+
+
+
+
+
 	}
 
 
