@@ -90,22 +90,22 @@ int main(int argc, char* argv[])
 				if (VALID_HANDLE(hBVH_d)
 					&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d)))
 				{
-					int i_sub_parts[5][2] = {0};
+					int parts_body_idx_range[5][2] = {0};
 					const int n_parts = 5;
-					i_sub_parts[0][0] = 0;
-					i_sub_parts[0][1] = (int)parts[0]->size();
+					parts_body_idx_range[0][0] = 0;
+					parts_body_idx_range[0][1] = (int)parts[0]->size();
 					for (int i_part = 1; i_part < n_parts; i_part ++)
 					{
-						int& i_sub_part_start = i_sub_parts[i_part][0];
-						int& i_sub_part_end = i_sub_parts[i_part][0];
-						const int i_sub_part_end_p = i_sub_parts[i_part-1][1];
-						i_sub_part_start = i_sub_part_end_p;
-						i_sub_part_end = i_sub_part_start + (int)parts[i_part]->size();
+						int& i_part_start = parts_body_idx_range[i_part][0];
+						int& i_part_end = parts_body_idx_range[i_part][1];
+						const int i_part_end_p = parts_body_idx_range[i_part-1][1];
+						i_part_start = i_part_end_p;
+						i_part_end = i_part_start + (int)parts[i_part]->size();
 					}
 
 					body_T_test(body_d, up
 						, pts_interest.data(), (int)pts_interest.size()
-						, i_sub_parts
+						, parts_body_idx_range
 						, err);
 				}
 
