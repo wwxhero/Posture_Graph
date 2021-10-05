@@ -34,9 +34,11 @@ int main(int argc, char* argv[])
 			std::cout << "Joint hierarchy : " << std::endl;
 			PrintJointHierarchy(hBVH);
 #ifdef _DEBUG
+			HBVH hBVH_dup = copy_bvh(hBVH);
 			std::string bvh_file_path_dup(bvh_file_path);
 			bvh_file_path_dup += "_dup";
-			WriteBvhFile(hBVH, bvh_file_path_dup.c_str());
+			WriteBvhFile(hBVH_dup, bvh_file_path_dup.c_str());
+			unload_bvh(hBVH_dup);
 #endif
 			unload_bvh(hBVH);
 		}
