@@ -35,6 +35,8 @@ int main(int argc, char* argv[])
 			PrintJointHierarchy(hBVH);
 #ifdef _DEBUG
 			HBVH hBVH_dup = copy_bvh(hBVH);
+			std::cout << "BVH duplicated:" << std::endl;
+			PrintJointHierarchy(hBVH_dup);
 			std::string bvh_file_path_dup(bvh_file_path);
 			bvh_file_path_dup += "_dup";
 			WriteBvhFile(hBVH_dup, bvh_file_path_dup.c_str());
