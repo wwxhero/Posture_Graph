@@ -1,9 +1,26 @@
+#include <set>
+#include <algorithm>
+#include <cctype>
+#include <string>
+#include <filesystem>
 
+namespace fs = std::experimental::filesystem;
+
+inline std::string Norm(std::string path)
+{
+	std::transform(path.begin()
+				, path.end()
+				, path.begin()
+				, [](unsigned char c)
+					{
+						return std::tolower(c);
+					});
+	return std::move(path);
+}
 
 template<typename LAMBDA_onext>
 void TraverseDirTree(const std::string& dirPath, LAMBDA_onext onbvh, const std::string& ext) //  throw (std::string)
 {
-	namespace fs = std::experimental::filesystem;
 	WIN32_FIND_DATA ffd;
 	LARGE_INTEGER filesize;
 	std::string filter = dirPath + "\\*";
