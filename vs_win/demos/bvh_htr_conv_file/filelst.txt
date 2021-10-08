@@ -1,0 +1,4 @@
+mv bvh_posture_reset_file.vcxproj bvh_htr_conv_file.vcxproj
+mv bvh_posture_reset_file.vcxproj.filters bvh_htr_conv_file.vcxproj.filters
+mv bvh_posture_reset_file.vcxproj.user bvh_htr_conv_file.vcxproj.user
+
