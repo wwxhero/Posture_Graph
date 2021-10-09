@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <iostream>
 #include "bvh.h"
 
@@ -13,8 +14,8 @@ int main(int argc, char* argv[])
 	if (!for_show_file_info
 	 && !for_reset_restpose)
 	{
-		std::cerr << "Usage:\tsimpe_demo <BVH_PATH>\t\t//to show the file information" << std::endl;
-		std::cerr <<       "\tsimpe_demo <BVH_PATH_SRC> <BVH_PATH_DEST> <FRAME_NO> [<SCALE>]\t//to reset rest posture with the given frame posture" << std::endl;
+		std::cerr << "Usage:\tbvh_posture_reset_file <BVH_PATH>\t\t//to show the file information" << std::endl;
+		std::cerr <<       "\tbvh_posture_reset_file <BVH_PATH_SRC> <BVH_PATH_DEST> <FRAME_NO> [<SCALE>]\t//to reset rest posture with the given frame posture" << std::endl;
 	}
 	else
 	{
@@ -33,9 +34,13 @@ int main(int argc, char* argv[])
 			std::cout << "Joint hierarchy : " << std::endl;
 			PrintJointHierarchy(hBVH);
 #ifdef _DEBUG
+			HBVH hBVH_dup = copy_bvh(hBVH);
+			std::cout << "BVH duplicated:" << std::endl;
+			PrintJointHierarchy(hBVH_dup);
 			std::string bvh_file_path_dup(bvh_file_path);
 			bvh_file_path_dup += "_dup";
-			WriteBvhFile(hBVH, bvh_file_path_dup.c_str());
+			WriteBvhFile(hBVH_dup, bvh_file_path_dup.c_str());
+			unload_bvh(hBVH_dup);
 #endif
 			unload_bvh(hBVH);
 		}
