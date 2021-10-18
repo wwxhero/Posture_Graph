@@ -4,9 +4,6 @@
 #include <string>
 #include <shlwapi.h>
 #include <strsafe.h>
-#include <opencv2/opencv.hpp>
-#include "articulated_body.h"
-#include "bvh.h"
 #include "posture_graph.h"
 #include "filesystem_helper.hpp"
 
@@ -34,21 +31,11 @@ int main(int argc, char* argv[])
 			{
 				const char* path_htr = argv[1];
 				const char* path_png = argv[2];
-				HBVH htr = load_bvh_c(path_htr);
-				unsigned int n_frames = get_n_frames(htr);
-				cv::Mat err_out(n_frames, n_frames, CV_16U);
-				HERRS err = alloc_err_table(htr);
-				for (int i_frame = 0; i_frame < n_frames; i_frame++)
-				{
-					for (int j_frame = 0; j_frame < n_frames; j_frame++)
-					{
-						auto& vis_scale_ij = err_out.at<unsigned short>(i_frame, j_frame);
-						vis_scale_ij = (unsigned short)(get_err(err, i_frame, j_frame) * USHRT_MAX);
-					}
-				}
-				free_err_table(err);
-				unload_bvh(htr);
-				imwrite(path_png, err_out);
+				auto tick_start = ::GetTickCount64();
+				err_vis(path_htr, path_png);
+				auto tick = ::GetTickCount64() - tick_start;
+				float tick_sec = tick / 1000.0f;
+				printf("Converting error-table from %s to %s takes %.2f seconds\n", argv[1], argv[2], tick_sec);
 			}
 			else
 			{
