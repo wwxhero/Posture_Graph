@@ -21,7 +21,6 @@ int main(int argc, char* argv[])
 	{
 		try
 		{
-			// std::cerr << "Usage:\tposture_error_vis <HTR> <PNG_grayscale>" << std::endl;
 			const char* c_exts[] = { ".xml", ".htr" };
 			fs::path path_src(argv[1]);
 			fs::path path_dst(argv[2]);
