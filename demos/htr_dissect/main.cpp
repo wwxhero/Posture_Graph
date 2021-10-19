@@ -27,7 +27,10 @@ int main(int argc, char* argv[])
 			{
 				auto outDir = fs::path(path_dst).replace_extension();
 				fs::create_directory(outDir);
-				dissect(path_xml, path_src, outDir.u8string().c_str());
+				bool ok = dissect(path_xml, path_src, outDir.u8string().c_str());
+				const char* res[] = { "failed", "successful" };
+				int i_res = (ok ? 1 : 0);
+				printf("dissect %s to %s: %s\n", path_src, path_dst, res[i_res]);
 				return true;
 			};
 
