@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
 	if (4 != argc)
 	{
-		std::cout << "Usage:\thtr_dissect <PG.XML> <HTR> <OutDir>" << std::endl;
+		std::cout << "Usage:\thtr_dissect_file <PG.XML> <HTR> <OutDir>" << std::endl;
 		return -1;
 	}
 	else
@@ -41,15 +41,12 @@ int main(int argc, char* argv[])
 			{
 				std::cout << "Not the right file extensions!!!" << std::endl;
 			}
-			
 		}
 		catch (std::string &info)
 		{
 			std::cout << "ERROR: " << info << std::endl;
 		}
 	}
-
-
 
 	return 0;
 }
