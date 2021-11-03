@@ -11,10 +11,11 @@
 
 void conv(const char* path_src, const char* path_dst, bool htr2bvh)
 {
+	printf("Converting %s to %s: ", path_src, path_dst);
 	bool converted = convert(path_src, path_dst, htr2bvh);
 	const char* res[] = { "failed", "successful" };
 	int i_res = (converted ? 1 : 0);
-	printf("Converting %s to %s: %s\n", path_src, path_dst, res[i_res]);
+	printf(" %s\n", res[i_res]);
 };
 
 int main(int argc, char* argv[])
