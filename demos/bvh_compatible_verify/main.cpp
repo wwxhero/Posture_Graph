@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 				if (VALID_HANDLE(hBVH_d)
 				 	&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d)))
 				{
-				 	// body_EQ_test(body_s, body_d, pts_interest, err);
+				 	body_EQ_test(body_s, body_d, pts_interest.data(), n_interests, err);
 				}
 
 				std::cout << path;
