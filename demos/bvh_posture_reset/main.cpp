@@ -27,12 +27,15 @@ int main(int argc, char* argv[])
 
 		auto onbvh = [pose_id] (const char* path_src, const char* path_dst) -> bool
 			{
+				std::cout << "reset pose from " << path_src << " to " << path_dst;
 				bool resetted = ResetRestPose(path_src
 											, pose_id
 											, path_dst
 											, 1.0);
-				if (!resetted)
-					std::cout << "reset pose from " << path_src << " to " << path_dst << " failed!!!" << std::endl;
+				if (resetted)
+				 	std::cout << " successful!" << std::endl;
+				else
+					std::cout << " failed!!!" << std::endl;
 				return true;
 			};
 		try

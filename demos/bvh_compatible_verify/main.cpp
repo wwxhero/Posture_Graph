@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	if (!for_testing_compatibility
 	 && !for_testing_restpose_T)
 	{
-		std::cout << "Usage:\tbvh_compatible_verify <STANDARD_BVH> <BVH_DIR>\t\t\t\t\t//to compare the files in <BVH_DIR> against <STANDARD_BVH>" << std::endl;
+		// std::cout << "Usage:\tbvh_compatible_verify <STANDARD_BVH> <BVH_DIR>\t\t\t\t\t//to compare the files in <BVH_DIR> against <STANDARD_BVH>" << std::endl;
 		std::cout << 	   "\tbvh_compatible_verify <BVH_DIR>\t\t\t\t\t\t\t//to verify for the files in <BVH_DIR> in 'T' posture" << std::endl;
 	}
 	else
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 				if (VALID_HANDLE(hBVH_d)
 				 	&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d)))
 				{
-				 	body_EQ_test(interests, body_d, errs);
+				 	// body_EQ_test(interests, body_d, errs);
 				}
 
 				std::cout << path;
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 				"LeftForeArm", "LeftHand"						//left arm points
 			};
 			std::vector<const char*> spine_pts = {
-				"Spine", "Spine1", "Neck", "Neck1", "Head",		//spine points
+				"Hips", "LowerBack", "Spine", "Spine1", "Neck", "Neck1", "Head",		//spine points
 			};
 			std::vector<const char*> right_leg_pts = {
 				"RightFoot", "RightLeg",						//right leg points
@@ -110,6 +110,7 @@ int main(int argc, char* argv[])
 
 			std::vector<const char*> pts_interest;
 			std::vector<const char*>* parts[] = {&spine_pts, &right_leg_pts, &left_leg_pts, &right_arm_pts, &left_arm_pts };
+			const int n_parts = sizeof(parts)/sizeof(std::vector<const char*>*);
 			for (auto part : parts)
 			{
 				pts_interest.insert(pts_interest.end(), part->begin(), part->end());
@@ -121,14 +122,14 @@ int main(int argc, char* argv[])
 				HBVH hBVH_d = load_bvh_c(path);
 				HBODY body_d = H_INVALID;
 				const Real up[] = {(Real)0, (Real)1, (Real)0}; //+Y
+				const Real forward[] = {(Real)0, (Real)0, (Real)1};
 				// memset(err, c_errMax, n_interests * sizeof(Real));
 				for (int i_interest = 0; i_interest < n_interests; i_interest++)
 					err[i_interest] = c_errMax;
 				if (VALID_HANDLE(hBVH_d)
 					&& VALID_HANDLE(body_d = create_tree_body_bvh(hBVH_d)))
 				{
-					int parts_body_idx_range[5][2] = {0};
-					const int n_parts = 5;
+					int (*parts_body_idx_range)[2] = (int (*)[2])malloc(2*n_parts*sizeof(int));
 					parts_body_idx_range[0][0] = 0;
 					parts_body_idx_range[0][1] = (int)parts[0]->size();
 					for (int i_part = 1; i_part < n_parts; i_part ++)
@@ -140,10 +141,11 @@ int main(int argc, char* argv[])
 						i_part_end = i_part_start + (int)parts[i_part]->size();
 					}
 
-					body_T_test(body_d, up
+					body_T_test(body_d, up, forward
 						, pts_interest.data(), (int)pts_interest.size()
 						, parts_body_idx_range
 						, err);
+					free(parts_body_idx_range);
 				}
 
 				std::cout << path;
