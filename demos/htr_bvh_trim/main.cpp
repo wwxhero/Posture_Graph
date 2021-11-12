@@ -30,9 +30,10 @@ int main(int argc, char* argv[])
 			{
 				std::cout << "Trimming " << path_src << " to " << path_dst << ":";
 				bool trimmed = trim(path_src, path_dst, name_subtrees_rm.data(), (int)name_subtrees_rm.size());
-				static const char* const results[] = {"failed", "successful"};
-				int i_result = trim? 1 : 0;
-				std::cout << results[i_result] << std::endl;
+				if (trimmed)
+					std::cout << "successful!" << std::endl;
+				else
+					std::cout << "failed!!!" << std::endl;
 				return true;
 			};
 
