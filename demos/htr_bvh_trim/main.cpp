@@ -4,10 +4,10 @@
 #include <string>
 #include <shlwapi.h>
 #include <strsafe.h>
-#include <filesystem>
 #include "articulated_body.h"
 #include "bvh.h"
 #include "filesystem_helper.hpp"
+#include "posture_graph.h"
 
 int main(int argc, char* argv[])
 {
@@ -26,10 +26,9 @@ int main(int argc, char* argv[])
 		for (int i_subtree = 0; i_subtree < n_subtrees_rm; i_subtree ++)
 			name_subtrees_rm[i_subtree] = argv[i_subtree + i_base_subtree];
 
-		auto OnTrimFile = [](const char* path_src, const char* path_dst) -> bool
+		auto OnTrimFile = [&name_subtrees_rm = std::as_const(name_subtrees_rm)](const char* path_src, const char* path_dst) -> bool
 			{
-				std::cout << "Trim " << path_src << " to " << path_dst << std::endl;
-				return true;
+				return trim(path_src, path_dst, name_subtrees_rm.data(), (int)name_subtrees_rm.size());
 			};
 
 		const char* dir_src = argv[1];
