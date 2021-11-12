@@ -28,7 +28,12 @@ int main(int argc, char* argv[])
 
 		auto OnTrimFile = [&name_subtrees_rm = std::as_const(name_subtrees_rm)](const char* path_src, const char* path_dst) -> bool
 			{
-				return trim(path_src, path_dst, name_subtrees_rm.data(), (int)name_subtrees_rm.size());
+				std::cout << "Trimming " << path_src << " to " << path_dst << ":";
+				bool trimmed = trim(path_src, path_dst, name_subtrees_rm.data(), (int)name_subtrees_rm.size());
+				static const char* const results[] = {"failed", "successful"};
+				int i_result = trim? 1 : 0;
+				std::cout << results[i_result] << std::endl;
+				return true;
 			};
 
 		const char* dir_src = argv[1];
