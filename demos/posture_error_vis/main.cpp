@@ -5,6 +5,7 @@
 #include <shlwapi.h>
 #include <strsafe.h>
 #include "posture_graph.h"
+#include "error_table_helper.hpp"
 #include "filesystem_helper.hpp"
 
 int main(int argc, char* argv[])
@@ -37,7 +38,15 @@ int main(int argc, char* argv[])
 			{
 				const char* res[] = { "failed", "successful" };
 				auto tick_start = ::GetTickCount64();
-				bool done = err_vis(path_interests_conf, path_src, path_dst);
+				_ERROR_TB etb;
+				bool done = init_err_tb(path_interests_conf, path_src, &etb);
+				if (done)
+				{
+					cv::Mat vis;
+					ETB_Convert(&etb, vis);
+					imwrite(path_dst, vis);
+					uninit_err_tb(&etb);
+				}
 				int i_res = done ? 1 : 0;
 				auto tick = ::GetTickCount64() - tick_start;
 				float tick_sec = tick / 1000.0f;
