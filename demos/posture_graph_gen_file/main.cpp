@@ -26,20 +26,21 @@ int main(int argc, char* argv[])
 			const char* path_interests_conf = argv[1];
 			const char* path_htr = argv[2];
 			const char* pg_dir = argv[3];
-			double eps_err = atof(argv[4]);
+			Real eps_err = (Real)atof(argv[4]);
 			std::string exts_input[] = {
 				Norm(fs::path(path_htr).extension().u8string()),
 			};
 			bool htr2pg = (exts_input[0] == c_exts[0]);
 			if (htr2pg)
 			{
+				printf("Converting error-table from %s to %s ", path_htr, pg_dir);
 				const char* res[] = { "failed", "successful" };
 				auto tick_start = ::GetTickCount64();
-				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err);
+				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err, NULL);
 				int i_res = done ? 1 : 0;
 				auto tick = ::GetTickCount64() - tick_start;
 				float tick_sec = tick / 1000.0f;
-				printf("Converting error-table from %s to %s takes %.2f seconds: %s\n", path_htr, pg_dir, tick_sec, res[i_res]);
+				printf("takes %.2f seconds: %s\n", tick_sec, res[i_res]);
 			}
 			else
 			{
