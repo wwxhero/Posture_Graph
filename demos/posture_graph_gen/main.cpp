@@ -15,38 +15,33 @@ int main(int argc, char* argv[])
 
 	if (5 != argc)
 	{
-		std::cout << "Usage:\tposture_graph_gen_file <INTEREST_XML> <HTR> <PG_DIR> <Epsilon>" << std::endl;
+		std::cout << "Usage:\tposture_graph_gen <INTERESTS_XML> <BVH_DIR_SRC> <BVH_DIR_DST> <Epsilon>" << std::endl;
 		return -1;
 	}
 	else
 	{
-		try
-		{
-			const char* c_exts[] = {".htr"};
-			const char* path_interests_conf = argv[1];
-			const char* path_htr = argv[2];
-			const char* pg_dir = argv[3];
-			Real eps_err = (Real)atof(argv[4]);
-			std::string exts_input[] = {
-				Norm(fs::path(path_htr).extension().u8string()),
-			};
-			bool htr2pg = (exts_input[0] == c_exts[0]);
-			if (htr2pg)
+		const char* path_interests_conf = argv[1];
+		const char* dir_src = argv[2];
+		const char* dir_dst = argv[3];
+		Real eps_err = (Real)atof(argv[4]);
+
+
+		auto onhtr = [path_interests_conf, eps_err] (const char* path_src, const char* path_dst) -> bool
 			{
-				printf("Converting error-table from %s to %s ", path_htr, pg_dir);
-				const char* res[] = { "failed", "successful" };
+				std::string dir_dst = fs::path(path_dst).parent_path().u8string();
+				printf("Building Posture-Graph from %s to %s ", path_src, dir_dst.c_str());
 				auto tick_start = ::GetTickCount64();
-				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err, NULL);
-				int i_res = done ? 1 : 0;
+				bool built = posture_graph_gen(path_interests_conf, path_src, dir_dst.c_str(), eps_err, NULL);
+				const char* res[] = { "failed", "successful" };
+				int i_res = (built ? 1 : 0);
 				auto tick = ::GetTickCount64() - tick_start;
 				float tick_sec = tick / 1000.0f;
 				printf("takes %.2f seconds: %s\n", tick_sec, res[i_res]);
-			}
-			else
-			{
-				std::cout << "Not the right file extensions!!!" << std::endl;
-			}
-			
+				return true;
+			};
+		try
+		{
+			CopyDirTree(dir_src, dir_dst, onhtr, ".htr");
 		}
 		catch (std::string &info)
 		{
