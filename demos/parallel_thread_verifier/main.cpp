@@ -22,6 +22,26 @@ public:
 
 	~CTaskThread()
 	{
+		int n_tasks = (int)m_tasks.size();
+		if (0 < n_tasks)
+		{
+			int task_id_i = m_tasks[0].first;
+			int step_id_i = m_tasks[0].second;
+			for (int i_task = 1; i_task < n_tasks; i_task ++)
+			{
+				// TASKs: (i, 0), (i, 1), (i, 2), (i+k, 0), (i+k, 1), (i+k, 2), (i+k+p, 0) ... where i>=0, k>0, p>0
+				int task_id_i_p = m_tasks[i_task].first;
+				int step_id_i_p = m_tasks[i_task].second;
+				bool valid_same_task = (task_id_i == task_id_i_p
+										&& step_id_i + 1 == step_id_i_p);
+				bool valid_diff_task = (task_id_i < task_id_i_p
+										&& c_stepCompleteTask == step_id_i
+										&& c_stepPrepareTask == step_id_i_p);
+				assert(valid_same_task || valid_diff_task);
+				task_id_i = task_id_i_p;
+				step_id_i = step_id_i_p;
+			}
+		}
 	}
 
 	void PrepareTask_main(int task_id)
@@ -33,6 +53,7 @@ public:
 			&& (!initialized || valid_step));		// initialized->valid_step
 		m_task_id = task_id;
 		m_task_step = c_stepPrepareTask;
+		m_tasks.push_back(std::make_pair(m_task_id, m_task_step));
 		Execute_main();
 	}
 
@@ -42,6 +63,7 @@ public:
 		bool valid_step = (c_stepExeTask == m_task_step);
 		assert(valid_task && valid_step);
 		m_task_step = c_stepCompleteTask;
+		m_tasks.push_back(std::make_pair(m_task_id, m_task_step));
 	}
 
 private:
@@ -51,6 +73,7 @@ private:
 		bool valid_step = (c_stepPrepareTask == m_task_step);
 		assert(valid_task && valid_step);
 		m_task_step = c_stepExeTask;
+		m_tasks.push_back(std::make_pair(m_task_id, m_task_step));
 	}
 private:
 	const int c_stepPrepareTask;
@@ -58,6 +81,8 @@ private:
 	const int c_stepCompleteTask;
 	volatile int m_task_id;
 	volatile int m_task_step;
+	typedef std::pair<int, int> TASK;
+	std::vector<TASK> m_tasks;
 };
 
 
@@ -81,9 +106,9 @@ int main(int argc, char* argv[])
 		int task_id = 0;
 		std::vector<CTaskThread*>& threads = pool.WaitForAllReadyThreads_main();
 		for (auto thread : threads)
-			thread->PrepareTask_main(task_id);
+			thread->PrepareTask_main(task_id++);
 
-		for (task_id ++; task_id < n_tasks; task_id ++)
+		while (task_id < n_tasks)
 		{
 			CTaskThread* thread_i = NULL;
 			do
@@ -92,7 +117,7 @@ int main(int argc, char* argv[])
 			} while (NULL == thread_i);
 
 			thread_i->CompleteTask_main();
-			thread_i->PrepareTask_main(task_id);
+			thread_i->PrepareTask_main(task_id ++);
 		}
 
 		threads = pool.WaitForAllReadyThreads_main();
