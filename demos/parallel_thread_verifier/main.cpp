@@ -8,60 +8,56 @@
 #include "posture_graph.h"
 #include "parallel_thread_helper.hpp"
 
-class CThreadPostureGraphGen : public CThread_W32
+class CTaskThread : public CThread_W32
 {
 public:
-	CThreadPostureGraphGen()
-		: m_generated(false)
+	CTaskThread()
+		: c_stepPrepareTask(0)
+		, c_stepExeTask(1)
+		, c_stepCompleteTask(2)
+		, m_task_id(-1)
+		, m_task_step(c_stepCompleteTask)
 	{
 	}
 
-	~CThreadPostureGraphGen()
+	~CTaskThread()
 	{
 	}
 
-	void posture_graph_gen_pre_main(std::string& path_interests_conf, std::string& path_src, std::string& dir_dst, Real eps_err)
+	void PrepareTask_main(int task_id)
 	{
-		m_path_interests_conf = std::move(path_interests_conf);
-		m_path_src = std::move(path_src);
-		m_dir_dst = std::move(dir_dst);
-		m_eps_err = eps_err;
-		c_dir_dst = m_dir_dst.c_str();
-		c_path_interests_conf = m_path_interests_conf.c_str();
-		c_path_src = m_path_src.c_str();
+		bool initialized = !(m_task_id < 0);
+		bool increasing_taskid = (m_task_id < task_id);
+		bool valid_step = (c_stepCompleteTask == m_task_step);
+		assert((!initialized || increasing_taskid)	// initialized->increasing_taskid
+			&& (!initialized || valid_step));		// initialized->valid_step
+		m_task_id = task_id;
+		m_task_step = c_stepPrepareTask;
 		Execute_main();
 	}
 
-	bool posture_graph_gen_post_main(std::string& path_src, std::string& dir_dst, Real& eps_err, unsigned int & dur_milli, bool& generated)
+	void CompleteTask_main()
 	{
-		assert(m_path_src.empty() == m_dir_dst.empty());
-		if (m_path_src.empty() || m_dir_dst.empty())
-			return false;
-		dur_milli = Dur_main();
-		path_src = std::move(m_path_src);
-		dir_dst = std::move(m_dir_dst);
-		eps_err = m_eps_err;
-		generated = m_generated;
-		return true;
+		bool valid_task = !(m_task_id < 0);
+		bool valid_step = (c_stepExeTask == m_task_step);
+		assert(valid_task && valid_step);
+		m_task_step = c_stepCompleteTask;
 	}
 
+private:
 	virtual void Run_worker()
 	{
-		m_generated = posture_graph_gen(c_path_interests_conf
-									, c_path_src
-									, c_dir_dst
-									, m_eps_err
-									, NULL);
+		bool valid_task = !(m_task_id < 0);
+		bool valid_step = (c_stepPrepareTask == m_task_step);
+		assert(valid_task && valid_step);
+		m_task_step = c_stepExeTask;
 	}
 private:
-	std::string m_path_interests_conf;
-	std::string m_path_src;
-	std::string m_dir_dst;
-	const char* volatile c_path_interests_conf;
-	const char* volatile c_path_src;
-	const char* volatile c_dir_dst;
-	volatile Real m_eps_err;
-	volatile bool m_generated;
+	const int c_stepPrepareTask;
+	const int c_stepExeTask;
+	const int c_stepCompleteTask;
+	volatile int m_task_id;
+	volatile int m_task_step;
 };
 
 
@@ -70,89 +66,41 @@ int main(int argc, char* argv[])
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
-	if (6 != argc)
+	if (3 != argc)
 	{
-		std::cout << "Usage:\tposture_graph_gen <INTERESTS_XML> <BVH_DIR_SRC> <BVH_DIR_DST> <Epsilon> <N_threads>" << std::endl;
+		std::cout << "Usage:\tparallel_thread_verifier <N_threads> <N_tasks>" << std::endl;
 		return -1;
 	}
 	else
 	{
-		const char* path_interests_conf = argv[1];
-		const char* dir_src = argv[2];
-		const char* dir_dst = argv[3];
-		Real eps_err = (Real)atof(argv[4]);
-		const int n_threads = atoi(argv[5]);
+		const int n_parallel = atoi(argv[1]);
+		const int n_tasks = atoi(argv[2]);
+		CThreadPool_W32<CTaskThread> pool;
+		pool.Initialize_main(n_parallel);
 
-		auto tick_start = ::GetTickCount64();
+		int task_id = 0;
+		std::vector<CTaskThread*>& threads = pool.WaitForAllReadyThreads_main();
+		for (auto thread : threads)
+			thread->PrepareTask_main(task_id);
 
-		CThreadPool_W32<CThreadPostureGraphGen> pool;
-		pool.Initialize_main(n_threads);
-
-		auto onhtr = [path_interests_conf, eps_err, &pool] (const char* path_src, const char* path_dst) -> bool
+		for (task_id ++; task_id < n_tasks; task_id ++)
+		{
+			CTaskThread* thread_i = NULL;
+			do
 			{
-				CThreadPostureGraphGen* posture_graph_gen_worker_i = NULL;
+				thread_i = pool.WaitForAReadyThread_main(10);
+			} while (NULL == thread_i);
 
-				do {
-					posture_graph_gen_worker_i = pool.WaitForAReadyThread_main(10000); // wait 10 seconds for a ready thread
-				} while(NULL == posture_graph_gen_worker_i);
-
-				unsigned int dur_milli_out = 0;
-				bool ret_out = false;
-				std::string path_src_out;
-				std::string dir_dst_out;
-				Real eps_err_out;
-				if (posture_graph_gen_worker_i->posture_graph_gen_post_main( path_src_out
-																			, dir_dst_out
-																			, eps_err_out
-																			, dur_milli_out
-																			, ret_out))
-				{
-					const char* res[] = { "failed", "successful" };
-					int i_res = (ret_out ? 1 : 0);
-					printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
-				}
-				std::string path_conf_worker_in(path_interests_conf);
-				std::string path_src_in(path_src);
-				std::string dir_dst_in = fs::path(path_dst).parent_path().u8string();
-				posture_graph_gen_worker_i->posture_graph_gen_pre_main(path_conf_worker_in, path_src_in, dir_dst_in, eps_err);
-				return true;
-			};
-		try
-		{
-			CopyDirTree(dir_src, dir_dst, onhtr, ".htr");
-		}
-		catch (std::string &info)
-		{
-			std::cout << "ERROR: " << info << std::endl;
+			thread_i->CompleteTask_main();
+			thread_i->PrepareTask_main(task_id);
 		}
 
-		std::vector<CThreadPostureGraphGen*>& all_threads = pool.WaitForAllReadyThreads_main();
+		threads = pool.WaitForAllReadyThreads_main();
+		for (auto thread : threads)
+			thread->CompleteTask_main();
 
-		for (auto thread_i : all_threads)
-		{
-			unsigned int dur_milli_out = 0;
-			bool ret_out = false;
-			std::string path_src_out;
-			std::string dir_dst_out;
-			Real eps_err_out;
-			if (thread_i->posture_graph_gen_post_main( path_src_out
-													, dir_dst_out
-													, eps_err_out
-													, dur_milli_out
-													, ret_out))
-			{
-				const char* res[] = { "failed", "successful" };
-				int i_res = (ret_out ? 1 : 0);
-				printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
-			}
-		}
-
-		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds*************\n", (double)tick_cnt/(double)1000);
-
+		std::cout << "verified successful!!!" << std::endl;
+		return 0;
 	}
 
-
-
-	return 0;
 }
