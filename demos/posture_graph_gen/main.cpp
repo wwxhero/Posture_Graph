@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 		const char* dir_dst = argv[3];
 		Real eps_err = (Real)atof(argv[4]);
 
+		auto tick_start = ::GetTickCount64();
 
 		auto onhtr = [path_interests_conf, eps_err] (const char* path_src, const char* path_dst) -> bool
 			{
@@ -47,6 +48,10 @@ int main(int argc, char* argv[])
 		{
 			std::cout << "ERROR: " << info << std::endl;
 		}
+
+		auto tick_cnt = ::GetTickCount64() - tick_start;
+		printf("************TOTAL TIME: %.2f seconds************\n", (double)tick_cnt/(double)1000);
+
 	}
 
 
