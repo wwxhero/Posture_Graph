@@ -126,6 +126,27 @@ int main(int argc, char* argv[])
 			std::cout << "ERROR: " << info << std::endl;
 		}
 
+		std::vector<CThreadPostureGraphGen*>& all_threads = pool.WaitForAllReadyThreads_main();
+
+		for (auto thread_i : all_threads)
+		{
+			unsigned int dur_milli_out = 0;
+			bool ret_out = false;
+			std::string path_src_out;
+			std::string dir_dst_out;
+			Real eps_err_out;
+			if (thread_i->posture_graph_gen_post_main( path_src_out
+													, dir_dst_out
+													, eps_err_out
+													, dur_milli_out
+													, ret_out))
+			{
+				const char* res[] = { "failed", "successful" };
+				int i_res = (ret_out ? 1 : 0);
+				printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
+			}
+		}
+
 		auto tick_cnt = ::GetTickCount64() - tick_start;
 		printf("************TOTAL TIME: %.2f seconds*************\n", (double)tick_cnt/(double)1000);
 

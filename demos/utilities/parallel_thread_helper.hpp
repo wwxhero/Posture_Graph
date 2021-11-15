@@ -190,6 +190,15 @@ public:
 		return m_threads[i_thread];
 	}
 
+	std::vector<Thread*>& WaitForAllReadyThreads_main()
+	{
+		::WaitForMultipleObjects((DWORD)m_readiness_ref.size(),
+								m_readiness_ref.data(),
+								TRUE,
+								INFINITE);
+		return m_threads;
+	}
+
 private:
 	std::vector<Thread*> m_threads;
 	std::vector<HANDLE> m_readiness_ref; //semaphores
