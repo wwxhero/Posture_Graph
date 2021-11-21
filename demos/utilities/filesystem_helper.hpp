@@ -89,6 +89,24 @@ void TraverseDirTree(const std::string& dirPath, LAMBDA_onext onbvh, const std::
 template<typename LAMBDA_onext>
 void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext OnDir, const std::string& filename_filter) //  throw (std::string)
 {
+	auto TextEQ = [] (const std::string& txt_0, const std::string& txt_1) -> bool
+		{
+			std::size_t len = txt_0.size();
+			bool eq = (len == txt_1.size());
+			auto it_0 = txt_0.begin();
+			auto it_1 = txt_1.begin();
+			for (; eq && txt_0.end() != it_0 && txt_1.end() != it_1; it_0++, it_1++)
+			{
+				const char ch_0 = *it_0;
+				const char ch_1 = *it_1;
+				int diff_c = (int)ch_0 - (int)ch_1;
+				const int TRIVIAL_DIFF_p = (int)'z' - (int)'Z';
+				const int TRIVIAL_DIFF_z = -TRIVIAL_DIFF_p;
+				eq = (0 == diff_c || TRIVIAL_DIFF_p == diff_c || TRIVIAL_DIFF_z == diff_c);
+			}
+			return eq;
+		};
+
 	WIN32_FIND_DATA ffd;
 	LARGE_INTEGER filesize;
 	std::string filter = dirPath + "\\*";
@@ -132,8 +150,7 @@ void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext OnDir, cons
 			filesize.LowPart = ffd.nFileSizeLow;
 			filesize.HighPart = ffd.nFileSizeHigh;
 
-
-			if (fs::path(ffd.cFileName) == fs::path(filename_filter))
+			if (TextEQ(ffd.cFileName, filename_filter))
 			{
 				OnDir(dirPath.c_str());
 			}
