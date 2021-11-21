@@ -87,7 +87,7 @@ void TraverseDirTree(const std::string& dirPath, LAMBDA_onext onbvh, const std::
 }
 
 template<typename LAMBDA_onext>
-void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext onbvh, const std::string& filename_filter) //  throw (std::string)
+void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext OnDir, const std::string& filename_filter) //  throw (std::string)
 {
 	WIN32_FIND_DATA ffd;
 	LARGE_INTEGER filesize;
@@ -117,7 +117,7 @@ void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext onbvh, cons
 				try
 				{
 					fs::path dirPath_prime = fs::path(dirPath)/ffd.cFileName;
-					TraverseDirTree_filter(dirPath_prime.u8string(), onbvh, filename_filter);
+					TraverseDirTree_filter(dirPath_prime.u8string(), OnDir, filename_filter);
 				}
 				catch (std::string& info)
 				{
@@ -135,8 +135,7 @@ void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext onbvh, cons
 
 			if (fs::path(ffd.cFileName) == fs::path(filename_filter))
 			{
-				fs::path filepath = fs::path(dirPath)/ffd.cFileName;
-				traversing = onbvh(filepath.u8string().c_str());
+				OnDir(dirPath.c_str());
 			}
 
 		}
