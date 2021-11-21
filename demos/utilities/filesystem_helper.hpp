@@ -9,16 +9,22 @@
 
 namespace fs = std::experimental::filesystem;
 
-inline std::string Norm(std::string path)
+bool TextEQ(const std::string& txt_0, const std::string& txt_1)
 {
-	std::transform(path.begin()
-				, path.end()
-				, path.begin()
-				, [](unsigned char c)
-					{
-						return std::tolower(c);
-					});
-	return std::move(path);
+	std::size_t len = txt_0.size();
+	bool eq = (len == txt_1.size());
+	auto it_0 = txt_0.begin();
+	auto it_1 = txt_1.begin();
+	for (; eq && txt_0.end() != it_0 && txt_1.end() != it_1; it_0++, it_1++)
+	{
+		const char ch_0 = *it_0;
+		const char ch_1 = *it_1;
+		int diff_c = (int)ch_0 - (int)ch_1;
+		const int TRIVIAL_DIFF_p = (int)'z' - (int)'Z';
+		const int TRIVIAL_DIFF_z = -TRIVIAL_DIFF_p;
+		eq = (0 == diff_c || TRIVIAL_DIFF_p == diff_c || TRIVIAL_DIFF_z == diff_c);
+	}
+	return eq;
 }
 
 template<typename LAMBDA_onext>
@@ -89,24 +95,6 @@ void TraverseDirTree(const std::string& dirPath, LAMBDA_onext onbvh, const std::
 template<typename LAMBDA_onext>
 void TraverseDirTree_filter(const std::string& dirPath, LAMBDA_onext OnDir, const std::string& filename_filter) //  throw (std::string)
 {
-	auto TextEQ = [] (const std::string& txt_0, const std::string& txt_1) -> bool
-		{
-			std::size_t len = txt_0.size();
-			bool eq = (len == txt_1.size());
-			auto it_0 = txt_0.begin();
-			auto it_1 = txt_1.begin();
-			for (; eq && txt_0.end() != it_0 && txt_1.end() != it_1; it_0++, it_1++)
-			{
-				const char ch_0 = *it_0;
-				const char ch_1 = *it_1;
-				int diff_c = (int)ch_0 - (int)ch_1;
-				const int TRIVIAL_DIFF_p = (int)'z' - (int)'Z';
-				const int TRIVIAL_DIFF_z = -TRIVIAL_DIFF_p;
-				eq = (0 == diff_c || TRIVIAL_DIFF_p == diff_c || TRIVIAL_DIFF_z == diff_c);
-			}
-			return eq;
-		};
-
 	WIN32_FIND_DATA ffd;
 	LARGE_INTEGER filesize;
 	std::string filter = dirPath + "\\*";
@@ -286,7 +274,7 @@ void CopyDirTree_file(const std::string& dir_src, const std::string& dir_dst, LA
 			filesize.LowPart = ffd.nFileSizeLow;
 			filesize.HighPart = ffd.nFileSizeHigh;
 
-			if (fs::path(ffd.cFileName).u8string() == filename)
+			if (TextEQ(fs::path(ffd.cFileName).u8string(), filename))
 			{
 				fs::path filepath_src = fs::path(dir_src)/ffd.cFileName;
 				fs::path filepath_dst = fs::path(dir_dst)/ffd.cFileName;

@@ -9,6 +9,11 @@
 #include "parallel_thread_helper.hpp"
 
 
+class Bucket
+{
+
+};
+
 int main(int argc, char* argv[])
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -53,12 +58,104 @@ int main(int argc, char* argv[])
 			std::cout << "ERROR: " << info << std::endl;
 		}
 
-		for (auto path: dirs_src)
-			std::cout << path << std::endl;
+		//	for (auto path: dirs_src)
+		//		std::cout << path << std::endl;
+
+		const int N_BUCKET = 5;
+		BucketSteamIn bucket(N_BUCKET, dirs_src);
+
+		CThreadPool_W32<CMergeThread> pool;
+		pool.Initialize_main(n_threads);
+
+		std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
+		for (auto it_thread = threads.begin()
+			; threads.end() != it_thread
+				&& bucket.Size() > 1
+			; it_thread ++ )
+		{
+			std::pair<HPG, HPG> merge_src = bucket.Pop_pair();
+			(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
+			bucket.PumpIn();
+			bucket.PumpIn();
+		}
+
+		while (bucket.Size() > 1)
+		{
+			CMergeThread* thread = pool.WaitForAReadyThread_main();
+			std::pair<HPG, HPG> merge_src = bucket.Pop_pair();
+			auto merge_res = thread->MergeEnd_main();
+			if (merge_res.ok)
+			{
+				bucket.Push(merge_res.res);
+				bucket.PumpIn();
+				Bucket::PumpOut(merge_res.src_0);
+				Bucket::PumpOut(merge_res.src_1);
+			}
+			else
+			{
+				bucket.Push(merge_res.src_0);
+				bucket.Push(merge_res.src_1);
+			}
+			thread->MergeStart_main(merge_src.first, merge_src.second);
+		}
+
+		threads = pool.WaitForAllReadyThreads_main();
+		BucketStatic bucket_final(bucket.Size() + 2*n_threads);
+		for (int i_ele = 0; i_ele < bucket.Size(); i_ele ++)
+			bucket_final.Push(bucket[i_ele]);
+		for (auto thread : threads)
+		{
+			auto merge_res = thread->MergeEnd_main();
+			if (merge_res.ok)
+			{
+				bucket_final.Push(merge_res.res);
+				Bucket::PumpOut(merge_res.src_0);
+				Bucket::PumpOut(merge_res.src_1);
+			}
+			else
+			{
+				bucket_final.Push(merge_res.src_0);
+				bucket_final.Push(merge_res.src_1);
+			}
+		}
+
+		int N_rounds = bucket_final.Size();
+		int i_round = 0;
+		while (bucket_final.Size() > 1
+			&& i_round < N_rounds)
+		{
+			std::pair<HPG, HPG> merge_src = bucket_final.Pop_pair();
+			HPG res = posture_graph_merge(merge_src.first, merge_src.second, path_interests_conf, eps_err);
+			if (VALID_HANDLE(res))
+			{
+				bucket_final.Push(res);
+				Bucket::PumpOut(merge_src.first);
+				Bucket::PumpOut(merge_src.second);
+			}
+			else
+			{
+				bucket_final.Push(merge_src.first);
+				bucket_final.Push(merge_src.second);
+				if (2 == bucket_final.Size())
+					break;
+			}
+			i_round ++;
+		}
+
+		std::string dir_dst_str(dir_dst);
+		int i_res = 0;
+		do
+		{
+			std::error_code ec;
+			fs::create_directory(fs::path(dir_dst_str), ec);
+			save_pg(bucket_final[i_res], dir_dst_str.c_str());
+			Bucket::PumpOut(bucket_final[i_res]);
+			dir_dst_str += "X"; // to create a different folder for another PG
+		} while (i_res < bucket_final.Size());
 
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds*************\n", (double)tick_cnt/(double)1000);
+		printf("************TOTAL TIME: %.2f seconds, merged into %d PGs*************\n", (double)tick_cnt/(double)1000, i_res);
 
 	}
 
