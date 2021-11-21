@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 
 	if (7 != argc)
 	{
-		std::cout << "Usage:\tposture_graph_gen_file <INTEREST_XML> <PG_DIR_0> <PG_DIR_1> <PG_NAME> <Epsilon> <PG_DIR>" << std::endl;
+		std::cout << "Usage:\tposture_graph_merge_file <INTEREST_XML> <PG_DIR_0> <PG_DIR_1> <PG_NAME> <Epsilon> <PG_DIR>" << std::endl;
 		return -1;
 	}
 	else
