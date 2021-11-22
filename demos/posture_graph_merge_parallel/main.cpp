@@ -11,8 +11,67 @@
 
 class Bucket
 {
+private:
+	std::vector<HPG> m_pgs;
+};
+
+class BucketStreamIn : public Bucket
+{
 
 };
+
+class BucketStatic : public Bucket
+{
+
+};
+
+class CMergeThread : public CThread_W32
+{
+public:
+	struct MergeRes
+	{
+		HPG src_0;
+		HPG src_1;
+		HPG res;
+		bool ok;
+	};
+	CMergeThread()
+	{
+	}
+	void Initialize(const char* interests_conf, Real eps_err)
+	{
+		m_interest_conf = interests_conf;
+		m_epsErr = eps_err;
+	}
+	virtual ~CMergeThread()
+	{
+	}
+
+	void MergeStart_main(HPG src_0, HPG src_1)
+	{
+		m_res.src_0 = src_0;
+		m_res.src_1 = src_1;
+		m_res.res = H_INVALID;
+		m_res.ok = false;
+		Execute_main();
+	}
+
+	MergeRes MergeEnd_main()
+	{
+		return m_res;
+	}
+private:
+	virtual void Run_worker()
+	{
+		m_res.ok = posture_graph_merge(m_res.src_0, m_res.src_1, m_interest_conf.c_str(), m_epsErr);
+	}
+
+private:
+	volatile MergeRes m_res;
+	volatile std::string m_interest_conf;
+	volatile Real m_epsErr;
+};
+
 
 int main(int argc, char* argv[])
 {
@@ -62,7 +121,7 @@ int main(int argc, char* argv[])
 		//		std::cout << path << std::endl;
 
 		const int N_BUCKET = 5;
-		BucketSteamIn bucket(N_BUCKET, dirs_src);
+		Bucket bucket(N_BUCKET, dirs_src);
 
 		CThreadPool_W32<CMergeThread> pool;
 		pool.Initialize_main(n_threads);
@@ -74,6 +133,7 @@ int main(int argc, char* argv[])
 			; it_thread ++ )
 		{
 			std::pair<HPG, HPG> merge_src = bucket.Pop_pair();
+			(*it_thread)->Initialize(path_interests_conf, eps_err);
 			(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
 			bucket.PumpIn();
 			bucket.PumpIn();
@@ -153,13 +213,10 @@ int main(int argc, char* argv[])
 			dir_dst_str += "X"; // to create a different folder for another PG
 		} while (i_res < bucket_final.Size());
 
-
 		auto tick_cnt = ::GetTickCount64() - tick_start;
 		printf("************TOTAL TIME: %.2f seconds, merged into %d PGs*************\n", (double)tick_cnt/(double)1000, i_res);
 
 	}
-
-
 
 	return 0;
 }
