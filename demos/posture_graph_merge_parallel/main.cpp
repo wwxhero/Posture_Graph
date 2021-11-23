@@ -4,72 +4,198 @@
 #include <string>
 #include <shlwapi.h>
 #include <strsafe.h>
+#include <queue>
 #include "filesystem_helper.hpp"
 #include "posture_graph.h"
 #include "parallel_thread_helper.hpp"
 
+class Merge
+{
+public:
+	Merge(Real a_eps, const std::string& dir_pg, const std::string& pg_name)
+		: src_min(nullptr)
+		, src_max(nullptr)
+		, hpg(H_INVALID)
+		, cov((Real)0)
+		, eps(a_eps)
+	{
+		hpg = posture_graph_load(dir_pg.c_str(), pg_name.c_str());
+	}
+
+	Merge(std::shared_ptr<Merge> src_0, std::shared_ptr<Merge> src_1)
+		: hpg(H_INVALID)
+		, cov((Real)0)
+	{
+		if (src_0->cov < src_1->cov)
+		{
+			src_min = src_0;
+			src_max = src_1;
+		}
+		else
+		{
+			src_min = src_1;
+			src_max = src_0;
+		}
+		eps = max(src_0->eps, src_1->eps);
+	}
+
+	~Merge()
+	{
+		if (VALID_HANDLE(hpg))
+			posture_graph_release(hpg);
+		hpg = H_INVALID;
+	}
+
+	void Done(Real a_eps)
+	{
+		cov = (Real)N_Theta(hpg);
+		eps = a_eps;
+		src_min = nullptr;
+		src_max = nullptr;
+	}
+
+	void Abort(Real decay, Real decay_inv)
+	{
+		src_min->cov = decay * src_min->cov;
+		src_min->eps = decay_inv * src_min->eps;
+	}
+
+	void Exe(const char* conf_path)
+	{
+		hpg = posture_graph_merge(src_min->hpg, src_max->hpg, conf_path, eps);
+	}
+
+	std::shared_ptr<Merge> src_min;
+	std::shared_ptr<Merge> src_max;
+	HPG hpg;
+	Real cov;
+	Real eps;
+};
+
+class GreatorPGCov
+{
+public:
+	explicit GreatorPGCov()
+	{
+	}
+	bool operator()(std::shared_ptr<Merge> left, std::shared_ptr<Merge> right) const
+	{
+		return left->cov > right->cov;
+	}
+
+};
+
 
 class Bucket
 {
+public:
+	Bucket(int bucketSize, Real eps_dft, std::list<std::string>& paths, const char* pg_name)
+		: c_epsErr(eps_dft)
+		, m_pgDirs(std::move(paths))
+		, m_itDir(m_pgDirs.begin())
+		, c_strPGName(pg_name)
+		, c_decay((Real)0.9)
+		, c_decayinv((Real)1.0/ (Real)0.9)
+	{
+		for (int n_ele = 0; n_ele < bucketSize; n_ele ++)
+		{
+			std::shared_ptr<Merge> ele = PumpIn();
+			Push(ele);
+		}
+	}
+
+	void Push(std::shared_ptr<Merge> toMerge)
+	{
+		if (toMerge)
+			m_mergingQ.push(toMerge);
+	}
+
+	std::shared_ptr<Merge> PumpIn()
+	{
+		if (m_itDir != m_pgDirs.end())
+		{
+			auto ret = std::make_shared<Merge>(c_epsErr, *m_itDir, c_strPGName);
+			m_itDir ++;
+			return ret;
+		}
+		else
+			return std::shared_ptr<Merge>();
+	}
+
+	void PushMergeRes(std::shared_ptr<Merge> merged)
+	{
+		if (VALID_HANDLE(merged->hpg))
+		{
+			merged->Done(c_epsErr);
+			Push(merged);
+			Push(PumpIn());
+		}
+		else
+		{
+			merged->Abort(c_decay, c_decayinv);
+			Push(merged->src_min);
+			Push(merged->src_max);
+			merged = nullptr;
+		}
+	}
+
+	std::size_t Size() const
+	{
+		return m_mergingQ.size();
+	}
+
+	std::pair<std::shared_ptr<Merge>, std::shared_ptr<Merge>> Pop_pair()
+	{
+		assert(m_mergingQ.size()>1);
+		auto p_0 = m_mergingQ.top(); m_mergingQ.pop();
+		auto p_1 = m_mergingQ.top(); m_mergingQ.pop();
+		return std::make_pair(p_0, p_1);
+	}
+
 private:
-	std::vector<HPG> m_pgs;
-};
-
-class BucketStreamIn : public Bucket
-{
-
-};
-
-class BucketStatic : public Bucket
-{
-
+	std::priority_queue<std::shared_ptr<Merge>, std::vector<std::shared_ptr<Merge>>, GreatorPGCov> m_mergingQ;
+	const Real c_epsErr;
+	std::list<std::string> m_pgDirs;
+	std::list<std::string>::iterator m_itDir;
+	std::string c_strPGName;
+	const Real c_decay;
+	const Real c_decayinv;
 };
 
 class CMergeThread : public CThread_W32
 {
 public:
-	struct MergeRes
-	{
-		HPG src_0;
-		HPG src_1;
-		HPG res;
-		bool ok;
-	};
 	CMergeThread()
 	{
 	}
-	void Initialize(const char* interests_conf, Real eps_err)
+	void Initialize(const char* interests_conf)
 	{
 		m_interest_conf = interests_conf;
-		m_epsErr = eps_err;
 	}
 	virtual ~CMergeThread()
 	{
 	}
 
-	void MergeStart_main(HPG src_0, HPG src_1)
+	void MergeStart_main(std::shared_ptr<Merge> src_0, std::shared_ptr<Merge> src_1)
 	{
-		m_res.src_0 = src_0;
-		m_res.src_1 = src_1;
-		m_res.res = H_INVALID;
-		m_res.ok = false;
+		m_res = std::make_shared<Merge>(src_0, src_1);
 		Execute_main();
 	}
 
-	MergeRes MergeEnd_main()
+	std::shared_ptr<Merge> MergeEnd_main()
 	{
 		return m_res;
 	}
+
 private:
 	virtual void Run_worker()
 	{
-		m_res.ok = posture_graph_merge(m_res.src_0, m_res.src_1, m_interest_conf.c_str(), m_epsErr);
+		m_res->Exe(m_interest_conf.c_str());
 	}
 
 private:
-	volatile MergeRes m_res;
-	volatile std::string m_interest_conf;
-	volatile Real m_epsErr;
+	std::shared_ptr<Merge> m_res;
+	std::string m_interest_conf;
 };
 
 
@@ -121,7 +247,7 @@ int main(int argc, char* argv[])
 		//		std::cout << path << std::endl;
 
 		const int N_BUCKET = 5;
-		Bucket bucket(N_BUCKET, dirs_src);
+		Bucket bucket(N_BUCKET, eps_err, dirs_src, pg_name);
 
 		CThreadPool_W32<CMergeThread> pool;
 		pool.Initialize_main(n_threads);
@@ -129,93 +255,43 @@ int main(int argc, char* argv[])
 		std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
 		for (auto it_thread = threads.begin()
 			; threads.end() != it_thread
-				&& bucket.Size() > 1
 			; it_thread ++ )
 		{
-			std::pair<HPG, HPG> merge_src = bucket.Pop_pair();
-			(*it_thread)->Initialize(path_interests_conf, eps_err);
+			assert(bucket.Size() > 1);
+			auto merge_src = bucket.Pop_pair();
+			(*it_thread)->Initialize(path_interests_conf);
 			(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
-			bucket.PumpIn();
-			bucket.PumpIn();
+			bucket.Push(bucket.PumpIn());
+			bucket.Push(bucket.PumpIn());
 		}
 
 		while (bucket.Size() > 1)
 		{
 			CMergeThread* thread = pool.WaitForAReadyThread_main();
-			std::pair<HPG, HPG> merge_src = bucket.Pop_pair();
+			auto merge_src = bucket.Pop_pair();
 			auto merge_res = thread->MergeEnd_main();
-			if (merge_res.ok)
-			{
-				bucket.Push(merge_res.res);
-				bucket.PumpIn();
-				Bucket::PumpOut(merge_res.src_0);
-				Bucket::PumpOut(merge_res.src_1);
-			}
-			else
-			{
-				bucket.Push(merge_res.src_0);
-				bucket.Push(merge_res.src_1);
-			}
+			bucket.PushMergeRes(merge_res);
 			thread->MergeStart_main(merge_src.first, merge_src.second);
 		}
 
 		threads = pool.WaitForAllReadyThreads_main();
-		BucketStatic bucket_final(bucket.Size() + 2*n_threads);
-		for (int i_ele = 0; i_ele < bucket.Size(); i_ele ++)
-			bucket_final.Push(bucket[i_ele]);
+		Bucket bucket_final(bucket);
 		for (auto thread : threads)
 		{
 			auto merge_res = thread->MergeEnd_main();
-			if (merge_res.ok)
-			{
-				bucket_final.Push(merge_res.res);
-				Bucket::PumpOut(merge_res.src_0);
-				Bucket::PumpOut(merge_res.src_1);
-			}
-			else
-			{
-				bucket_final.Push(merge_res.src_0);
-				bucket_final.Push(merge_res.src_1);
-			}
+			bucket_final.PushMergeRes(merge_res);
 		}
 
-		int N_rounds = bucket_final.Size();
-		int i_round = 0;
-		while (bucket_final.Size() > 1
-			&& i_round < N_rounds)
+		while (bucket_final.Size() > 1)
 		{
-			std::pair<HPG, HPG> merge_src = bucket_final.Pop_pair();
-			HPG res = posture_graph_merge(merge_src.first, merge_src.second, path_interests_conf, eps_err);
-			if (VALID_HANDLE(res))
-			{
-				bucket_final.Push(res);
-				Bucket::PumpOut(merge_src.first);
-				Bucket::PumpOut(merge_src.second);
-			}
-			else
-			{
-				bucket_final.Push(merge_src.first);
-				bucket_final.Push(merge_src.second);
-				if (2 == bucket_final.Size())
-					break;
-			}
-			i_round ++;
+			auto merge_src = bucket_final.Pop_pair();
+			auto merge_res = std::make_shared<Merge>(merge_src.first, merge_src.second);
+			merge_res->Exe(path_interests_conf);
+			bucket_final.PushMergeRes(merge_res);
 		}
-
-		std::string dir_dst_str(dir_dst);
-		int i_res = 0;
-		do
-		{
-			std::error_code ec;
-			fs::create_directory(fs::path(dir_dst_str), ec);
-			save_pg(bucket_final[i_res], dir_dst_str.c_str());
-			Bucket::PumpOut(bucket_final[i_res]);
-			dir_dst_str += "X"; // to create a different folder for another PG
-		} while (i_res < bucket_final.Size());
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds, merged into %d PGs*************\n", (double)tick_cnt/(double)1000, i_res);
-
+		printf("************TOTAL TIME: %.2f seconds*************\n", (double)tick_cnt/(double)1000);
 	}
 
 	return 0;
