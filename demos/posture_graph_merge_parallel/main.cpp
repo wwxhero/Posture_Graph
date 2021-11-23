@@ -304,42 +304,45 @@ int main(int argc, char* argv[])
 		const int N_BUCKET = 5;
 		Bucket bucket(N_BUCKET, eps_err, dirs_src, pg_name);
 
-		auto Parallel_N_currency = [&] (int n_threads)
+		if (n_threads > 0)
 		{
-			CThreadPool_W32<CMergeThread> pool;
-			pool.Initialize_main(n_threads);
-
-			std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
-			for (auto it_thread = threads.begin()
-				; threads.end() != it_thread
-				; it_thread ++ )
+			[&] (int n_threads)	// assign tasks to n_threads until not all threads are assigned
 			{
-				assert(bucket.Size() > 1);
-				auto merge_src = bucket.Pop_pair();
-				(*it_thread)->Initialize(path_interests_conf);
-				(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
-				bucket.Push(bucket.PumpIn());
-				bucket.Push(bucket.PumpIn());
-			}
+				CThreadPool_W32<CMergeThread> pool;
+				pool.Initialize_main(n_threads);
 
-			while (bucket.Size() > 1)
-			{
-				CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
-				auto merge_src = bucket.Pop_pair();
-				auto merge_res = thread_i->MergeEnd_main();
-				bucket.PushMergeRes(merge_res);
-				thread_i->MergeStart_main(merge_src.first, merge_src.second);
-			}
+				std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
+				for (auto it_thread = threads.begin()
+					; threads.end() != it_thread
+					; it_thread ++ )
+				{
+					assert(bucket.Size() > 1);
+					auto merge_src = bucket.Pop_pair();
+					(*it_thread)->Initialize(path_interests_conf);
+					(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
+					bucket.Push(bucket.PumpIn());
+					bucket.Push(bucket.PumpIn());
+				}
 
-			threads = pool.WaitForAllReadyThreads_main();
-			for (auto thread : threads)
-			{
-				auto merge_res = thread->MergeEnd_main();
-				bucket.PushMergeRes(merge_res);
-			}
-		};
+				while (bucket.Size() > 1)
+				{
+					CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
+					auto merge_src = bucket.Pop_pair();
+					auto merge_res = thread_i->MergeEnd_main();
+					bucket.PushMergeRes(merge_res);
+					thread_i->MergeStart_main(merge_src.first, merge_src.second);
+				}
 
-		auto Parallel_CompleteBucket = [&] ()
+				threads = pool.WaitForAllReadyThreads_main();
+				for (auto thread : threads)
+				{
+					auto merge_res = thread->MergeEnd_main();
+					bucket.PushMergeRes(merge_res);
+				}
+			}(n_threads);
+		}
+
+		[&] () // finish up the merge tasks stored in bucket
 		{
 			while (bucket.Size() > 1)
 			{
@@ -361,20 +364,21 @@ int main(int argc, char* argv[])
 					bucket.PushMergeRes(merge_res);
 				}
 			}
-		};
+		}();
 
-		if (n_threads > 0)
-			Parallel_N_currency(n_threads);
-		Parallel_CompleteBucket();
-
-		std::shared_ptr<Merge> res = bucket.Pop();
-		posture_graph_save(res->hpg, dir_dst);
+		int n_theta_total = 0;
+		if (bucket.Size() > 0)
+		{
+			std::shared_ptr<Merge> res = bucket.Pop();
+			posture_graph_save(res->hpg, dir_dst);
+			n_theta_total = N_Theta(res->hpg);
+		}
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
 		printf("************TOTAL TIME: %.2f seconds: %d files of %d postures in total have been merged into %d postures with %d failures*************\n"
 			, (double)tick_cnt/(double)1000
 			, bucket.m_nPumped, bucket.m_nTheta
-			, N_Theta(res->hpg), bucket.m_nFailure);
+			, n_theta_total, bucket.m_nFailure);
 	}
 
 	return 0;
