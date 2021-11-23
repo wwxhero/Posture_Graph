@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 		const char* c_exts[] = { ".pg", ".dot" };
 		fs::path path_src(argv[1]);
 		fs::path path_dst(argv[2]);
-		std::string exts_input[] = { Norm(path_src.extension().u8string()), Norm(path_dst.extension().u8string()) };
+		std::string exts_input[] = { path_src.extension().u8string(), path_dst.extension().u8string() };
 		bool pg2dot = (exts_input[0] == c_exts[0] && exts_input[1] == c_exts[1]);
 		if (pg2dot)
 		{

@@ -100,6 +100,7 @@ public:
 		, c_decay((Real)0.9)
 		, c_decayinv((Real)1.0/ (Real)0.9)
 		, m_nPumped(0)
+		, m_nTheta(0)
 		, m_nFailure(0)
 	{
 		for (int n_ele = 0; n_ele < bucketSize; n_ele ++)
@@ -124,8 +125,10 @@ public:
 			try
 			{
 				auto ret = std::make_shared<Merge>(c_epsErr, *m_itDir, c_strPGName);
+				std::cout << "Loading " << *m_itDir << " results " << ret->cov << " postures" << std::endl;
 				m_itDir ++;
 				m_nPumped ++;
+				m_nTheta += (int)(ret->cov);
 				return ret;
 			}
 			catch(std::exception& e)
@@ -142,12 +145,23 @@ public:
 	{
 		if (VALID_HANDLE(merged->hpg))
 		{
+			std::cout << "Merging between posture graphs of "
+						<< N_Theta(merged->src_min->hpg)
+						<< " postures and "
+						<< N_Theta(merged->src_max->hpg)
+						<< " postures results "
+						<< N_Theta(merged->hpg) << std::endl;
 			merged->Done(c_epsErr);
 			Push(merged);
 			Push(PumpIn());
 		}
 		else
 		{
+			std::cout << "Merging between posture graphs of "
+						<< N_Theta(merged->src_min->hpg)
+						<< " postures and "
+						<< N_Theta(merged->src_max->hpg)
+						<< " failed!!! " << std::endl;
 			merged->Abort(c_decay, c_decayinv);
 			Push(merged->src_min);
 			Push(merged->src_max);
@@ -186,6 +200,7 @@ private:
 	const Real c_decayinv;
 public:
 	int m_nPumped;
+	int m_nTheta;
 	int m_nFailure;
 };
 
@@ -323,9 +338,10 @@ int main(int argc, char* argv[])
 		save_pg(res->hpg, dir_dst);
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds: %d files have been merged and with %d failures*************\n"
+		printf("************TOTAL TIME: %.2f seconds: %d files of %d postures in total have been merged into %d postures with %d failures*************\n"
 			, (double)tick_cnt/(double)1000
-			, bucket.m_nPumped, bucket.m_nFailure);
+			, bucket.m_nPumped, bucket.m_nTheta
+			, N_Theta(res->hpg), bucket.m_nFailure);
 	}
 
 	return 0;
