@@ -10,6 +10,7 @@
 #include "parallel_thread_helper.hpp"
 
 #define MIN_N_THETA 10
+#define MAX_N_MATTEMPTS 5
 
 class Merge
 {
@@ -19,6 +20,7 @@ public:
 		, src_max(nullptr)
 		, hpg(H_INVALID)
 		, eps(a_eps)
+		, n_attempts(0)
 	{
 		hpg = posture_graph_load(dir_pg.c_str(), pg_name.c_str());
 		cov = (Real)N_Theta(hpg);
@@ -26,6 +28,7 @@ public:
 
 	Merge(std::shared_ptr<Merge> src_0, std::shared_ptr<Merge> src_1)
 		: hpg(H_INVALID)
+		, n_attempts(0)
 	{
 		if (src_0->cov < src_1->cov)
 		{
@@ -54,12 +57,15 @@ public:
 		eps = a_eps;
 		src_min = nullptr;
 		src_max = nullptr;
+		n_attempts = 0;
 	}
 
 	void Abort(Real decay, Real decay_inv)
 	{
 		src_min->cov = decay * src_min->cov;
 		src_min->eps = decay_inv * src_min->eps;
+		src_min->n_attempts ++;
+		src_max->n_attempts ++;
 	}
 
 	void Exe(const char* conf_path)
@@ -72,6 +78,7 @@ public:
 	HPG hpg;
 	Real cov;
 	Real eps;
+	int n_attempts;
 };
 
 class LessPGCov
@@ -112,7 +119,7 @@ public:
 
 	void Push(std::shared_ptr<Merge> toMerge)
 	{
-		if (toMerge && toMerge->cov > MIN_N_THETA)
+		if (toMerge && toMerge->cov > MIN_N_THETA && toMerge->n_attempts < MAX_N_MATTEMPTS)
 		{
 			m_mergingQ.push(toMerge);
 		}
