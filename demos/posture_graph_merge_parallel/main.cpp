@@ -9,22 +9,23 @@
 #include "posture_graph.h"
 #include "parallel_thread_helper.hpp"
 
+#define MIN_N_THETA 10
+
 class Merge
 {
 public:
-	Merge(Real a_eps, const std::string& dir_pg, const std::string& pg_name)
+	Merge(Real a_eps, const std::string& dir_pg, const std::string& pg_name) // throw
 		: src_min(nullptr)
 		, src_max(nullptr)
 		, hpg(H_INVALID)
-		, cov((Real)0)
 		, eps(a_eps)
 	{
 		hpg = posture_graph_load(dir_pg.c_str(), pg_name.c_str());
+		cov = (Real)N_Theta(hpg);
 	}
 
 	Merge(std::shared_ptr<Merge> src_0, std::shared_ptr<Merge> src_1)
 		: hpg(H_INVALID)
-		, cov((Real)0)
 	{
 		if (src_0->cov < src_1->cov)
 		{
@@ -37,6 +38,7 @@ public:
 			src_max = src_0;
 		}
 		eps = max(src_0->eps, src_1->eps);
+		cov = src_0->cov + src_1->cov;
 	}
 
 	~Merge()
@@ -72,15 +74,16 @@ public:
 	Real eps;
 };
 
-class GreatorPGCov
+class LessPGCov
 {
 public:
-	explicit GreatorPGCov()
+	explicit LessPGCov()
 	{
 	}
+
 	bool operator()(std::shared_ptr<Merge> left, std::shared_ptr<Merge> right) const
 	{
-		return left->cov > right->cov;
+		return left->cov < right->cov;
 	}
 
 };
@@ -96,6 +99,8 @@ public:
 		, c_strPGName(pg_name)
 		, c_decay((Real)0.9)
 		, c_decayinv((Real)1.0/ (Real)0.9)
+		, m_nPumped(0)
+		, m_nFailure(0)
 	{
 		for (int n_ele = 0; n_ele < bucketSize; n_ele ++)
 		{
@@ -106,17 +111,28 @@ public:
 
 	void Push(std::shared_ptr<Merge> toMerge)
 	{
-		if (toMerge)
+		if (toMerge && toMerge->cov > MIN_N_THETA)
+		{
 			m_mergingQ.push(toMerge);
+		}
 	}
 
 	std::shared_ptr<Merge> PumpIn()
 	{
 		if (m_itDir != m_pgDirs.end())
 		{
-			auto ret = std::make_shared<Merge>(c_epsErr, *m_itDir, c_strPGName);
-			m_itDir ++;
-			return ret;
+			try
+			{
+				auto ret = std::make_shared<Merge>(c_epsErr, *m_itDir, c_strPGName);
+				m_itDir ++;
+				m_nPumped ++;
+				return ret;
+			}
+			catch(std::exception& e)
+			{
+				std::cout << e.what();
+				return std::shared_ptr<Merge>();
+			}
 		}
 		else
 			return std::shared_ptr<Merge>();
@@ -136,6 +152,7 @@ public:
 			Push(merged->src_min);
 			Push(merged->src_max);
 			merged = nullptr;
+			m_nFailure ++;
 		}
 	}
 
@@ -152,20 +169,31 @@ public:
 		return std::make_pair(p_0, p_1);
 	}
 
+	std::shared_ptr<Merge> Pop()
+	{
+		auto p = m_mergingQ.top();
+		m_mergingQ.pop();
+		return p;
+	}
+
 private:
-	std::priority_queue<std::shared_ptr<Merge>, std::vector<std::shared_ptr<Merge>>, GreatorPGCov> m_mergingQ;
+	std::priority_queue<std::shared_ptr<Merge>, std::vector<std::shared_ptr<Merge>>, LessPGCov> m_mergingQ;
 	const Real c_epsErr;
 	std::list<std::string> m_pgDirs;
 	std::list<std::string>::iterator m_itDir;
 	std::string c_strPGName;
 	const Real c_decay;
 	const Real c_decayinv;
+public:
+	int m_nPumped;
+	int m_nFailure;
 };
 
 class CMergeThread : public CThread_W32
 {
 public:
 	CMergeThread()
+		: m_res(nullptr)
 	{
 	}
 	void Initialize(const char* interests_conf)
@@ -184,7 +212,9 @@ public:
 
 	std::shared_ptr<Merge> MergeEnd_main()
 	{
-		return m_res;
+		std::shared_ptr<Merge> ret = m_res;
+		m_res = nullptr;
+		return ret;
 	}
 
 private:
@@ -267,31 +297,35 @@ int main(int argc, char* argv[])
 
 		while (bucket.Size() > 1)
 		{
-			CMergeThread* thread = pool.WaitForAReadyThread_main();
+			CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
 			auto merge_src = bucket.Pop_pair();
-			auto merge_res = thread->MergeEnd_main();
+			auto merge_res = thread_i->MergeEnd_main();
 			bucket.PushMergeRes(merge_res);
-			thread->MergeStart_main(merge_src.first, merge_src.second);
+			thread_i->MergeStart_main(merge_src.first, merge_src.second);
 		}
 
 		threads = pool.WaitForAllReadyThreads_main();
-		Bucket bucket_final(bucket);
 		for (auto thread : threads)
 		{
 			auto merge_res = thread->MergeEnd_main();
-			bucket_final.PushMergeRes(merge_res);
+			bucket.PushMergeRes(merge_res);
 		}
 
-		while (bucket_final.Size() > 1)
+		while (bucket.Size() > 1)
 		{
-			auto merge_src = bucket_final.Pop_pair();
+			auto merge_src = bucket.Pop_pair();
 			auto merge_res = std::make_shared<Merge>(merge_src.first, merge_src.second);
 			merge_res->Exe(path_interests_conf);
-			bucket_final.PushMergeRes(merge_res);
+			bucket.PushMergeRes(merge_res);
 		}
 
+		std::shared_ptr<Merge> res = bucket.Pop();
+		save_pg(res->hpg, dir_dst);
+
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds*************\n", (double)tick_cnt/(double)1000);
+		printf("************TOTAL TIME: %.2f seconds: %d files have been merged and with %d failures*************\n"
+			, (double)tick_cnt/(double)1000
+			, bucket.m_nPumped, bucket.m_nFailure);
 	}
 
 	return 0;
