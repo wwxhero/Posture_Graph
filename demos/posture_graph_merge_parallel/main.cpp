@@ -150,7 +150,8 @@ public:
 						<< " postures and "
 						<< N_Theta(merged->src_max->hpg)
 						<< " postures results "
-						<< N_Theta(merged->hpg) << std::endl;
+						<< N_Theta(merged->hpg) 
+						<< " postures!" << std::endl;
 			merged->Done(c_epsErr);
 			Push(merged);
 			Push(PumpIn());
@@ -261,7 +262,7 @@ int main(int argc, char* argv[])
 		const char* dir_dst = argv[3];
 		const char* pg_name = argv[4];
 		Real eps_err = (Real)atof(argv[5]);
-		const int n_threads = atoi(argv[6]);
+		int n_threads = atoi(argv[6]);
 
 		auto tick_start = ::GetTickCount64();
 
@@ -288,51 +289,76 @@ int main(int argc, char* argv[])
 			std::cout << "ERROR: " << info << std::endl;
 		}
 
+		int half_n_pgs = (((int)dirs_src.size()) >> 1);
+		n_threads = min(n_threads, half_n_pgs);
 		//	for (auto path: dirs_src)
 		//		std::cout << path << std::endl;
 
 		const int N_BUCKET = 5;
 		Bucket bucket(N_BUCKET, eps_err, dirs_src, pg_name);
 
-		CThreadPool_W32<CMergeThread> pool;
-		pool.Initialize_main(n_threads);
-
-		std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
-		for (auto it_thread = threads.begin()
-			; threads.end() != it_thread
-			; it_thread ++ )
+		auto Parallel_N_currency = [&] (int n_threads)
 		{
-			assert(bucket.Size() > 1);
-			auto merge_src = bucket.Pop_pair();
-			(*it_thread)->Initialize(path_interests_conf);
-			(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
-			bucket.Push(bucket.PumpIn());
-			bucket.Push(bucket.PumpIn());
-		}
+			CThreadPool_W32<CMergeThread> pool;
+			pool.Initialize_main(n_threads);
 
-		while (bucket.Size() > 1)
-		{
-			CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
-			auto merge_src = bucket.Pop_pair();
-			auto merge_res = thread_i->MergeEnd_main();
-			bucket.PushMergeRes(merge_res);
-			thread_i->MergeStart_main(merge_src.first, merge_src.second);
-		}
+			std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
+			for (auto it_thread = threads.begin()
+				; threads.end() != it_thread
+				; it_thread ++ )
+			{
+				assert(bucket.Size() > 1);
+				auto merge_src = bucket.Pop_pair();
+				(*it_thread)->Initialize(path_interests_conf);
+				(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
+				bucket.Push(bucket.PumpIn());
+				bucket.Push(bucket.PumpIn());
+			}
 
-		threads = pool.WaitForAllReadyThreads_main();
-		for (auto thread : threads)
-		{
-			auto merge_res = thread->MergeEnd_main();
-			bucket.PushMergeRes(merge_res);
-		}
+			while (bucket.Size() > 1)
+			{
+				CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
+				auto merge_src = bucket.Pop_pair();
+				auto merge_res = thread_i->MergeEnd_main();
+				bucket.PushMergeRes(merge_res);
+				thread_i->MergeStart_main(merge_src.first, merge_src.second);
+			}
 
-		while (bucket.Size() > 1)
+			threads = pool.WaitForAllReadyThreads_main();
+			for (auto thread : threads)
+			{
+				auto merge_res = thread->MergeEnd_main();
+				bucket.PushMergeRes(merge_res);
+			}
+		};
+
+		auto Parallel_CompleteBucket = [&] ()
 		{
-			auto merge_src = bucket.Pop_pair();
-			auto merge_res = std::make_shared<Merge>(merge_src.first, merge_src.second);
-			merge_res->Exe(path_interests_conf);
-			bucket.PushMergeRes(merge_res);
-		}
+			while (bucket.Size() > 1)
+			{
+				CThreadPool_W32<CMergeThread> pool_finish;
+				int n_threads = ((int)bucket.Size() >> 1);
+				assert(n_threads > 0);
+				pool_finish.Initialize_main(n_threads);
+				std::vector<CMergeThread*>& threads = pool_finish.WaitForAllReadyThreads_main();
+				for (auto thread_i : threads)
+				{
+					auto merge_src = bucket.Pop_pair();
+					thread_i->Initialize(path_interests_conf);
+					thread_i->MergeStart_main(merge_src.first, merge_src.second);
+				}
+				threads = pool_finish.WaitForAllReadyThreads_main();
+				for (auto thread_i : threads)
+				{
+					auto merge_res = thread_i->MergeEnd_main();
+					bucket.PushMergeRes(merge_res);
+				}
+			}
+		};
+
+		if (n_threads > 0)
+			Parallel_N_currency(n_threads);
+		Parallel_CompleteBucket();
 
 		std::shared_ptr<Merge> res = bucket.Pop();
 		save_pg(res->hpg, dir_dst);
