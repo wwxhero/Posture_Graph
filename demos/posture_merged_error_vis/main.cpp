@@ -13,33 +13,35 @@ int main(int argc, char* argv[])
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
-	if (4 != argc)
+	if (5 != argc)
 	{
-		std::cout << "Usage:\tposture_error_vis <INTERESTS> <HTR> <PNG_grayscale>" << std::endl;
+		std::cout << "Usage:\tposture_merged_error_vis <INTERESTS> <PG_THETA_0> <PG_THETA_1> <PNG_grayscale>" << std::endl;
 		return -1;
 	}
 	else
 	{
 		try
 		{
-			const char* c_exts[] = { ".xml", ".htr", ".png" };
+			const char* c_exts[] = { ".xml", ".png" };
 			const char* path_interests_conf = argv[1];
-			const char* path_src = argv[2];
-			const char* path_dst = argv[3];
+			const char* pg_theta_0 = argv[2];
+			const char* pg_theta_1 = argv[3];
+			const char* path_dst = argv[4];
 			std::string exts_input[] = {
 				Norm(fs::path(path_interests_conf).extension().u8string()),
-				Norm(fs::path(path_src).extension().u8string()),
 				Norm(fs::path(path_dst).extension().u8string())
 			};
-			bool htr2png = (exts_input[0] == c_exts[0] 
-							&& exts_input[1] == c_exts[1]
-							&& exts_input[2] == c_exts[2]);
-			if (htr2png)
+			bool valid_ext = (exts_input[0] == ".xml"
+							&& exts_input[1] == ".png");
+			if (valid_ext)
 			{
 				const char* res[] = { "failed", "successful" };
 				auto tick_start = ::GetTickCount64();
 				_ERROR_TB etb;
-				bool done = init_err_tb(path_interests_conf, path_src, &etb);
+				bool done = init_err_tb_merged(path_interests_conf
+											, pg_theta_0
+											, pg_theta_1
+											, &etb);
 				if (done)
 				{
 					cv::Mat vis;

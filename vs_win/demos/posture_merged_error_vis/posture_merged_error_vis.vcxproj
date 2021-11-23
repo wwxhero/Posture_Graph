@@ -19,14 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\demos\posture_error_vis\main.cpp" />
+    <ClCompile Include="..\..\..\demos\posture_merged_error_vis\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{565CAC91-9947-4566-BBF2-32F8B2BD5C9F}</ProjectGuid>
+    <ProjectGuid>{88A814BC-06DB-41FA-B0C6-6FCAE1DEF72A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>bvhposturereset</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <ProjectName>posture_merged_error_vis</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
