@@ -368,7 +368,7 @@ int main(int argc, char* argv[])
 		Parallel_CompleteBucket();
 
 		std::shared_ptr<Merge> res = bucket.Pop();
-		save_pg(res->hpg, dir_dst);
+		posture_graph_save(res->hpg, dir_dst);
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
 		printf("************TOTAL TIME: %.2f seconds: %d files of %d postures in total have been merged into %d postures with %d failures*************\n"
