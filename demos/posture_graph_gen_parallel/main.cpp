@@ -86,16 +86,11 @@ int main(int argc, char* argv[])
 		auto tick_start = ::GetTickCount64();
 
 		CThreadPool_W32<CThreadPostureGraphGen> pool;
-		pool.Initialize_main(n_threads);
+		pool.Initialize_main(n_threads, [](CThreadPostureGraphGen*){});
 
 		auto onhtr = [path_interests_conf, eps_err, &pool] (const char* path_src, const char* path_dst) -> bool
 			{
-				CThreadPostureGraphGen* posture_graph_gen_worker_i = NULL;
-
-				do {
-					posture_graph_gen_worker_i = pool.WaitForAReadyThread_main(10000); // wait 10 seconds for a ready thread
-				} while(NULL == posture_graph_gen_worker_i);
-
+				CThreadPostureGraphGen* posture_graph_gen_worker_i = pool.WaitForAReadyThread_main(INFINITE);
 				unsigned int dur_milli_out = 0;
 				bool ret_out = false;
 				std::string path_src_out;
