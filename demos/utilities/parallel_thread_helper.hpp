@@ -140,7 +140,8 @@ template<typename Thread>
 class CThreadPool_W32
 {
 public:
-	bool Initialize_main(int n_threads)
+	template<typename LAMBDA_Initialize>
+	bool Initialize_main(int n_threads, LAMBDA_Initialize Initialize)
 	{
 		m_threads.resize(n_threads, NULL);
 		m_readiness_ref.resize(n_threads, NULL);
@@ -152,6 +153,7 @@ public:
 			; i_thread ++)
 		{
 			Thread* thread_i = new Thread();
+			Initialize(thread_i);
 			all_created = thread_i->Create_main();
 			m_threads[i_thread]  = thread_i;
 			m_readiness_ref[i_thread] = thread_i->Readiness_sema();

@@ -309,35 +309,35 @@ int main(int argc, char* argv[])
 			[&] (int n_threads)	// assign tasks to n_threads until not all threads are assigned
 			{
 				CThreadPool_W32<CMergeThread> pool;
-				pool.Initialize_main(n_threads);
-
-				std::vector<CMergeThread*>& threads = pool.WaitForAllReadyThreads_main();
-				for (auto it_thread = threads.begin()
-					; threads.end() != it_thread
-					; it_thread ++ )
-				{
-					assert(bucket.Size() > 1);
-					auto merge_src = bucket.Pop_pair();
-					(*it_thread)->Initialize(path_interests_conf);
-					(*it_thread)->MergeStart_main(merge_src.first, merge_src.second);
-					bucket.Push(bucket.PumpIn());
-					bucket.Push(bucket.PumpIn());
-				}
+				pool.Initialize_main(
+								n_threads,
+								[path_interests_conf](CMergeThread* thread)
+									{
+										thread->Initialize(path_interests_conf);
+									}
+								);
 
 				while (bucket.Size() > 1)
 				{
 					CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
 					auto merge_src = bucket.Pop_pair();
 					auto merge_res = thread_i->MergeEnd_main();
-					bucket.PushMergeRes(merge_res);
+					if (merge_res)
+						bucket.PushMergeRes(merge_res);
+					else
+					{
+						bucket.Push(bucket.PumpIn());
+						bucket.Push(bucket.PumpIn());
+					}
 					thread_i->MergeStart_main(merge_src.first, merge_src.second);
 				}
 
-				threads = pool.WaitForAllReadyThreads_main();
+				auto& threads = pool.WaitForAllReadyThreads_main();
 				for (auto thread : threads)
 				{
 					auto merge_res = thread->MergeEnd_main();
-					bucket.PushMergeRes(merge_res);
+					if (merge_res)
+						bucket.PushMergeRes(merge_res);
 				}
 			}(n_threads);
 		}
@@ -349,7 +349,7 @@ int main(int argc, char* argv[])
 				CThreadPool_W32<CMergeThread> pool_finish;
 				int n_threads = ((int)bucket.Size() >> 1);
 				assert(n_threads > 0);
-				pool_finish.Initialize_main(n_threads);
+				pool_finish.Initialize_main(n_threads, [](CMergeThread*) {});
 				std::vector<CMergeThread*>& threads = pool_finish.WaitForAllReadyThreads_main();
 				for (auto thread_i : threads)
 				{
