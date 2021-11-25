@@ -5,6 +5,7 @@
 #include <shlwapi.h>
 #include <strsafe.h>
 #include <queue>
+#include <sys/stat.h>
 #include "filesystem_helper.hpp"
 #include "posture_graph.h"
 #include "parallel_thread_helper.hpp"
@@ -298,6 +299,31 @@ int main(int argc, char* argv[])
 
 		int half_n_pgs = (((int)dirs_src.size()) >> 1);
 		n_threads = min(n_threads, half_n_pgs);
+
+		class GreatorFileSize
+		{
+		public:
+			GreatorFileSize(const char* pg_name)
+				: m_pgName(pg_name)
+			{
+				m_pgName += ".htr";
+			}
+			bool operator()(const std::string &dir_0, const std::string &dir_1) const
+			{
+				fs::path theta_path_0(dir_0); theta_path_0.append(m_pgName);
+				fs::path theta_path_1(dir_1); theta_path_1.append(m_pgName);
+				struct stat stat_buf_0;
+				int rc_0 = stat(theta_path_0.u8string().c_str(), &stat_buf_0);
+				struct stat stat_buf_1;
+				int rc_1 = stat(theta_path_1.u8string().c_str(), &stat_buf_1);
+				return !(0 == rc_0 && 0 == rc_1)
+					|| (stat_buf_0.st_size > stat_buf_1.st_size);
+			}
+		private:
+			std::string m_pgName;
+		};
+
+		dirs_src.sort(GreatorFileSize(pg_name));
 		//	for (auto path: dirs_src)
 		//		std::cout << path << std::endl;
 
