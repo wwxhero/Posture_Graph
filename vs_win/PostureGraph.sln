@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ALL_BUILD", "ALL_BUILD.vcxproj", "{7F59AD05-4C85-3ECA-8081-76E1EFE3F190}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_hIK", "..\..\lib_hIK\platforms\windows\lib_hIK.vcxproj", "{4625B20B-A8C9-4319-8589-26B41E7B4D74}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51017157-E1D9-4346-B29B-65FA00FFD1C5} = {51017157-E1D9-4346-B29B-65FA00FFD1C5}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bvh_posture_reset", "demos\bvh_posture_reset\bvh_posture_reset.vcxproj", "{59B91858-A9FC-4395-AA5C-92F3A3C55C4B}"
 EndProject
