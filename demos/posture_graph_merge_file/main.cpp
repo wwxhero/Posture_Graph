@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
 				HPG hpg = posture_graph_merge(hpg_0, hpg_1, path_interests_conf, eps_err);
 				if (VALID_HANDLE(hpg))
 				{
-					done = save_pg(hpg, pg_dir_dst);
+					done = posture_graph_save(hpg, pg_dir_dst);
 					posture_graph_release(hpg);
 				}
 				posture_graph_release(hpg_0);

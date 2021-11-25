@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 			const char* pg_dir = argv[3];
 			Real eps_err = (Real)atof(argv[4]);
 			std::string exts_input[] = {
-				Norm(fs::path(path_htr).extension().u8string()),
+				fs::path(path_htr).extension().u8string()
 			};
 			bool htr2pg = (exts_input[0] == c_exts[0]);
 			if (htr2pg)
