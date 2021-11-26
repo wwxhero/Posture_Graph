@@ -11,7 +11,7 @@
 #include "parallel_thread_helper.hpp"
 
 #define MIN_N_THETA 10
-#define MAX_N_MATTEMPTS 5
+#define MAX_N_MATTEMPTS 10
 
 class Merge
 {
@@ -109,7 +109,7 @@ public:
 		, c_decayinv((Real)1.0)
 		, m_nPumped(0)
 		, m_nTheta(0)
-		, m_nFailure(0)
+		, m_nDrops(0)
 	{
 		for (int n_ele = 0; n_ele < bucketSize; n_ele ++)
 		{
@@ -127,6 +127,7 @@ public:
 		else if (toMerge && VALID_HANDLE(toMerge->hpg))
 		{
 			std::cout << "Drop a posture graph of " << N_Theta(toMerge->hpg) << " postures!!!" << std::endl;
+			m_nDrops ++;
 		}
 
 	}
@@ -180,7 +181,6 @@ public:
 			Push(merged->src_min);
 			Push(merged->src_max);
 			merged = nullptr;
-			m_nFailure ++;
 		}
 	}
 
@@ -223,7 +223,7 @@ private:
 public:
 	int m_nPumped;
 	int m_nTheta;
-	int m_nFailure;
+	int m_nDrops;
 };
 
 class CMergeThread : public CThread_W32
@@ -418,10 +418,10 @@ int main(int argc, char* argv[])
 		}
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds: %d files of %d postures in total have been merged into %d postures with %d failures*************\n"
+		printf("************TOTAL TIME: %.2f seconds: %d files of %d postures in total have been merged into %d postures with %d drops*************\n"
 			, (double)tick_cnt/(double)1000
 			, tasks.m_nPumped, tasks.m_nTheta
-			, n_theta_total, tasks.m_nFailure);
+			, n_theta_total, tasks.m_nDrops);
 	}
 
 	return 0;
