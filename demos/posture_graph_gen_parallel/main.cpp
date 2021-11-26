@@ -68,8 +68,8 @@ private:
 	const char* volatile c_dir_dst;
 	volatile Real m_eps_err;
 	volatile bool m_generated;
-	volatile int m_nThetaRaw;
-	volatile int m_nThetaPG;
+	int m_nThetaRaw;
+	int m_nThetaPG;
 };
 
 
@@ -119,7 +119,8 @@ int main(int argc, char* argv[])
 					n_theta_pgs += n_theta_pgs_i;
 					const char* res[] = { "failed", "successful" };
 					int i_res = (ret_out ? 1 : 0);
-					printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
+					printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, reduce posture from, %d, to, %d, %s\n"
+						, path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, n_theta_raw_i, n_theta_pgs_i, res[i_res]);
 				}
 				std::string path_conf_worker_in(path_interests_conf);
 				std::string path_src_in(path_src);
@@ -159,7 +160,8 @@ int main(int argc, char* argv[])
 				n_theta_pgs += n_theta_pg_i;
 				const char* res[] = { "failed", "successful" };
 				int i_res = (ret_out ? 1 : 0);
-				printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
+					printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, reduce posture from, %d, to, %d, %s\n"
+						, path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, n_theta_raw_i, n_theta_pg_i, res[i_res]);
 			}
 		}
 
