@@ -124,6 +124,11 @@ public:
 		{
 			m_mergingQ.push_back(toMerge);
 		}
+		else if (toMerge && VALID_HANDLE(toMerge->hpg))
+		{
+			std::cout << "Drop a posture graph of " << N_Theta(toMerge->hpg) << " postures!!!" << std::endl;
+		}
+
 	}
 
 	std::shared_ptr<Merge> PumpIn()
