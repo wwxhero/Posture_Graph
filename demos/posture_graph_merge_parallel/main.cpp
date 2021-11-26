@@ -105,8 +105,8 @@ public:
 		, m_pgDirs(std::move(paths))
 		, m_itDir(m_pgDirs.begin())
 		, c_strPGName(pg_name)
-		, c_decay((Real)0.9)
-		, c_decayinv((Real)1.0/ (Real)0.9)
+		, c_decay((Real)1.0)
+		, c_decayinv((Real)1.0)
 		, m_nPumped(0)
 		, m_nTheta(0)
 		, m_nFailure(0)
@@ -122,7 +122,7 @@ public:
 	{
 		if (toMerge && toMerge->cov > MIN_N_THETA && toMerge->n_attempts < MAX_N_MATTEMPTS)
 		{
-			m_mergingQ.push(toMerge);
+			m_mergingQ.push_back(toMerge);
 		}
 	}
 
@@ -161,7 +161,7 @@ public:
 						<< N_Theta(merged->hpg) 
 						<< " postures!" << std::endl;
 			merged->Done(c_epsErr);
-			Push(merged);
+			PushFront(merged);
 			Push(PumpIn());
 		}
 		else
@@ -187,20 +187,28 @@ public:
 	std::pair<std::shared_ptr<Merge>, std::shared_ptr<Merge>> Pop_pair()
 	{
 		assert(m_mergingQ.size()>1);
-		auto p_0 = m_mergingQ.top(); m_mergingQ.pop();
-		auto p_1 = m_mergingQ.top(); m_mergingQ.pop();
+		auto p_0 = m_mergingQ.front(); m_mergingQ.pop_front();
+		auto p_1 = m_mergingQ.back(); m_mergingQ.pop_back();
 		return std::make_pair(p_0, p_1);
 	}
 
 	std::shared_ptr<Merge> Pop()
 	{
-		auto p = m_mergingQ.top();
-		m_mergingQ.pop();
+		auto p = m_mergingQ.front();
+		m_mergingQ.pop_front();
 		return p;
 	}
 
 private:
-	std::priority_queue<std::shared_ptr<Merge>, std::vector<std::shared_ptr<Merge>>, LessPGCov> m_mergingQ;
+	void PushFront(std::shared_ptr<Merge> merged)
+	{
+		assert(VALID_HANDLE(merged->hpg));
+		m_mergingQ.push_front(merged);
+	}
+
+	// back -> front
+	// (bad theta file) -> (good theta file)
+	std::deque<std::shared_ptr<Merge>> m_mergingQ;
 	const Real c_epsErr;
 	std::list<std::string> m_pgDirs;
 	std::list<std::string>::iterator m_itDir;
@@ -327,7 +335,7 @@ int main(int argc, char* argv[])
 		//	for (auto path: dirs_src)
 		//		std::cout << path << std::endl;
 
-		const int N_BUCKET = 5;
+		const int N_BUCKET = 1 + (n_threads << 1);
 		TasksQ tasks(N_BUCKET, eps_err, dirs_src, pg_name);
 
 		if (n_threads > 0)
