@@ -13,6 +13,8 @@ class CThreadPostureGraphGen : public CThread_W32
 public:
 	CThreadPostureGraphGen()
 		: m_generated(false)
+		, m_nThetaRaw(0)
+		, m_nThetaPG(0)
 	{
 	}
 
@@ -32,7 +34,7 @@ public:
 		Execute_main();
 	}
 
-	bool posture_graph_gen_post_main(std::string& path_src, std::string& dir_dst, Real& eps_err, unsigned int & dur_milli, bool& generated)
+	bool posture_graph_gen_post_main(std::string& path_src, std::string& dir_dst, Real& eps_err, unsigned int & dur_milli, bool& generated, int& n_theta_raw, int& n_theta_pg)
 	{
 		assert(m_path_src.empty() == m_dir_dst.empty());
 		if (m_path_src.empty() || m_dir_dst.empty())
@@ -42,6 +44,8 @@ public:
 		dir_dst = std::move(m_dir_dst);
 		eps_err = m_eps_err;
 		generated = m_generated;
+		n_theta_raw = m_nThetaRaw;
+		n_theta_pg = m_nThetaPG;
 		return true;
 	}
 
@@ -51,7 +55,9 @@ public:
 									, c_path_src
 									, c_dir_dst
 									, m_eps_err
-									, NULL);
+									, NULL
+									, &m_nThetaRaw
+									, &m_nThetaPG);
 	}
 private:
 	std::string m_path_interests_conf;
@@ -62,6 +68,8 @@ private:
 	const char* volatile c_dir_dst;
 	volatile Real m_eps_err;
 	volatile bool m_generated;
+	volatile int m_nThetaRaw;
+	volatile int m_nThetaPG;
 };
 
 
@@ -87,8 +95,9 @@ int main(int argc, char* argv[])
 
 		CThreadPool_W32<CThreadPostureGraphGen> pool;
 		pool.Initialize_main(n_threads, [](CThreadPostureGraphGen*){});
-
-		auto onhtr = [path_interests_conf, eps_err, &pool] (const char* path_src, const char* path_dst) -> bool
+		int n_theta_raw = 0;
+		int n_theta_pgs = 0;
+		auto onhtr = [path_interests_conf, eps_err, &pool, &n_theta_raw, &n_theta_pgs] (const char* path_src, const char* path_dst) -> bool
 			{
 				CThreadPostureGraphGen* posture_graph_gen_worker_i = pool.WaitForAReadyThread_main(INFINITE);
 				unsigned int dur_milli_out = 0;
@@ -96,12 +105,18 @@ int main(int argc, char* argv[])
 				std::string path_src_out;
 				std::string dir_dst_out;
 				Real eps_err_out;
+				int n_theta_raw_i = 0;
+				int n_theta_pgs_i = 0;
 				if (posture_graph_gen_worker_i->posture_graph_gen_post_main( path_src_out
 																			, dir_dst_out
 																			, eps_err_out
 																			, dur_milli_out
-																			, ret_out))
+																			, ret_out
+																			, n_theta_raw_i
+																			, n_theta_pgs_i))
 				{
+					n_theta_raw += n_theta_raw_i;
+					n_theta_pgs += n_theta_pgs_i;
 					const char* res[] = { "failed", "successful" };
 					int i_res = (ret_out ? 1 : 0);
 					printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
@@ -130,12 +145,18 @@ int main(int argc, char* argv[])
 			std::string path_src_out;
 			std::string dir_dst_out;
 			Real eps_err_out;
+			int n_theta_raw_i = 0;
+			int n_theta_pg_i = 0;
 			if (thread_i->posture_graph_gen_post_main( path_src_out
 													, dir_dst_out
 													, eps_err_out
 													, dur_milli_out
-													, ret_out))
+													, ret_out
+													, n_theta_raw_i
+													, n_theta_pg_i))
 			{
+				n_theta_raw += n_theta_raw_i;
+				n_theta_pgs += n_theta_pg_i;
 				const char* res[] = { "failed", "successful" };
 				int i_res = (ret_out ? 1 : 0);
 				printf("Building Posture-Graph from, %s, to, %s, takes %.2f seconds:, %s\n", path_src_out.c_str(), dir_dst_out.c_str(), (double)dur_milli_out/(double)1000, res[i_res]);
@@ -143,7 +164,10 @@ int main(int argc, char* argv[])
 		}
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds*************\n", (double)tick_cnt/(double)1000);
+		printf("************TOTAL TIME: %.2f seconds, build PG of %d postures from %d frames of record*************\n"
+			, (double)tick_cnt/(double)1000
+			, n_theta_pgs
+			, n_theta_raw);
 
 	}
 
