@@ -273,7 +273,7 @@ int main(int argc, char* argv[])
 
 	if (7 != argc)
 	{
-		std::cout << "Usage:\tposture_graph_merge <INTERESTS_XML> <PG_DIR_SRC> <PG_DIR_DST> <PG_NAME> <Epsilon> <N_threads>" << std::endl;
+		std::cout << "Usage:\tposture_graph_merge_parallel <INTERESTS_XML> <PG_DIR_SRC> <PG_DIR_DST> <PG_NAME> <Epsilon> <N_threads>" << std::endl;
 		return -1;
 	}
 	else

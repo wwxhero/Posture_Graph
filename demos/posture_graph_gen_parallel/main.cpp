@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 
 	if (6 != argc)
 	{
-		std::cout << "Usage:\tposture_graph_gen <INTERESTS_XML> <BVH_DIR_SRC> <BVH_DIR_DST> <Epsilon> <N_threads>" << std::endl;
+		std::cout << "Usage:\tposture_graph_gen_parallel <INTERESTS_XML> <BVH_DIR_SRC> <PG_DIR_DST> <Epsilon> <N_threads>" << std::endl;
 		return -1;
 	}
 	else

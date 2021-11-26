@@ -26,13 +26,19 @@ int main(int argc, char* argv[])
 		Real eps_err = (Real)atof(argv[4]);
 
 		auto tick_start = ::GetTickCount64();
+		int n_theta_raw = 0;
+		int n_theta_graphs = 0;
 
-		auto onhtr = [path_interests_conf, eps_err] (const char* path_src, const char* path_dst) -> bool
+		auto onhtr = [path_interests_conf, eps_err, &n_theta_raw, &n_theta_graphs] (const char* path_src, const char* path_dst) -> bool
 			{
 				std::string dir_dst = fs::path(path_dst).parent_path().u8string();
 				printf("Building Posture-Graph from %s to %s ", path_src, dir_dst.c_str());
 				auto tick_start = ::GetTickCount64();
-				bool built = posture_graph_gen(path_interests_conf, path_src, dir_dst.c_str(), eps_err, NULL);
+				int n_theta_raw_i = 0;
+				int n_theta_graphs_i = 0;
+				bool built = posture_graph_gen(path_interests_conf, path_src, dir_dst.c_str(), eps_err, NULL, &n_theta_raw_i, &n_theta_graphs_i);
+				n_theta_raw += n_theta_raw_i;
+				n_theta_graphs += n_theta_graphs_i;
 				const char* res[] = { "failed", "successful" };
 				int i_res = (built ? 1 : 0);
 				auto tick = ::GetTickCount64() - tick_start;
@@ -50,7 +56,10 @@ int main(int argc, char* argv[])
 		}
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds************\n", (double)tick_cnt/(double)1000);
+		printf("************TOTAL TIME: %.2f seconds, Build graphs of %d postures from %d postures************\n"
+			, (double)tick_cnt/(double)1000
+			, n_theta_graphs
+			, n_theta_raw);
 
 	}
 

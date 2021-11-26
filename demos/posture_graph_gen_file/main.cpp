@@ -36,11 +36,14 @@ int main(int argc, char* argv[])
 				printf("Converting error-table from %s to %s ", path_htr, pg_dir);
 				const char* res[] = { "failed", "successful" };
 				auto tick_start = ::GetTickCount64();
-				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err, NULL);
+				int n_theta_raw = 0;
+				int n_theta_pg = 0;
+				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err, NULL, &n_theta_raw, &n_theta_pg);
 				int i_res = done ? 1 : 0;
 				auto tick = ::GetTickCount64() - tick_start;
 				float tick_sec = tick / 1000.0f;
-				printf("takes %.2f seconds: %s\n", tick_sec, res[i_res]);
+				printf("takes %.2f seconds: %s, build a graph of %d postures from %d raw postures\n"
+					, tick_sec, res[i_res], n_theta_pg, n_theta_raw);
 			}
 			else
 			{
