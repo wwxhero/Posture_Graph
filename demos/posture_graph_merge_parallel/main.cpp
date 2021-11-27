@@ -65,7 +65,7 @@ public:
 	{
 		src_min->cov = decay * src_min->cov;
 		src_min->eps = decay_inv * src_min->eps;
-		src_min->n_attempts ++;
+		src_min->n_attempts += 2;
 		src_max->n_attempts ++;
 	}
 
@@ -120,7 +120,7 @@ public:
 
 	void Push(std::shared_ptr<Merge> toMerge)
 	{
-		if (toMerge && toMerge->cov > MIN_N_THETA && toMerge->n_attempts < MAX_N_MATTEMPTS)
+		if (toMerge && toMerge->n_attempts < MAX_N_MATTEMPTS)
 		{
 			m_mergingQ.push_back(toMerge);
 		}
@@ -178,8 +178,8 @@ public:
 						<< N_Theta(merged->src_max->hpg)
 						<< " failed!!! " << std::endl;
 			merged->Abort(c_decay, c_decayinv);
-			Push(merged->src_min);
 			Push(merged->src_max);
+			Push(merged->src_min);
 			merged = nullptr;
 		}
 	}
