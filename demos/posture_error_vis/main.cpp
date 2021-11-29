@@ -27,9 +27,9 @@ int main(int argc, char* argv[])
 			const char* path_src = argv[2];
 			const char* path_dst = argv[3];
 			std::string exts_input[] = {
-				Norm(fs::path(path_interests_conf).extension().u8string()),
-				Norm(fs::path(path_src).extension().u8string()),
-				Norm(fs::path(path_dst).extension().u8string())
+				fs::path(path_interests_conf).extension().u8string(),
+				fs::path(path_src).extension().u8string(),
+				fs::path(path_dst).extension().u8string()
 			};
 			bool htr2png = (exts_input[0] == c_exts[0] 
 							&& exts_input[1] == c_exts[1]

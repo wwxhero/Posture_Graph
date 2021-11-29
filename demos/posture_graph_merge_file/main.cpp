@@ -36,6 +36,9 @@ int main(int argc, char* argv[])
 			bool done = false;
 			HPG hpg_0 = posture_graph_load(pg_dir_0, pg_name);
 			HPG hpg_1 = posture_graph_load(pg_dir_1, pg_name);
+			int n_theta_0 = N_Theta(hpg_0);
+			int n_theta_1 = N_Theta(hpg_1);
+			int n_theta = n_theta_0 + n_theta_1;
 			if (VALID_HANDLE(hpg_0)
 				&& VALID_HANDLE(hpg_1))
 			{
@@ -43,6 +46,7 @@ int main(int argc, char* argv[])
 				if (VALID_HANDLE(hpg))
 				{
 					done = posture_graph_save(hpg, pg_dir_dst);
+					n_theta = N_Theta(hpg);
 					posture_graph_release(hpg);
 				}
 				posture_graph_release(hpg_0);
@@ -52,7 +56,8 @@ int main(int argc, char* argv[])
 			int i_res = done ? 1 : 0;
 			auto tick = ::GetTickCount64() - tick_start;
 			float tick_sec = tick / 1000.0f;
-			printf("takes %.2f seconds: %s\n", tick_sec, res[i_res]);
+			printf("takes %.2f seconds: %s, results %d postures from merging (%d, %d) postures\n"
+				, tick_sec, res[i_res], n_theta, n_theta_0, n_theta_1);
 		}
 		catch (std::string &info)
 		{

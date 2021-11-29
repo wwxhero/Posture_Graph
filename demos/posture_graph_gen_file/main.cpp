@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 				auto tick_start = ::GetTickCount64();
 				int n_theta_raw = 0;
 				int n_theta_pg = 0;
-				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err, NULL, &n_theta_raw, &n_theta_pg);
+				bool done = posture_graph_gen(path_interests_conf, path_htr, pg_dir, eps_err, &n_theta_raw, &n_theta_pg);
 				int i_res = done ? 1 : 0;
 				auto tick = ::GetTickCount64() - tick_start;
 				float tick_sec = tick / 1000.0f;

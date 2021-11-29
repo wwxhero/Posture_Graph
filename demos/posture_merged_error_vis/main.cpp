@@ -28,8 +28,8 @@ int main(int argc, char* argv[])
 			const char* pg_theta_1 = argv[3];
 			const char* path_dst = argv[4];
 			std::string exts_input[] = {
-				Norm(fs::path(path_interests_conf).extension().u8string()),
-				Norm(fs::path(path_dst).extension().u8string())
+				fs::path(path_interests_conf).extension().u8string(),
+				fs::path(path_dst).extension().u8string()
 			};
 			bool valid_ext = (exts_input[0] == ".xml"
 							&& exts_input[1] == ".png");
