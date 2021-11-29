@@ -14,15 +14,15 @@ echo posture_graph_gen_parallel %Interests_XML% %BVH_dir_src_trimmed% %PGS_dir_d
 posture_graph_gen_parallel %Interests_XML% %BVH_dir_src_trimmed% %PGS_dir_dst% %Eps% %N_threads% > posture_graph_gen_parallel.log
 
 rem to merge all the PGs into one PG
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LowerBack %Eps_merge% %N_threads% ">" posture_graph_merge_parallel_LowerBack.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LowerBack %Eps_merge% %N_threads% > posture_graph_merge_parallel_LowerBack.log
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftArm %Eps_merge% %N_threads% ">" posture_graph_merge_parallel_LeftArm.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftArm %Eps_merge% %N_threads% > posture_graph_merge_parallel_LeftArm.log
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightArm %Eps_merge% %N_threads% ">" posture_graph_merge_parallel_RightArm.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightArm %Eps_merge% %N_threads% > posture_graph_merge_parallel_RightArm.log
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftUpLeg %Eps_merge% %N_threads% ">" posture_graph_merge_parallel_LeftUpLeg.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftUpLeg %Eps_merge% %N_threads% > posture_graph_merge_parallel_LeftUpLeg.log
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightUpLeg %Eps_merge% %N_threads% ">" posture_graph_merge_parallel_RightUpLeg.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightUpLeg %Eps_merge% %N_threads% > posture_graph_merge_parallel_RightUpLeg.log
+echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LowerBack %Eps_merge% 2 ">" posture_graph_merge_parallel_LowerBack.log
+posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LowerBack %Eps_merge% 2 > posture_graph_merge_parallel_LowerBack.log
+echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftArm %Eps_merge% 2 ">" posture_graph_merge_parallel_LeftArm.log
+posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftArm %Eps_merge% 2 > posture_graph_merge_parallel_LeftArm.log
+echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightArm %Eps_merge% 2 ">" posture_graph_merge_parallel_RightArm.log
+posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightArm %Eps_merge% 2 > posture_graph_merge_parallel_RightArm.log
+echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftUpLeg %Eps_merge% 2 ">" posture_graph_merge_parallel_LeftUpLeg.log
+posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% LeftUpLeg %Eps_merge% 2 > posture_graph_merge_parallel_LeftUpLeg.log
+echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightUpLeg %Eps_merge% 2 ">" posture_graph_merge_parallel_RightUpLeg.log
+posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% RightUpLeg %Eps_merge% 2 > posture_graph_merge_parallel_RightUpLeg.log
 
 
