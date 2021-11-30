@@ -55,7 +55,6 @@ public:
 									, c_path_src
 									, c_dir_dst
 									, m_eps_err
-									, NULL
 									, &m_nThetaRaw
 									, &m_nThetaPG);
 	}
