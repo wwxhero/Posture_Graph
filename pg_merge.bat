@@ -49,16 +49,16 @@ del .\posture_graph_merge_parallel_RightArm.log
 
 for /L %%i in (0, 1, %N_sub_folders%) do (
 	call mkdir %PG_dir_dst_sub%\%%List_sub_folders[%%i]%%
-	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LowerBack %Eps_merge% 2
-	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LowerBack %Eps_merge% 2 >> posture_graph_merge_parallel_LowerBack.log
-	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftUpLeg %Eps_merge% 2
-	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftUpLeg %Eps_merge% 2 >> posture_graph_merge_parallel_LeftUpLeg.log
-	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightUpLeg %Eps_merge% 2
-	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightUpLeg %Eps_merge% 2 >> posture_graph_merge_parallel_RightUpLeg.log
-	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftArm %Eps_merge% 2
-	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftArm %Eps_merge% 2 >> posture_graph_merge_parallel_LeftArm.log
-	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightArm %Eps_merge% 2
-	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightArm %Eps_merge% 2 >> posture_graph_merge_parallel_RightArm.log
+	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LowerBack %Eps_merge% 4
+	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LowerBack %Eps_merge% 4 >> posture_graph_merge_parallel_LowerBack.log
+	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftUpLeg %Eps_merge% 4
+	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftUpLeg %Eps_merge% 4 >> posture_graph_merge_parallel_LeftUpLeg.log
+	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightUpLeg %Eps_merge% 4
+	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightUpLeg %Eps_merge% 4 >> posture_graph_merge_parallel_RightUpLeg.log
+	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftArm %Eps_merge% 4
+	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% LeftArm %Eps_merge% 4 >> posture_graph_merge_parallel_LeftArm.log
+	call echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightArm %Eps_merge% 4
+	call posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst%\%%List_sub_folders[%%i]%% %PG_dir_dst_sub%\%%List_sub_folders[%%i]%% RightArm %Eps_merge% 4 >> posture_graph_merge_parallel_RightArm.log
 )
 
 echo posture_graph_merge_parallel %Interests_XML% %PG_dir_dst_sub% %PG_dir_dst% RightArm %Eps_merge% 10
