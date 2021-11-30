@@ -11,7 +11,7 @@
 #include "parallel_thread_helper.hpp"
 
 #define MIN_N_THETA 10
-#define MAX_N_MATTEMPTS 6
+#define MAX_N_ATTEMPTS 6
 
 class Merge
 {
@@ -120,7 +120,7 @@ public:
 
 	void Push(std::shared_ptr<Merge> toMerge)
 	{
-		if (toMerge && toMerge->n_attempts < MAX_N_MATTEMPTS)
+		if (toMerge && toMerge->n_attempts < MAX_N_ATTEMPTS && toMerge->cov > MIN_N_THETA)
 		{
 			m_mergingQ.push_back(toMerge);
 		}
