@@ -11,7 +11,7 @@
 #include "parallel_thread_helper.hpp"
 
 #define MIN_N_THETA 10
-#define MAX_N_MATTEMPTS 10
+#define MAX_N_MATTEMPTS 6
 
 class Merge
 {
@@ -105,8 +105,8 @@ public:
 		, m_pgDirs(std::move(paths))
 		, m_itDir(m_pgDirs.begin())
 		, c_strPGName(pg_name)
-		, c_decay((Real)1.0)
-		, c_decayinv((Real)1.0)
+		, c_decay((Real)0.9)
+		, c_decayinv((Real)1.1)
 		, m_nPumped(0)
 		, m_nTheta(0)
 		, m_nDrops(0)
