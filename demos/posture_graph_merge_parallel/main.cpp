@@ -24,6 +24,7 @@ public:
 		, m_epsErr(0)
 		, m_nTheta0(0)
 		, m_nPGs(0)
+		, m_iPG(0)
 		, m_id(-1)
 	{
 	}
@@ -40,6 +41,7 @@ public:
 		m_pgSrcDirs = std::move(pg_list_dirs);
 		m_itSrcDirs = m_pgSrcDirs.begin();
 		m_nPGs = (int)m_pgSrcDirs.size();
+		m_iPG = 0;
 		m_pgDstDir = dir_dst;
 		m_epsErr = eps_err;
 		m_id = id_pg;
@@ -69,7 +71,7 @@ public:
 		int n_theta_1 = (VALID_HANDLE(m_hpgSrc1)) ? N_Theta(m_hpgSrc1) : 0;
 		if (VALID_HANDLE(m_hpgRes))
 		{
-			std::cout << m_id << ": Merging of postures ("
+			std::cout << m_id << ": "<< m_iPG << ". Merging of postures ("
 						<< n_theta_0
 						<< ", "
 						<< n_theta_1
@@ -83,7 +85,7 @@ public:
 		}
 		else if (n_theta_0 > 0 && n_theta_1 > 0)
 		{
-			std::cout << m_id << ": Merging of postures ("
+			std::cout << m_id << ": "<< m_iPG << ". Merging of postures ("
 						<< n_theta_0
 						<< ", "
 						<< n_theta_1
@@ -96,6 +98,7 @@ public:
 			m_hpgSrc1 = H_INVALID;
 			m_hpgRes = H_INVALID;
 		}
+		m_iPG ++;
 
 		return !m_pgSrcDirs.empty(); // m_pgSrcDirs.empty() <-> not able to proceed merging
 	}
@@ -164,6 +167,7 @@ private:
 	volatile Real m_epsErr;
 	int m_nTheta0;
 	int m_nPGs;
+	int m_iPG;
 	int m_id;
 };
 
@@ -267,13 +271,17 @@ int main(int argc, char* argv[])
 		pool.Initialize_main(n_pg,
 							[&](CMergeThread* thread)
 								{
-									printf("%20s", pg_names[id_pg].c_str());
+									int n_files = (int)pg_list_dirs[id_pg].size();
 									thread->Initialize(path_interests_conf,
 														pg_names[id_pg],
 														pg_list_dirs[id_pg],
 														dir_dst,
 														eps_err,
 														id_pg);
+									printf("%20s[%d]: Merging %d files\n"
+											, pg_names[id_pg].c_str()
+											, (int)id_pg
+											, n_files);
 									id_pg++;
 								});
 		std::cout << "***************end of initialization***********" << std::endl << std::endl;
