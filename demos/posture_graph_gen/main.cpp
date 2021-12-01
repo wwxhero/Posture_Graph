@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 				auto tick_start = ::GetTickCount64();
 				int n_theta_raw_i = 0;
 				int n_theta_graphs_i = 0;
-				bool built = posture_graph_gen(path_interests_conf, path_src, dir_dst.c_str(), eps_err, NULL, &n_theta_raw_i, &n_theta_graphs_i);
+				bool built = posture_graph_gen(path_interests_conf, path_src, dir_dst.c_str(), eps_err, &n_theta_raw_i, &n_theta_graphs_i);
 				n_theta_raw += n_theta_raw_i;
 				n_theta_graphs += n_theta_graphs_i;
 				const char* res[] = { "failed", "successful" };

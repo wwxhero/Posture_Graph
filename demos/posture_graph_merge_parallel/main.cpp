@@ -42,8 +42,8 @@ public:
 		m_nPGs = (int)m_pgSrcDirs.size();
 		m_pgDstDir = dir_dst;
 		m_epsErr = eps_err;
-		m_hpgSrc0 = LoadNext_main();
 		m_id = id_pg;
+		m_hpgSrc0 = LoadNext_main();
 	}
 
 	virtual ~CMergeThread()
@@ -81,7 +81,7 @@ public:
 			m_hpgSrc1 = H_INVALID;
 			m_hpgRes = H_INVALID;
 		}
-		else
+		else if (n_theta_0 > 0 && n_theta_1 > 0)
 		{
 			std::cout << m_id << ": Merging of postures ("
 						<< n_theta_0
@@ -110,13 +110,13 @@ public:
 			posture_graph_release(m_hpgSrc0);
 			m_hpgSrc0 = H_INVALID;
 		}
-		std::cout << m_id << ": Merging "
+		std::cout << "************" << m_pgName << ": Merging "
 					<< m_nTheta0
 					<< " postures from "
 					<< m_nPGs
 					<< " PGs results a PG of "
 					<< n_theta
-					<< " postures!!!" << std::endl;
+					<< " postures!!!*************" << std::endl;
 	}
 
 	int ID() const
@@ -261,10 +261,13 @@ int main(int argc, char* argv[])
 		// }
 
 		CThreadPool_W32<CMergeThread> pool;
+
 		int id_pg = 0;
+		std::cout << "Initializing threads:" << std::endl;
 		pool.Initialize_main(n_pg,
 							[&](CMergeThread* thread)
 								{
+									printf("%20s", pg_names[id_pg].c_str());
 									thread->Initialize(path_interests_conf,
 														pg_names[id_pg],
 														pg_list_dirs[id_pg],
@@ -273,7 +276,7 @@ int main(int argc, char* argv[])
 														id_pg);
 									id_pg++;
 								});
-
+		std::cout << "***************end of initialization***********" << std::endl << std::endl;
 		bool* tasks_done = new bool[n_pg];
 		memset(tasks_done, false, n_pg * sizeof(bool));
 
