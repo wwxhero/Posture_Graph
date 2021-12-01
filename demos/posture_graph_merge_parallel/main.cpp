@@ -265,163 +265,102 @@ private:
 	std::string m_interest_conf;
 };
 
+void InitPGDirList(const std::string& dir_root, const std::string& pg_name, std::list<std::string>& dirs_pg)
+{
+	std::set<std::string> dirs_src_pg;
+	auto OnDirPG = [&dirs_src_pg] (const char* dir)
+		{
+			dirs_src_pg.insert(dir);
+			return true;
+		};
+	std::list<std::string> dirs_src;
+	auto OnDirHTR = [&dirs_src_pg = std::as_const(dirs_src_pg), &dirs_src](const char* dir)
+		{
+			if (dirs_src_pg.end() != dirs_src_pg.find(dir))
+				dirs_src.push_back(dir);
+		};
+	try
+	{
+		TraverseDirTree_filter(dir_root, OnDirPG, pg_name + ".pg" );
+		TraverseDirTree_filter(dir_root, OnDirHTR, pg_name + ".htr" );
+	}
+	catch (std::string &info)
+	{
+		std::cout << "ERROR: " << info << std::endl;
+	}
+
+	class GreatorFileSize
+	{
+	public:
+		GreatorFileSize(const std::string& pg_name)
+			: m_pgName(pg_name)
+		{
+			m_pgName += ".htr";
+		}
+		bool operator()(const std::string &dir_0, const std::string &dir_1) const
+		{
+			fs::path theta_path_0(dir_0); theta_path_0.append(m_pgName);
+			fs::path theta_path_1(dir_1); theta_path_1.append(m_pgName);
+			struct stat stat_buf_0;
+			int rc_0 = stat(theta_path_0.u8string().c_str(), &stat_buf_0);
+			struct stat stat_buf_1;
+			int rc_1 = stat(theta_path_1.u8string().c_str(), &stat_buf_1);
+			return !(0 == rc_0 && 0 == rc_1)
+				|| (stat_buf_0.st_size > stat_buf_1.st_size);
+		}
+	private:
+		std::string m_pgName;
+	};
+
+	dirs_src.sort(GreatorFileSize(pg_name));
+	//	for (auto path: dirs_src)
+	//		std::cout << path << std::endl;
+	dirs_pg = std::move(dirs_src);
+}
 
 int main(int argc, char* argv[])
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
-	if (7 != argc)
+	if (!(5 < argc))
 	{
-		std::cout << "Usage:\tposture_graph_merge_parallel <INTERESTS_XML> <PG_DIR_SRC> <PG_DIR_DST> <PG_NAME> <Epsilon> <N_threads>" << std::endl;
+		std::cout << "Usage:\tposture_graph_merge_parallel <INTERESTS_XML> <PG_DIR_SRC> <PG_DIR_DST> <Epsilon> <PG_NAME>+ " << std::endl;
 		return -1;
 	}
 	else
 	{
-		const char* path_interests_conf = argv[1];
-		const char* dir_src = argv[2];
-		const char* dir_dst = argv[3];
-		const char* pg_name = argv[4];
-		Real eps_err = (Real)atof(argv[5]);
-		int n_threads = atoi(argv[6]);
-
 		auto tick_start = ::GetTickCount64();
 
-		std::set<std::string> dirs_src_pg;
-		auto OnDirPG = [&dirs_src_pg] (const char* dir)
-			{
-				dirs_src_pg.insert(dir);
-				return true;
-			};
-		std::list<std::string> dirs_src;
-		auto OnDirHTR = [&dirs_src_pg = std::as_const(dirs_src_pg), &dirs_src](const char* dir)
-			{
-				if (dirs_src_pg.end() != dirs_src_pg.find(dir))
-					dirs_src.push_back(dir);
-			};
-		try
+		const char* path_interests_conf = argv[1];
+		std::string dir_src = argv[2];
+		const char* dir_dst = argv[3];
+		Real eps_err = (Real)atof(argv[4]);
+
+		int i_pg_base = 5;
+		int i_pg_end = argc;
+
+		int n_pg = i_pg_end - i_pg_base;
+		std::vector<std::string> pg_names(n_pg);
+		std::vector<std::list<std::string>> pg_list_files(n_pg);
+		for (int i_pg = 0; i_pg < n_pg; i_pg ++)
 		{
-			std::string filter_base(pg_name);
-			TraverseDirTree_filter(dir_src, OnDirPG, filter_base + ".pg" );
-			TraverseDirTree_filter(dir_src, OnDirHTR, filter_base + ".htr" );
-		}
-		catch (std::string &info)
-		{
-			std::cout << "ERROR: " << info << std::endl;
+			std::string pg_i(argv[i_pg + i_pg_base]);
+			InitPGDirList(dir_src, pg_i, pg_list_files[i_pg]);
+			pg_names[i_pg] = std::move(pg_i);
 		}
 
-		int half_n_pgs = (((int)dirs_src.size()) >> 1);
-		n_threads = min(n_threads, half_n_pgs);
-
-		class GreatorFileSize
+		for (int i_pg = 0; i_pg < n_pg; i_pg ++)
 		{
-		public:
-			GreatorFileSize(const char* pg_name)
-				: m_pgName(pg_name)
-			{
-				m_pgName += ".htr";
-			}
-			bool operator()(const std::string &dir_0, const std::string &dir_1) const
-			{
-				fs::path theta_path_0(dir_0); theta_path_0.append(m_pgName);
-				fs::path theta_path_1(dir_1); theta_path_1.append(m_pgName);
-				struct stat stat_buf_0;
-				int rc_0 = stat(theta_path_0.u8string().c_str(), &stat_buf_0);
-				struct stat stat_buf_1;
-				int rc_1 = stat(theta_path_1.u8string().c_str(), &stat_buf_1);
-				return !(0 == rc_0 && 0 == rc_1)
-					|| (stat_buf_0.st_size > stat_buf_1.st_size);
-			}
-		private:
-			std::string m_pgName;
-		};
-
-		dirs_src.sort(GreatorFileSize(pg_name));
-		//	for (auto path: dirs_src)
-		//		std::cout << path << std::endl;
-
-		const int N_BUCKET = 1 + (n_threads << 1);
-		TasksQ tasks(N_BUCKET, eps_err, dirs_src, pg_name);
-
-		if (n_threads > 0)
-		{
-			[&] (int n_threads)	// assign tasks to n_threads until not all threads are assigned
-			{
-				CThreadPool_W32<CMergeThread> pool;
-				pool.Initialize_main(
-								n_threads,
-								[path_interests_conf](CMergeThread* thread)
-									{
-										thread->Initialize(path_interests_conf);
-									}
-								);
-
-				while (tasks.Size() > 1)
-				{
-					CMergeThread* thread_i = pool.WaitForAReadyThread_main(INFINITE);
-					auto merge_src = tasks.Pop_pair();
-					auto merge_res = thread_i->MergeEnd_main();
-					if (merge_res)
-						tasks.ProceMergeRes(merge_res);
-					else
-					{
-						tasks.Push(tasks.PumpIn());
-						tasks.Push(tasks.PumpIn());
-					}
-					thread_i->MergeStart_main(merge_src.first, merge_src.second);
-				}
-
-				auto& threads = pool.WaitForAllReadyThreads_main();
-				for (auto thread : threads)
-				{
-					auto merge_res = thread->MergeEnd_main();
-					if (merge_res)
-						tasks.ProceMergeRes(merge_res);
-				}
-			}(n_threads);
-		}
-
-		[&] () // finish up the merge tasks stored in tasks
-		{
-			while (tasks.Size() > 1)
-			{
-				CThreadPool_W32<CMergeThread> pool_finish;
-				int n_threads = ((int)tasks.Size() >> 1);
-				assert(n_threads > 0);
-				pool_finish.Initialize_main(
-										n_threads, 
-										[path_interests_conf](CMergeThread* thread_i) 
-											{
-												thread_i->Initialize(path_interests_conf);
-											});
-				std::vector<CMergeThread*>& threads = pool_finish.WaitForAllReadyThreads_main();
-				for (auto thread_i : threads)
-				{
-					auto merge_src = tasks.Pop_pair();
-					thread_i->MergeStart_main(merge_src.first, merge_src.second);
-				}
-				threads = pool_finish.WaitForAllReadyThreads_main();
-				for (auto thread_i : threads)
-				{
-					auto merge_res = thread_i->MergeEnd_main();
-					tasks.ProceMergeRes(merge_res);
-				}
-			}
-		}();
-
-		int n_theta_total = 0;
-		if (tasks.Size() > 0)
-		{
-			std::shared_ptr<Merge> res = tasks.Pop();
-			posture_graph_save(res->hpg, dir_dst);
-			n_theta_total = N_Theta(res->hpg);
+			std::cout << pg_names[i_pg] << ":" << std::endl;
+			auto& dirs_pg_i = pg_list_files[i_pg];
+			for (auto dir_pg_i : dirs_pg_i)
+				std::cout << "\t\t" << dir_pg_i << std::endl;
 		}
 
 		auto tick_cnt = ::GetTickCount64() - tick_start;
-		printf("************TOTAL TIME: %.2f seconds: %d files of %d postures in total have been merged into %d postures with %d drops*************\n"
-			, (double)tick_cnt/(double)1000
-			, tasks.m_nPumped, tasks.m_nTheta
-			, n_theta_total, tasks.m_nDrops);
+		printf("************TOTAL TIME: %.2f seconds*************\n"
+			, (double)tick_cnt/(double)1000);
 	}
 
 	return 0;
