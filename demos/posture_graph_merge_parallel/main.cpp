@@ -13,6 +13,13 @@
 #define MIN_N_THETA 10
 #define MAX_N_ATTEMPTS 6
 
+#include <crtdbg.h>
+#if defined LEAK_CHECK
+#define _CRTDBG_MAP_ALLOC
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
+
 class CMergeThread : public CThread_W32
 {
 public:
@@ -309,6 +316,7 @@ int main(int argc, char* argv[])
 				thread_i->MergeComplete_main();
 		}
 
+		delete [] tasks_done;
 		auto tick_cnt = ::GetTickCount64() - tick_start;
 		printf("************TOTAL TIME: %.2f seconds*************\n"
 			, (double)tick_cnt/(double)1000);
