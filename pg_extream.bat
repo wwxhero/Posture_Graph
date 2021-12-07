@@ -16,10 +16,13 @@ posture_graph_gen_parallel %Interests_XML% %BVH_dir_src_trimmed% %PGS_dir_dst% %
 
 rem to merge all the PGs into one PG
 
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg ">" posture_graph_merge_parallel_LowerBack_LeftUpLeg_RightUpLeg.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg > posture_graph_merge_parallel_LowerBack_LeftUpLeg_RightUpLeg.log
+rem echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg ">" posture_graph_merge_parallel.log
+rem posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg > posture_graph_merge_parallel.log
 
-echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LeftArm RightArm ">" posture_graph_merge_parallel_LeftArm_RightArm.log
-posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LeftArm RightArm > posture_graph_merge_parallel_LeftArm_RightArm.log
+rem echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LeftArm RightArm ">>" posture_graph_merge_parallel.log
+rem posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LeftArm RightArm >> posture_graph_merge_parallel.log
 
+rem it is a risk to memory system running 5 parts in parallel
+echo posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg LeftArm RightArm ">" posture_graph_merge_parallel.log
+posture_graph_merge_parallel %Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg LeftArm RightArm > posture_graph_merge_parallel.log
 
