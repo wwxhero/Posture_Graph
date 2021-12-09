@@ -52,14 +52,6 @@ private:
 	volatile bool m_converted;
 };
 
-void conv(const char* path_src, const char* path_dst)
-{
-	printf("Converting %s to %s: ", path_src, path_dst);
-	bool converted = convert(path_src, path_dst, false);
-	const char* res[] = { "failed", "successful" };
-	int i_res = (converted ? 1 : 0);
-	printf(" %s\n", res[i_res]);
-};
 
 int main(int argc, char* argv[])
 {
