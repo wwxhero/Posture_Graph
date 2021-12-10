@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
 	if (3 != argc)
 	{
-		std::cout << "Usage:\tbvh_posture_rest <BVH_DIR_SRC> <BVH_DIR_DST>" << std::endl;
+		std::cout << "Usage:\tbvh_htr_conv <BVH_DIR_SRC> <BVH_DIR_DST>" << std::endl;
 		return -1;
 	}
 	else
