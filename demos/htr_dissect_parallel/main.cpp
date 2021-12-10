@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
 
 		auto tick = ::GetTickCount64() - tick_start;
 		float tick_sec = tick / 1000.0f;
-		printf("Converting %s to %s takes %.2f seconds with %d failed cases\n", dir_src, dir_dst, tick_sec, n_failed_case);
+		printf("*************Converting %s to %s takes %.2f seconds with %d failed cases*************\n", dir_src, dir_dst, tick_sec, n_failed_case);
 	}
 
 	return 0;
