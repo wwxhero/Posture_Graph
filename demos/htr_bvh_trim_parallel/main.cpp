@@ -70,13 +70,13 @@ int main(int argc, char* argv[])
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 
-	if (argc < 5)
+	if (argc < 6)
 	{
-		std::cout << "Usage:\thtr_bvh_trim <DIR_SRC> <DIR_DST> <N_Threads> <SubTreeRM>+ \t\t\t\t\t// to trim the articulated body tree file <FILE_NAME> stored in <DIR_SRC>, the trimming result is stored in <DIR_DST>" << std::endl;
+		std::cout << "Usage:\thtr_bvh_trim <DIR_SRC> <DIR_DST> <FILE_NAME> <N_Threads> <SubTreeRM>+ \t\t\t\t\t// to trim the articulated body tree file <FILE_NAME> stored in <DIR_SRC>, the trimming result is stored in <DIR_DST>" << std::endl;
 	}
 	else
 	{
-		const int i_base_subtree = 4;
+		const int i_base_subtree = 5;
 		int n_subtrees_rm = argc-i_base_subtree;
 		std::vector<const char*> name_subtrees_rm(n_subtrees_rm);
 		for (int i_subtree = 0; i_subtree < n_subtrees_rm; i_subtree ++)
@@ -84,7 +84,8 @@ int main(int argc, char* argv[])
 
 		const char* dir_src = argv[1];
 		const char* dir_dst = argv[2];
-		const int n_threads = atoi(argv[3]);
+		std::string file_name = argv[3];
+		const int n_threads = atoi(argv[4]);
 		auto tick_start = ::GetTickCount64();
 		int n_failed_case = 0;
 		CThreadPool_W32<CThreadTrim> pool;
@@ -126,7 +127,7 @@ int main(int argc, char* argv[])
 
 		try
 		{
-			CopyDirTree(dir_src, dir_dst, OnTrimFile, ".htr");
+			CopyDirTree_file(dir_src, dir_dst, OnTrimFile, file_name);
 		}
 		catch(const std::string& exp)
 		{
