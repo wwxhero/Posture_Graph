@@ -28,29 +28,29 @@ IF NOT %argCount% == 4 (
 
 	mkdir %T_reset_dir%
 	echo bvh_posture_reset_parallel %BVH_dir_src% %T_reset_dir% %N_threads% ">" bvh_posture_reset.log
-	bvh_posture_reset_parallel %BVH_dir_src% %T_reset_dir% %N_threads% > bvh_posture_reset.log
+	rem bvh_posture_reset_parallel %BVH_dir_src% %T_reset_dir% %N_threads% > bvh_posture_reset.log
 
 	mkdir %HTR_raw_dir%
 	echo bvh_htr_conv_parallel %T_reset_dir% %HTR_raw_dir% %N_threads% ">" bvh_tr_conv.log
-	bvh_htr_conv_parallel %T_reset_dir% %HTR_raw_dir% %N_threads% > bvh_tr_conv.log
+	rem bvh_htr_conv_parallel %T_reset_dir% %HTR_raw_dir% %N_threads% > bvh_tr_conv.log
 
 	mkdir %HTR_disect_dir%
 	echo htr_dissect_parallel %HTR_dissect_XML% %HTR_raw_dir% %HTR_disect_dir% %N_threads% ">" htr_dissect.log
-	htr_dissect_parallel %HTR_dissect_XML% %HTR_raw_dir% %HTR_disect_dir% %N_threads% > htr_dissect.log
+	rem htr_dissect_parallel %HTR_dissect_XML% %HTR_raw_dir% %HTR_disect_dir% %N_threads% > htr_dissect.log
 	copy %HTR_dissect_XML% %HTR_disect_dir%
 
 	mkdir %HTR_trimmed_dir%
 	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftUpLeg.htr %N_threads% LeftFoot ">" htr_trimmed.log
-	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftUpLeg.htr %N_threads% LeftFoot > htr_trimmed.log
+	rem htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftUpLeg.htr %N_threads% LeftFoot > htr_trimmed.log
 
 	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightUpLeg.htr %N_threads% RightFoot ">>" htr_trimmed.log
-	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightUpLeg.htr %N_threads% RightFoot >> htr_trimmed.log
+	rem htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightUpLeg.htr %N_threads% RightFoot >> htr_trimmed.log
 
-	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftArm.htr %N_threads% LeftHand ">>" htr_trimmed.log
-	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftArm.htr %N_threads% LeftHand >> htr_trimmed.log
+	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftShoulder.htr %N_threads% LeftHand ">>" htr_trimmed.log
+	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LeftShoulder.htr %N_threads% LeftHand >> htr_trimmed.log
 
-	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightArm.htr %N_threads% RightHand ">>" htr_trimmed.log
-	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightArm.htr %N_threads% RightHand >> htr_trimmed.log
+	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightShoulder.htr %N_threads% RightHand ">>" htr_trimmed.log
+	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% RightShoulder.htr %N_threads% RightHand >> htr_trimmed.log
 
 	echo htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LowerBack.htr %N_threads% Head LeftShoulder RightShoulder ">>" htr_trimmed.log
 	htr_bvh_trim_parallel %HTR_disect_dir% %HTR_trimmed_dir% LowerBack.htr %N_threads% Head LeftShoulder RightShoulder >> htr_trimmed.log
@@ -63,9 +63,20 @@ IF NOT %argCount% == 4 (
 
 	rem to merge all the PGs into one PG
 	rem it is a risk to memory system running 5 parts in parallel
-	echo posture_graph_merge_parallel %PG_Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg LeftArm RightArm ">" posture_graph_merge_parallel.log
-	posture_graph_merge_parallel %PG_Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg LeftArm RightArm > posture_graph_merge_parallel.log
+	echo posture_graph_merge_parallel %PG_Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg LeftShoulder RightShoulder ">" posture_graph_merge_parallel.log
+	posture_graph_merge_parallel %PG_Interests_XML% %PGS_dir_dst% %PG_dir_dst% %Eps% LowerBack LeftUpLeg RightUpLeg LeftShoulder RightShoulder > posture_graph_merge_parallel.log
 	copy %PG_Interests_XML% %PG_dir_dst%
+
+	echo remove_theta_noise.exe %PG_dir_dst%\LowerBack.htr %PG_dir_dst%\LowerBack.htr %PG_Interests_XML%
+	remove_theta_noise.exe %PG_dir_dst%\LowerBack.htr %PG_dir_dst%\LowerBack.htr %PG_Interests_XML%
+	echo remove_theta_noise.exe %PG_dir_dst%\LeftUpLeg.htr %PG_dir_dst%\LeftUpLeg.htr %PG_Interests_XML%
+	remove_theta_noise.exe %PG_dir_dst%\LeftUpLeg.htr %PG_dir_dst%\LeftUpLeg.htr %PG_Interests_XML%
+	echo remove_theta_noise.exe %PG_dir_dst%\RightUpLeg.htr %PG_dir_dst%\RightUpLeg.htr %PG_Interests_XML%
+	remove_theta_noise.exe %PG_dir_dst%\RightUpLeg.htr %PG_dir_dst%\RightUpLeg.htr %PG_Interests_XML%
+	echo remove_theta_noise.exe %PG_dir_dst%\LeftShoulder.htr %PG_dir_dst%\LeftShoulder.htr %PG_Interests_XML%
+	remove_theta_noise.exe %PG_dir_dst%\LeftShoulder.htr %PG_dir_dst%\LeftShoulder.htr %PG_Interests_XML%
+	echo remove_theta_noise.exe %PG_dir_dst%\RightShoulder.htr %PG_dir_dst%\RightShoulder.htr %PG_Interests_XML%
+	remove_theta_noise.exe %PG_dir_dst%\RightShoulder.htr %PG_dir_dst%\RightShoulder.htr %PG_Interests_XML%
 
 	exit 0
 )
